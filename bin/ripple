@@ -1,0 +1,96 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+
+help = <<HELP
+Ripple is a lilypond helper.
+
+Basic Command Line Usage:
+  ripple                                                    # . -> .
+  ripple <path to source>                                   # . -> <path>
+
+  Configuration is read from '<source>/_info.yml' but can be overriden
+  using the following options:
+
+HELP
+
+require 'optparse'
+require 'ripple'
+
+exec = {}
+options = {}
+opts = OptionParser.new do |opts|
+  opts.banner = help
+
+  opts.on("--auto", "Auto-regenerate") do
+    options['auto'] = true
+  end
+
+  opts.on("--no-auto", "No auto-regenerate") do
+    options['auto'] = false
+  end
+
+  opts.on("--version", "Display current version") do
+    puts "Ripple " + Ripple.version
+    exit 0
+  end
+end
+
+opts.parse!
+
+# Get source and destintation from command line
+case ARGV.size
+  when 0
+    options['source'] = '.'
+  when 1
+    options['source']      = ARGV[0]
+  else
+    puts "Invalid options. Run `ripple --help` for assistance."
+    exit(1)
+end
+
+options = Ripple.configuration(options)
+
+# Get source and destination directories (possibly set by config file)
+source      = options['source']
+
+# Files to watch
+def globs(source)
+  Dir.chdir(source) do
+    dirs = Dir['*'].select { |x| File.directory?(x) }
+    dirs -= ['_site']
+    dirs = dirs.map { |x| "#{x}/**/*" }
+    dirs += ['*']
+  end
+end
+
+# Create the work
+work = Ripple::Work.new(options)
+
+# Run the directory watcher for auto-generation, if required
+if options['auto']
+  require 'directory_watcher'
+
+  puts "Auto-regenerating enabled: #{source} -> #{destination}"
+
+  dw = DirectoryWatcher.new(source)
+  dw.interval = 1
+  dw.glob = globs(source)
+
+  dw.add_observer do |*args|
+    t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+    puts "[#{t}] regeneration: #{args.size} files changed"
+    work.process
+  end
+
+  dw.start
+
+  unless options['server']
+    loop { sleep 1000 }
+  end
+else
+  puts "Processing work: #{source} -> #{destination}"
+  work.process
+  puts "Successfully generated site: #{source} -> #{destination}"
+end
+
