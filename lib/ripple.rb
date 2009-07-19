@@ -11,10 +11,12 @@ require 'yaml'
 # stdlib
 
 # internal requires
+require 'ripple/core_ext'
 require 'ripple/work'
 require 'ripple/part'
 # require 'ripple/score'
 require 'ripple/templates'
+require 'ripple/lilypond'
 
 module Ripple
   # Default options. Overriden by values in _config.yml or command-line opts.
@@ -38,7 +40,25 @@ module Ripple
     if File.exists?(config_file_path)
       config.merge!(YAML.load_file(config_file_path))
     end
+    find_include_files(config)
     config
+  end
+  
+  def self.find_include_files(config)
+    include_dir = File.join(config["source"], "_include")
+    return unless File.directory?(include_dir)
+
+    Dir[File.join(include_dir, "**/*.ly")].each do |fn|
+      case File.basename(fn)
+      when 'part.ly'
+        config["part_include"] = [File.expand_path(fn)]
+      when 'score.ly'
+        config["score_include"] = [File.expand_path(fn)]
+      else
+        config["include"] ||= []
+        config["include"] << File.expand_path(fn)
+      end
+    end
   end
   
   def self.process(opts = {})

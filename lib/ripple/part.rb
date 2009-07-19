@@ -11,9 +11,9 @@ module Ripple
     def movement_file(mvt)
       fn = File.join(@work.path, mvt, "#{@part}.rly")
       # here we also search for more general part files
-      # e.g. violino1 parts will include stuff from violino.rly files
+      # e.g. violino1 parts will include stuff from _violino.rly files
       if !File.exists?(fn) && @part =~ /^(.+)\d$/ &&
-        fn = File.join(@work, mvt, "#{$1}.rly")
+        fn = File.join(@work.path, mvt, "_#{$1}.rly")
       end
       fn
     end
@@ -38,26 +38,20 @@ module Ripple
       File.join(@config["ly_dir"], @work.relative_path, "#{@part}.ly")
     end
     
-    def write_ly_file(content)
-      File.open(ly_filename, 'w') {|f| f << content}
-    end
-    
     def pdf_filename
-      File.join(@config["pdf_dir"], @work.relative_path, "#{@part}.pdf")
+      File.join(@config["pdf_dir"], @work.relative_path, "#{@part}")
     end
     
     def process
       mvts = @work.movements
       mvts << "" if mvts.empty?
       
-      write_ly_file(render)
+      # create ly file
+      FileUtils.mkdir_p(File.dirname(ly_filename))
+      File.open(ly_filename, 'w') {|f| f << render}
+      
+      FileUtils.mkdir_p(File.dirname(pdf_filename))
+      Ripple::Lilypond.process(ly_filename, pdf_filename)
     end
   end
 end
-
-__END__
-\header {
-  title = <%= config["title"] %>
-  composer = <%= config["title"] %>
-  instrument = "Alto"
-}

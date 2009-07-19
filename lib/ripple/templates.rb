@@ -14,7 +14,7 @@ module Ripple
     }
   <% end %>
   >>
-  \\header { piece = data["movement"].to_movement_title }
+  \\header { piece = "<%= data["movement"].to_movement_title %>" }
 }
 EOF
       t.result(binding)
@@ -30,11 +30,20 @@ EOF
     end
     
     def self.render_part(content, config)
+      # include files
+      include = config["include"] || []
+      if config["part_include"]
+        include << config["part_include"]
+      end
+      
       t = ERB.new <<-EOF
+<% include.each do |inc| %>
+\\include "<%= inc %>"
+<% end %>
 \\header {
-  title = <%= config["title"] %>
-  composer = <%= config["composer"] %>
-  instrument = <%= config["part"].capitalize %>
+  title = "<%= config["title"] %>"
+  composer = "<%= config["composer"] %>"
+  instrument = "<%= config["part"].capitalize %>"
 }
 
 <%= content %>

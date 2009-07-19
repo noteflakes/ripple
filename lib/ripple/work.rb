@@ -27,7 +27,7 @@ module Ripple
     
     def parts
       @parts ||= Dir[File.join(@path, "**/*.rly")].
-        reject {|fn| !File.file?(fn)}.map do |fn|
+        reject {|fn| !File.file?(fn) || File.basename(fn) =~ /^_/}.map do |fn|
           File.basename(fn, ".rly")
         end.uniq.sort
     end
