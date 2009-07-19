@@ -13,7 +13,8 @@ require 'yaml'
 # internal requires
 require 'ripple/work'
 require 'ripple/part'
-require 'ripple/score'
+# require 'ripple/score'
+require 'ripple/templates'
 
 module Ripple
   # Default options. Overriden by values in _config.yml or command-line opts.
@@ -47,6 +48,16 @@ module Ripple
   def self.works(config)
     paths = Dir[File.join(config[SOURCE], "**/_work.yml")].
       map {|fn| Work.new(File.dirname(fn), config)}
+  end
+  
+  def self.format_movement_title(mvt)
+    if mvt =~ /^(\d+)\-(.+)$/
+      num = $1.to_i
+      name = $2.gsub("-", " ").gsub(/\b('?[a-z])/) {$1.capitalize}
+      "#{num}. #{name}"
+    else
+      mvt
+    end
   end
 
   def self.version
