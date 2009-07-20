@@ -42,4 +42,9 @@ case ARGV.size
 end
 
 config = Ripple.configuration(options)
-Ripple.works(config).each {|w| w.process}
+works = Ripple.works(config)
+if works.empty?
+  puts "No music found."
+else
+  works.each {|w| w.process}
+end
