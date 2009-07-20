@@ -47,18 +47,25 @@ module Ripple
   def self.find_include_files(config)
     include_dir = File.join(config["source"], "_include")
     return unless File.directory?(include_dir)
+    
+    config["include"] = []
+    config["part_include"] = []
+    config["score_include"] = []
 
     Dir[File.join(include_dir, "**/*.ly")].each do |fn|
       case File.basename(fn)
       when 'part.ly'
-        config["part_include"] = [File.expand_path(fn)]
+        config["part_include"] << File.expand_path(fn)
       when 'score.ly'
-        config["score_include"] = [File.expand_path(fn)]
+        config["score_include"] << File.expand_path(fn)
       else
-        config["include"] ||= []
         config["include"] << File.expand_path(fn)
       end
     end
+    
+    config["include"].uniq!
+    config["part_include"].uniq!
+    config["score_include"].uniq!
   end
   
   def self.process(opts = {})

@@ -6,11 +6,16 @@ module Ripple
   <<
   \\prepare
   \\new Staff {
+    <% if clef = data.lookup("parts/#{data["part"]}/clef") %>
+      \\clef "<%= clef %>"
+    <% end %>
     <%= data["staff_music"] %>
   }
   <% if data["staff_lyrics"] %>
     \\addlyrics {
-      <%= data["staff_lyrics"] %>
+      \\lyricmode {
+        <%= data["staff_lyrics"] %>
+      }
     }
   <% end %>
   >>
@@ -33,12 +38,11 @@ EOF
       # include files
       include = config["include"] || []
       if config["part_include"]
-        include << config["part_include"]
+        include += config["part_include"]
       end
       
       t = ERB.new <<-EOF
-<% include.each do |inc| %>
-\\include "<%= inc %>"
+<% include.each do |inc| %>\\include "<%= inc %>"
 <% end %>
 \\header {
   title = "<%= config["title"] %>"
@@ -53,5 +57,70 @@ EOF
 EOF
       t.result(binding)
     end
+    
+    def self.render_score_staff(data)
+      t = ERB.new <<-EOF
+\new Staff {
+  \set Staff.instrumentName = #"Soprano"
+  <%= data["staff_music"] %>
+}
+<% if data["staff_lyrics"] %>
+  \\addlyrics {
+    \\lyricmode {
+      <%= data["staff_lyrics"] %>
+    }
+  }
+<% end %>
+EOF
+      t.result(binding)
+    end
+    
+    def self.render_score_movement(parts, data)
+      order = config.lookup("score/order") || parts.sort
+      music = order.inject("") do |m, p|
+        if parts.include?(p)
+          staff_music = config.lookup("parts/#{p}/staff_music")
+          staff_lyrics = config.lookup("parts/#{p}/staff_lyrics")
+          d = data.merge('staff_music' => staff_music, 'staff_lyrics' => staff_lyrics)
+          m << render_score_staff(d)
+        end
+        m
+      end
+      t = ERB.new <<-EOF
+\\score {
+  \\new StaffGroup <<
+<%= music %>
+  >>
+  \\header { piece = "<%= data["movement"].to_movement_title %>" }
+}
+
+EOF
+      t.result(binding)
+    end
+    
+    def self.render_score(content, config)
+      # include files
+      include = config["include"] || []
+      if config["score_include"]
+        include += config["score_include"]
+      end
+
+      t = ERB.new <<-EOF
+<% include.each do |inc| %>\\include "<%= inc %>"
+<% end %>
+\\header {
+  title = "<%= config["title"] %>"
+  composer = "<%= config["composer"] %>"
+}
+
+<%= content %>
+
+\\version "2.12.2"
+
+EOF
+      t.result(binding)
+    end
+
+    
   end
 end

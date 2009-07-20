@@ -4,25 +4,41 @@ module Ripple
   class Part
     def initialize(part, work)
       @part = part; @work = work
-      @config = work.config
-      @config["part"] = part
+      @config = work.config.merge("part" => part)
     end
     
-    def movement_file(mvt)
-      fn = File.join(@work.path, mvt, "#{@part}.rly")
-      # here we also search for more general part files
-      # e.g. violino1 parts will include stuff from _violino.rly files
-      if !File.exists?(fn) && @part =~ /^(.+)\d$/ &&
-        fn = File.join(@work.path, mvt, "_#{$1}.rly")
+    def movement_music_file(mvt, config)
+      part = config.lookup("parts/#{@part}/source") || @part
+      File.join(@work.path, mvt, "#{part}.rly")
+    end
+    
+    def movement_lyrics_file(mvt, config)
+      case lyrics = config.lookup("parts/#{@part}/lyrics")
+      when nil
+        File.join(@work.path, mvt, "#{@part}.lyrics")
+      when 'none'
+        nil
+      else
+        File.join(@work.path, mvt, lyrics)
       end
-      fn
+    end
+    
+    def movement_config(mvt)
+      c = YAML.load(IO.read(File.join(@work.path, mvt, "_movement.yml"))) rescue {}
+      mvt_config = @config.deep_merge(c)
+      mvt_config["movement"] = mvt
+      mvt_config
     end
     
     def render_movement(mvt)
-      c = @config.merge("movement" => mvt)
-      fn = movement_file(mvt)
-      if File.exists?(fn)
-        c["staff_music"] = IO.read(fn)
+      c = movement_config(mvt)
+      music_fn = movement_music_file(mvt, c)
+      lyrics_fn = movement_lyrics_file(mvt, c)
+      if File.exists?(music_fn)
+        c["staff_music"] = IO.read(music_fn)
+        if lyrics_fn && File.exists?(lyrics_fn)
+          c["staff_lyrics"] = IO.read(lyrics_fn)
+        end
         Templates.render_part_music(c)
       else
         Templates.render_part_tacet(c)
@@ -43,6 +59,8 @@ module Ripple
     end
     
     def process
+      return if @config.lookup("parts/#{@part}/ignore")
+      
       mvts = @work.movements
       mvts << "" if mvts.empty?
       

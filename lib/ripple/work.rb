@@ -26,10 +26,15 @@ module Ripple
     end
     
     def parts
-      @parts ||= Dir[File.join(@path, "**/*.rly")].
+      return @parts if @parts
+      @parts = Dir[File.join(@path, "**/*.rly")].
         reject {|fn| !File.file?(fn) || File.basename(fn) =~ /^_/}.map do |fn|
           File.basename(fn, ".rly")
-        end.uniq.sort
+        end
+      @config.lookup("parts").each do |p, opts|
+        @parts << p unless opts["ignore"]
+      end
+      @parts.uniq!.sort!
     end
     
     def process(opts = {})
