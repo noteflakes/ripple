@@ -9,6 +9,16 @@ class String
     end
   end
   
+  ROMAN = %w[0 I II III IV V VI VII VIII IX X]
+  
+  def to_instrument_title
+    if self =~ /^([^\d]+)(\d+)$/
+      "#{$1.capitalize} #{ROMAN[$2.to_i]}"
+    else
+      self
+    end
+  end
+  
   def to_title
     gsub(/\b('?[a-z])/) {$1.capitalize}
   end

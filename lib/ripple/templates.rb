@@ -47,7 +47,8 @@ EOF
 \\header {
   title = "<%= config["title"] %>"
   composer = "<%= config["composer"] %>"
-  instrument = "<%= config["part"].capitalize %>"
+  instrument = "<%= config.lookup("parts/#{config["part"]}/title") || 
+    config["part"].to_instrument_title %>"
 }
 
 <%= content %>
@@ -60,8 +61,9 @@ EOF
     
     def self.render_score_staff(data)
       t = ERB.new <<-EOF
-\new Staff {
-  \set Staff.instrumentName = #"Soprano"
+\\new Staff {
+  \\set Staff.instrumentName = #"<%= data.lookup("parts/#{data["part"]}/title") || 
+    data["part"].to_instrument_title %>"
   <%= data["staff_music"] %>
 }
 <% if data["staff_lyrics"] %>
@@ -81,7 +83,8 @@ EOF
         if parts.include?(p)
           staff_music = config.lookup("parts/#{p}/staff_music")
           staff_lyrics = config.lookup("parts/#{p}/staff_lyrics")
-          d = data.merge('staff_music' => staff_music, 'staff_lyrics' => staff_lyrics)
+          d = data.merge('part' => p, 'staff_music' => staff_music, 
+            'staff_lyrics' => staff_lyrics)
           m << render_score_staff(d)
         end
         m
