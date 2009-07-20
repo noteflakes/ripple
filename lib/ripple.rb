@@ -17,6 +17,7 @@ require 'ripple/part'
 require 'ripple/score'
 require 'ripple/templates'
 require 'ripple/lilypond'
+require 'ripple/syntax'
 
 module Ripple
   # Default options. Overriden by values in _config.yml or command-line opts.
