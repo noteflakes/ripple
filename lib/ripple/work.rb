@@ -27,9 +27,9 @@ module Ripple
     
     def parts
       return @parts if @parts
-      @parts = Dir[File.join(@path, "**/*.rly")].
+      @parts = Dir[File.join(@path, "**/*.rpl")].
         reject {|fn| !File.file?(fn) || File.basename(fn) =~ /^_/}.map do |fn|
-          File.basename(fn, ".rly")
+          File.basename(fn, ".rpl")
         end
       @config.lookup("parts").each do |p, opts|
         @parts << p unless opts["ignore"]
@@ -39,9 +39,9 @@ module Ripple
     
     def process(opts = {})
       parts.each {|p| Part.new(p, self).process}
-      # if parts.size > 1
-      #   Score.new(self).process
-      # end
+      if parts.size > 1
+        Score.new(self).process
+      end
     end
   end
 end

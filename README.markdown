@@ -14,10 +14,10 @@ Ripple expects your files to be organized a certain way for it to function corre
       bach
         BWV1027-1
           _work.yml
-          gamba.rly
-          cembalo.rly
+          gamba.rpl
+          cembalo.rpl
 
-The music is contained in the .rly (Ripple - Lilypond) files. The <code>\_work.yml</code> file is a YAML file that contains the attributes of the work (more about that later):
+The music is contained in .rpl files. The <code>\_work.yml</code> file is a YAML file that contains the attributes of the work (more about that later):
 
     title: Sonata for Viola da Gamba and Harpsichord G-dur BWV1027
     composer: Johann Sebastian Bach
@@ -42,14 +42,14 @@ Ripple also supports multi-movement works. Consider the following file hierarchy
       BWV1029
         _work.yml
         01-allegro
-          gamba.rly
-          cembalo.rly
+          gamba.rpl
+          cembalo.rpl
         02-adagio
-          gamba.rly
-          cembalo.rly
+          gamba.rpl
+          cembalo.rpl
         03-vivace
-          gamba.rly
-          cembalo.rly
+          gamba.rpl
+          cembalo.rpl
 
 Ripple will generate gamba and cembalo parts containing all three movements, as well as a score containing the three movements.
 

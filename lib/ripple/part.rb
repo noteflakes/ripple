@@ -7,7 +7,7 @@ module Ripple
     
     def movement_music_file(mvt, config)
       part = config.lookup("parts/#{@part}/source") || @part
-      File.join(@work.path, mvt, "#{part}.rly")
+      File.join(@work.path, mvt, "#{part}.rpl")
     end
     
     def movement_lyrics_file(mvt, config)

@@ -7,7 +7,7 @@ module Ripple
     
     def movement_music_file(part, mvt, config)
       part = config.lookup("parts/#{part}/source") || part
-      File.join(@work.path, mvt, "#{part}.rly")
+      File.join(@work.path, mvt, "#{part}.rpl")
     end
     
     def movement_lyrics_file(part, mvt, config)
@@ -31,11 +31,11 @@ module Ripple
     def render_movement(mvt)
       c = movement_config(mvt)
       
-      movement_files = Dir[File.join(@work.path, mvt, '*.rly')]
+      movement_files = Dir[File.join(@work.path, mvt, '*.rpl')]
       parts = []
       
       movement_files.each do |fn|
-        p = File.basename(fn, '.rly')
+        p = File.basename(fn, '.rpl')
         parts << p
         
         c.set("parts/#{p}/staff_music", IO.read(fn))
