@@ -15,7 +15,7 @@ class String
     if self =~ /^([^\d]+)(\d+)$/
       "#{$1.capitalize} #{ROMAN[$2.to_i]}"
     else
-      self
+      self.capitalize
     end
   end
   

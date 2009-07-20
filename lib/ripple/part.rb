@@ -1,5 +1,3 @@
-require 'erb'
-
 module Ripple
   class Part
     def initialize(part, work)
@@ -46,7 +44,10 @@ module Ripple
     end
     
     def render
-      music = @work.movements.inject("") {|m, mvt| m << render_movement(mvt)}
+      mvts = @work.movements
+      mvts << "" if mvts.empty?
+      
+      music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
       Templates.render_part(music, @config)
     end
     
@@ -60,9 +61,6 @@ module Ripple
     
     def process
       return if @config.lookup("parts/#{@part}/ignore")
-      
-      mvts = @work.movements
-      mvts << "" if mvts.empty?
       
       # create ly file
       FileUtils.mkdir_p(File.dirname(ly_filename))

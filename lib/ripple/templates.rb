@@ -1,3 +1,5 @@
+require 'erb'
+
 module Ripple
   module Templates
     def self.render_part_music(data)
@@ -6,9 +8,7 @@ module Ripple
   <<
   \\prepare
   \\new Staff {
-    <% if clef = data.lookup("parts/#{data["part"]}/clef") %>
-      \\clef "<%= clef %>"
-    <% end %>
+    <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
     <%= data["staff_music"] %>
   }
   <% if data["staff_lyrics"] %>
@@ -64,6 +64,7 @@ EOF
 \\new Staff {
   \\set Staff.instrumentName = #"<%= data.lookup("parts/#{data["part"]}/title") || 
     data["part"].to_instrument_title %>"
+  <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
   <%= data["staff_music"] %>
 }
 <% if data["staff_lyrics"] %>
@@ -78,11 +79,11 @@ EOF
     end
     
     def self.render_score_movement(parts, data)
-      order = config.lookup("score/order") || parts.sort
+      order = data.lookup("score/order") || parts.sort
       music = order.inject("") do |m, p|
         if parts.include?(p)
-          staff_music = config.lookup("parts/#{p}/staff_music")
-          staff_lyrics = config.lookup("parts/#{p}/staff_lyrics")
+          staff_music = data.lookup("parts/#{p}/staff_music")
+          staff_lyrics = data.lookup("parts/#{p}/staff_lyrics")
           d = data.merge('part' => p, 'staff_music' => staff_music, 
             'staff_lyrics' => staff_lyrics)
           m << render_score_staff(d)

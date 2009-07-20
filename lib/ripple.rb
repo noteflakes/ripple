@@ -14,7 +14,7 @@ require 'yaml'
 require 'ripple/core_ext'
 require 'ripple/work'
 require 'ripple/part'
-# require 'ripple/score'
+require 'ripple/score'
 require 'ripple/templates'
 require 'ripple/lilypond'
 
