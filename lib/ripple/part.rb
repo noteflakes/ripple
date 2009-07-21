@@ -1,5 +1,7 @@
 module Ripple
   class Part
+    include Syntax
+    
     def initialize(part, work)
       @part = part; @work = work
       @config = work.config.merge("part" => part)
@@ -7,7 +9,12 @@ module Ripple
     
     def movement_music_file(mvt, config)
       part = config.lookup("parts/#{@part}/source") || @part
-      File.join(@work.path, mvt, "#{part}.rpl")
+      fn = File.join(@work.path, mvt, "#{part}.rpl")
+      unless File.file?(fn)
+        fn = File.join(@work.path, mvt, "#{part}.ly")
+      else
+        fn
+      end
     end
     
     def movement_lyrics_file(mvt, config)
@@ -33,7 +40,7 @@ module Ripple
       music_fn = movement_music_file(mvt, c)
       lyrics_fn = movement_lyrics_file(mvt, c)
       if File.exists?(music_fn)
-        c["staff_music"] = IO.read(music_fn)
+        c["staff_music"] = load_music(music_fn)
         if lyrics_fn && File.exists?(lyrics_fn)
           c["staff_lyrics"] = IO.read(lyrics_fn)
         end
@@ -45,7 +52,6 @@ module Ripple
     
     def render
       mvts = @work.movements
-      mvts << "" if mvts.empty?
       
       music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
       Templates.render_part(music, @config)

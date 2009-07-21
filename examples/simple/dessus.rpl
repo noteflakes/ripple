@@ -1,0 +1,27 @@
+\relative c' {
+  \time 2/2
+  \clef treble
+  \key g \major
+  
+  b'2 b4 d
+  c2 a
+  b a4 g
+  a b a2
+  b2 b4 d
+  c2 a
+  b a4 g
+  a1
+  
+  \bar ":||:"
+  
+  a2 a4 c
+  b2 a4 g
+  a2 a4 c
+  b2 g
+  a2 a4 c
+  b d c b
+  a g a b
+  g1
+  
+  \bar ":||"
+}

@@ -1,7 +1,7 @@
 module Ripple
   module Lilypond
     def self.delete_ps_file(pdf_file)
-      FileUtils.rm("#{pdf_file}.ps")
+      FileUtils.rm("#{pdf_file}.ps") rescue nil
     end
     
     def self.process(ly_file, pdf_file)

@@ -10,12 +10,17 @@ module Ripple
     
     APPOGGIATURE_RE = /(\s)?\^([a-g])/
     
-    def convert(t)
-      t = t.gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}
-      t = t.gsub(BEAM_SLUR_RE) {"#{$1}#{$4}#{$2}"}
-      t = t.gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}
-      t = t.gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
-      t
+    def convert_rpl(m)
+      m = m.gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}
+      m = m.gsub(BEAM_SLUR_RE) {"#{$1}#{$4}#{$2}"}
+      m = m.gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}
+      m = m.gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
+      m
+    end
+    
+    def load_music(fn)
+      m = IO.read(fn)
+      fn =~ /\.rpl$/ ? convert_rpl(m) : m
     end
   end
 end

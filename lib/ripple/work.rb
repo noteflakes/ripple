@@ -11,7 +11,7 @@ module Ripple
     
     def relative_path
       root = File.expand_path(config["source"])
-      path =~ /^#{root}\/(.+)$/ && $1
+      path =~ /^#{root}\/(.+)$/ ? $1 : "."
     end
     
     def work_config
@@ -19,22 +19,26 @@ module Ripple
     end
     
     def movements
-      @movements ||= Dir[File.join(@path, "**")].
-        reject {|fn| !File.directory?(fn)}.map do |fn|
+      return @movements if @movements
+      @movements = Dir[File.join(@path, "**")].
+        reject {|fn| File.basename(fn) =~ /^_/ || !File.directory?(fn)}.map do |fn|
           fn =~ /^#{@path}\/(.+)$/ && $1
-        end.sort
+        end
+      @movements << "" if @movements.empty?
+      @movements.sort!
     end
     
     def parts
       return @parts if @parts
-      @parts = Dir[File.join(@path, "**/*.rpl")].
+      @parts = Dir[File.join(@path, "**/*.rpl"), File.join(@path, "**/*.ly")].
         reject {|fn| !File.file?(fn) || File.basename(fn) =~ /^_/}.map do |fn|
-          File.basename(fn, ".rpl")
+          File.basename(fn, ".*")
         end
-      @config.lookup("parts").each do |p, opts|
+      (@config.lookup("parts") || {}).each do |p, opts|
         @parts << p unless opts["ignore"]
       end
-      @parts.uniq!.sort!
+      @parts.uniq!
+      @parts.sort!
     end
     
     def process(opts = {})

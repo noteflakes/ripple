@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
     "lib/ripple/lilypond.rb",
     "lib/ripple/part.rb",
     "lib/ripple/score.rb",
+    "lib/ripple/syntax.rb",
     "lib/ripple/templates.rb",
     "lib/ripple/work.rb"
   ]

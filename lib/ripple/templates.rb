@@ -6,7 +6,7 @@ module Ripple
       t = ERB.new <<-EOF
 \\score {
   <<
-  \\prepare
+  <%= data["part_macro"] %>
   \\new Staff {
     <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
     <%= data["staff_music"] %>

@@ -12,17 +12,17 @@ require 'yaml'
 
 # internal requires
 require 'ripple/core_ext'
+require 'ripple/syntax'
 require 'ripple/work'
 require 'ripple/part'
 require 'ripple/score'
 require 'ripple/templates'
 require 'ripple/lilypond'
-require 'ripple/syntax'
 
 module Ripple
   # Default options. Overriden by values in _config.yml or command-line opts.
   # Strings are used instead of symbols for YAML compatibility.
-  CONFIG_FILE = '_config.yml'
+  CONFIG_FILE = '_ripple.yml'
   AUTO = 'auto'
   SOURCE = 'source'
   LY_DIR = 'ly_dir'
@@ -41,6 +41,7 @@ module Ripple
     if File.exists?(config_file_path)
       config.merge!(YAML.load_file(config_file_path))
     end
+    
     find_include_files(config)
     config
   end

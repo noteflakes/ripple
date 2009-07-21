@@ -1,5 +1,7 @@
 module Ripple
   class Score
+    include Syntax
+    
     def initialize(work)
       @work = work
       @config = work.config
@@ -7,7 +9,12 @@ module Ripple
     
     def movement_music_file(part, mvt, config)
       part = config.lookup("parts/#{part}/source") || part
-      File.join(@work.path, mvt, "#{part}.rpl")
+      fn = File.join(@work.path, mvt, "#{part}.rpl")
+      unless File.file?(fn)
+        fn = File.join(@work.path, mvt, "#{part}.ly")
+      else
+        fn
+      end
     end
     
     def movement_lyrics_file(part, mvt, config)
@@ -38,7 +45,7 @@ module Ripple
         p = File.basename(fn, '.rpl')
         parts << p
         
-        c.set("parts/#{p}/staff_music", IO.read(fn))
+        c.set("parts/#{p}/staff_music", load_music(fn))
         lyrics_fn = File.join(File.dirname(fn), "#{p}.lyrics")
         if File.exists?(lyrics_fn)
           c.set("parts/#{p}/staff_lyrics", IO.read(lyrics_fn))
@@ -66,7 +73,6 @@ module Ripple
     
     def process
       mvts = @work.movements
-      mvts << "" if mvts.empty?
       
       # create ly file
       FileUtils.mkdir_p(File.dirname(ly_filename))
