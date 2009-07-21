@@ -35,7 +35,7 @@ module Ripple
       c = movement_config(mvt)
       music_fn = movement_music_file(mvt, c)
       lyrics = movement_lyrics_files(mvt, c)
-      if File.exists?(music_fn)
+      if music_fn && File.exists?(music_fn)
         c["staff_music"] = load_music(music_fn)
         c["staff_lyrics"] = lyrics.map {|fn| IO.read(fn)}
         Templates.render_part_music(c)

@@ -39,6 +39,16 @@ context "Syntax converter" do
       'a b c d['
   end
   
+  specify "should not convert postfixed [" do
+    convert_rpl('a[ b]').should ==
+      'a[ b]'
+  end
+  
+  specify "should not convert postfixed (" do
+    convert_rpl('a( b)').should ==
+      'a( b)'
+  end
+  
   specify "should convert 3,6 values to 32, 16 values" do
     convert_rpl('a3 b6 b,,3 e6(').should ==
       'a32 b16 b,,32 e16('
@@ -54,4 +64,10 @@ context "Syntax converter" do
     convert_rpl('[c8 ^e6 d8]').should ==
       'c8[ \\appoggiatura e16 d8]'
   end
+  
+  specify "case 01" do
+    convert_rpl('b8 (e6 d)').should ==
+      'b8 e16( d)'
+  end
 end
+
