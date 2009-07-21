@@ -28,7 +28,7 @@ module Ripple
       @movements.sort!
     end
     
-    def parts
+    def all_parts
       return @parts if @parts
       @parts = Dir[File.join(@path, "**/*.rpl"), File.join(@path, "**/*.ly")].
         reject {|fn| !File.file?(fn) || File.basename(fn) =~ /^_/}.map do |fn|
@@ -41,10 +41,15 @@ module Ripple
       @parts.sort!
     end
     
-    def process(opts = {})
-      parts.each {|p| Part.new(p, self).process}
+    def process
+      if pp = @config["selected_parts"]
+        parts = pp.split(',')
+      else
+        parts = all_parts
+      end
+      parts.each {|p| Part.new(p, self).process} unless @config["score_only"]
       if parts.size > 1
-        Score.new(self).process
+        Score.new(self).process unless @config["parts_only"]
       end
     end
   end

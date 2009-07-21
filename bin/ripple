@@ -7,7 +7,7 @@ Ripple is a lilypond helper.
 
 Basic Command Line Usage:
   ripple                                                    # . -> .
-  ripple <path to source>                                   # . -> <path>
+  ripple <path to work  >                                   # . -> <path>
 
   Configuration is read from '<source>/<work>/_work.yml' but can be overriden
   using the following options:
@@ -22,6 +22,22 @@ options = {}
 opts = OptionParser.new do |opts|
   opts.banner = help
 
+  opts.on("-p", "--part PART", "Part") do |v|
+    options["selected_parts"] = v
+  end
+  
+  opts.on("-m", "--mvt MVT", "Movement") do |v|
+    options["selected_movements"] = v
+  end
+  
+  opts.on("--ly-only", "Generate Lilypond file only") do
+    options["ly_only"] = true
+  end
+  
+  opts.on("--score-only", "Generate score, no parts") do
+    options["score_only"] = true
+  end
+
   opts.on("--version", "Display current version") do
     puts "Ripple " + Ripple.version
     exit 0
@@ -33,9 +49,9 @@ opts.parse!
 # Get source and destintation from command line
 case ARGV.size
   when 0
-    options['source'] = '.'
+    work = nil
   when 1
-    options['source']      = ARGV[0]
+    work = ARGV[0]
   else
     puts "Invalid options. Run `ripple --help` for assistance."
     exit(1)
@@ -43,7 +59,9 @@ end
 
 config = Ripple.configuration(options)
 works = Ripple.works(config)
-if works.empty?
+if work
+  Ripple::Work.new(work, config).process
+elsif works.empty?
   puts "No music found."
 else
   works.each {|w| w.process}

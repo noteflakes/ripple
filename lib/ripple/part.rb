@@ -9,22 +9,18 @@ module Ripple
     
     def movement_music_file(mvt, config)
       part = config.lookup("parts/#{@part}/source") || @part
-      fn = File.join(@work.path, mvt, "#{part}.rpl")
-      unless File.file?(fn)
-        fn = File.join(@work.path, mvt, "#{part}.ly")
-      else
-        fn
-      end
+      fn = Dir[File.join(@work.path, mvt, "#{part}.rpl"), 
+        File.join(@work.path, mvt, "#{part}.ly")].first
     end
     
-    def movement_lyrics_file(mvt, config)
+    def movement_lyrics_files(mvt, config)
       case lyrics = config.lookup("parts/#{@part}/lyrics")
       when nil
-        File.join(@work.path, mvt, "#{@part}.lyrics")
+        Dir[File.join(@work.path, mvt, "#{@part}.lyrics*")].sort
       when 'none'
-        nil
+        []
       else
-        File.join(@work.path, mvt, lyrics)
+        Dir[File.join(@work.path, mvt, lyrics)].sort
       end
     end
     
@@ -38,12 +34,10 @@ module Ripple
     def render_movement(mvt)
       c = movement_config(mvt)
       music_fn = movement_music_file(mvt, c)
-      lyrics_fn = movement_lyrics_file(mvt, c)
+      lyrics = movement_lyrics_files(mvt, c)
       if File.exists?(music_fn)
         c["staff_music"] = load_music(music_fn)
-        if lyrics_fn && File.exists?(lyrics_fn)
-          c["staff_lyrics"] = IO.read(lyrics_fn)
-        end
+        c["staff_lyrics"] = lyrics.map {|fn| IO.read(fn)}
         Templates.render_part_music(c)
       else
         Templates.render_part_tacet(c)
@@ -51,7 +45,11 @@ module Ripple
     end
     
     def render
-      mvts = @work.movements
+      if m = @config["selected_movements"]
+        mvts = m.split(',')
+      else
+        mvts = @work.movements
+      end
       
       music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
       Templates.render_part(music, @config)
@@ -72,6 +70,7 @@ module Ripple
       FileUtils.mkdir_p(File.dirname(ly_filename))
       File.open(ly_filename, 'w') {|f| f << render}
       
+      return if @config["ly_only"]
       FileUtils.mkdir_p(File.dirname(pdf_filename))
       Ripple::Lilypond.process(ly_filename, pdf_filename)
     end

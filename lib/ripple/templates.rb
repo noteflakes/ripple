@@ -12,11 +12,13 @@ module Ripple
     <%= data["staff_music"] %>
   }
   <% if data["staff_lyrics"] %>
-    \\addlyrics {
-      \\lyricmode {
-        <%= data["staff_lyrics"] %>
+    <% data["staff_lyrics"].each do |lyr| %>
+      \\addlyrics {
+        \\lyricmode {
+          <%= lyr %>
+        }
       }
-    }
+    <% end %>
   <% end %>
   >>
   \\header { piece = "<%= data["movement"].to_movement_title %>" }
@@ -68,11 +70,13 @@ EOF
   <%= data["staff_music"] %>
 }
 <% if data["staff_lyrics"] %>
-  \\addlyrics {
-    \\lyricmode {
-      <%= data["staff_lyrics"] %>
+  <% data["staff_lyrics"].each do |lyr| %>
+    \\addlyrics {
+      \\lyricmode {
+        <%= lyr %>
+      }
     }
-  }
+  <% end %>
 <% end %>
 EOF
       t.result(binding)

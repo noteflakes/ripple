@@ -38,25 +38,28 @@ module Ripple
     def render_movement(mvt)
       c = movement_config(mvt)
       
-      movement_files = Dir[File.join(@work.path, mvt, '*.rpl')]
+      movement_files = Dir[File.join(@work.path, mvt, '*.rpl'), File.join(@work.path, mvt, '*.ly')]
       parts = []
       
       movement_files.each do |fn|
-        p = File.basename(fn, '.rpl')
+        p = File.basename(fn, '.*')
         parts << p
         
         c.set("parts/#{p}/staff_music", load_music(fn))
-        lyrics_fn = File.join(File.dirname(fn), "#{p}.lyrics")
-        if File.exists?(lyrics_fn)
-          c.set("parts/#{p}/staff_lyrics", IO.read(lyrics_fn))
-        end
+        
+        lyrics = Dir[File.join(File.dirname(fn), "#{p}.lyrics*")].sort
+        c.set("parts/#{p}/staff_lyrics", lyrics.map {|fn| IO.read(fn)})
       end
       
       Templates.render_score_movement(parts, c)
     end
     
     def render
-      mvts = @work.movements
+      if m = @config["selected_movements"]
+        mvts = m.split(',')
+      else
+        mvts = @work.movements
+      end
       mvts << "" if mvts.empty?
       
       music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
@@ -78,6 +81,7 @@ module Ripple
       FileUtils.mkdir_p(File.dirname(ly_filename))
       File.open(ly_filename, 'w') {|f| f << render}
       
+      return if @config["ly_only"]
       FileUtils.mkdir_p(File.dirname(pdf_filename))
       Ripple::Lilypond.process(ly_filename, pdf_filename)
     end
