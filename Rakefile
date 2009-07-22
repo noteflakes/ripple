@@ -7,10 +7,10 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = "ripple"
-    s.summary = %Q{Ripple is a lilypond helper.}
+    s.summary = %Q{Ripple is a lilypond generator.}
     s.email = "ciconia@gmail.com"
     s.homepage = "http://github.com/ciconia/ripple"
-    s.description = "Ripple is a lilypond helper."
+    s.description = "Ripple is a lilypond generator."
     s.authors = ["Sharon Rosner"]
     s.rubyforge_project = "ripple"
     # s.add_dependency('directory_watcher', '>= 1.1.1')
