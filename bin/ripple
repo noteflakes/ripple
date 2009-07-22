@@ -3,7 +3,7 @@
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 help = <<HELP
-Ripple is a lilypond helper.
+Ripple is a lilypond generator.
 
 Basic Command Line Usage:
   ripple                                                    # . -> .
@@ -22,19 +22,19 @@ options = {}
 opts = OptionParser.new do |opts|
   opts.banner = help
 
-  opts.on("-p", "--part PART", "Part") do |v|
+  opts.on("-p", "--parts PART", "Parts (comma-separated)") do |v|
     options["selected_parts"] = v
   end
   
-  opts.on("-m", "--mvt MVT", "Movement") do |v|
+  opts.on("-m", "--mvts MVT", "Movements (comma-separated)") do |v|
     options["selected_movements"] = v
   end
   
-  opts.on("--ly-only", "Generate Lilypond file only") do
-    options["ly_only"] = true
+  opts.on("--no-pdf", "Generate Lilypond file only") do
+    options["no_pdf"] = true
   end
   
-  opts.on("--score-only", "Generate score, no parts") do
+  opts.on("--score", "Generate only score, no parts") do
     options["score_only"] = true
   end
 

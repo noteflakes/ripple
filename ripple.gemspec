@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ripple}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sharon Rosner"]
   s.date = %q{2009-07-16}
   s.default_executable = %q{ripple}
-  s.description = %q{Ripple is a lilypond helper.}
+  s.description = %q{Ripple is a lilypond generator.}
   s.email = %q{ciconia@gmail.com}
   s.executables = ["ripple"]
   s.extra_rdoc_files = [
@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{ripple}
   s.rubygems_version = %q{1.3.3}
-  s.summary = %q{Ripple is a lilypond helper.}
+  s.summary = %q{Ripple is a lilypond generator.}
   s.test_files = [
   ]
 

@@ -70,7 +70,7 @@ module Ripple
       FileUtils.mkdir_p(File.dirname(ly_filename))
       File.open(ly_filename, 'w') {|f| f << render}
       
-      return if @config["ly_only"]
+      return if @config["no_pdf"]
       FileUtils.mkdir_p(File.dirname(pdf_filename))
       Ripple::Lilypond.process(ly_filename, pdf_filename)
     end
