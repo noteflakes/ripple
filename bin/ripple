@@ -37,6 +37,10 @@ opts = OptionParser.new do |opts|
   opts.on("--score", "Generate only score, no parts") do
     options["score_only"] = true
   end
+  
+  opts.on("--open", "Open PDF file after processing") do
+    options["open_pdf"] = true
+  end
 
   opts.on("--version", "Display current version") do
     puts "Ripple " + Ripple.version

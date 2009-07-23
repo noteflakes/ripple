@@ -72,7 +72,7 @@ module Ripple
       
       return if @config["no_pdf"]
       FileUtils.mkdir_p(File.dirname(pdf_filename))
-      Ripple::Lilypond.process(ly_filename, pdf_filename)
+      Ripple::Lilypond.process(ly_filename, pdf_filename, @config)
     end
   end
 end
