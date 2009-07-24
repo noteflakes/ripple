@@ -20,11 +20,13 @@ module Ripple
     def movement_lyrics_file(part, mvt, config)
       case lyrics = config.lookup("parts/#{part}/lyrics")
       when nil
-        File.join(@work.path, mvt, "#{part}.lyrics")
+        Dir[File.join(@work.path, mvt, "#{part}.lyrics*")].sort
       when 'none'
-        nil
+        []
+      when Array
+        lyrics.inject([]) {|m, i| m+= Dir[File.join(@work.path, mvt, i)].sort}
       else
-        File.join(@work.path, mvt, lyrics)
+        Dir[File.join(@work.path, mvt, lyrics)].sort
       end
     end
     
@@ -48,7 +50,7 @@ module Ripple
         
         c.set("parts/#{p}/staff_music", load_music(fn))
         
-        lyrics = Dir[File.join(File.dirname(fn), "#{p}.lyrics*")].sort
+        lyrics = movement_lyrics_file(p)
         c.set("parts/#{p}/staff_lyrics", lyrics.map {|fn| IO.read(fn)})
       end
       
