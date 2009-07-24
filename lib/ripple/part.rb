@@ -35,8 +35,39 @@ module Ripple
       mvt_config
     end
     
+    def render_part(parts, config, mvt)
+      parts = [parts] unless parts.is_a?(Array)
+      output = ''
+      parts.each do |p|
+        music_fn = Dir[File.join(@work.path, mvt, "#{p}.ly"),
+          File.join(@work.path, mvt, "#{p}.rpl")].first
+        output += Templates.render_staff(load_music(music_fn), config)
+        if lyrics = Dir[File.join(@work.path, mvt, "#{p}.lyrics*")]
+          lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), config)}
+        end
+      end
+      output
+    end
+    
     def render_movement(mvt)
       c = movement_config(mvt)
+      
+      before_parts = c.lookup("parts/#{@part}/before_include")
+      after_parts = c.lookup("parts/#{@part}/after_include")
+      part_source = c.lookup("parts/#{@part}/source") || @part
+      
+      if before_parts || after_parts
+        content = ''
+        if before_parts
+          content = render_part(before_parts, c, mvt)
+        end
+        content += render_part(part_source, c, mvt)
+        if after_parts
+          content = render_part(after_parts, c, mvt)
+        end
+        return Templates.render_staff_group(content, c)
+      end
+      
       music_fn = movement_music_file(mvt, c)
       lyrics = movement_lyrics_files(mvt, c)
       if music_fn && File.exists?(music_fn)

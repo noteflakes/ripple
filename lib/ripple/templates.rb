@@ -141,6 +141,42 @@ EOF
       t.result(binding)
     end
 
+##########################################################################################
+
+    def self.render_staff_group(content, data)
+      t = ERB.new <<-EOF
+\\score {
+  \\new StaffGroup <<
+  <%= data["part_macro"] %>
+<%= content %>
+  >>
+  \\header { piece = "<%= data["movement"].to_movement_title %>" }
+}
+
+EOF
+      t.result(binding)      
+    end
+
+    def self.render_staff(content, data)
+      t = ERB.new <<-EOF
+\\new Staff {
+  <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
+  <%= content %>
+  <%= end_bar(data) %>
+}
+EOF
+      t.result(binding)
+    end
     
+    def self.render_lyrics(content, data)
+      t = ERB.new <<-EOF
+\\addlyrics {
+  \\lyricmode {
+    <%= content %>
+  }
+}
+EOF
+      t.result(binding)
+    end
   end
 end
