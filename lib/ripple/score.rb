@@ -50,7 +50,7 @@ module Ripple
         
         c.set("parts/#{p}/staff_music", load_music(fn))
         
-        lyrics = movement_lyrics_file(p)
+        lyrics = movement_lyrics_file(p, mvt, c)
         c.set("parts/#{p}/staff_lyrics", lyrics.map {|fn| IO.read(fn)})
       end
       
