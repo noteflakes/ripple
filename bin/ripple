@@ -38,6 +38,10 @@ opts = OptionParser.new do |opts|
     options["score_only"] = true
   end
   
+  opts.on("--no-score", "Generate only parts, no score") do
+    options["no_score"] = true
+  end
+  
   opts.on("--open", "Open PDF file after processing") do
     options["open_pdf"] = true
   end

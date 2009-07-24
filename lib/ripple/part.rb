@@ -63,7 +63,7 @@ module Ripple
         end
         content += render_part(part_source, c, mvt)
         if after_parts
-          content = render_part(after_parts, c, mvt)
+          content += render_part(after_parts, c, mvt)
         end
         return Templates.render_staff_group(content, c)
       end

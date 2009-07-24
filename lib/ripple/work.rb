@@ -48,7 +48,7 @@ module Ripple
         parts = all_parts
       end
       parts.each {|p| Part.new(p, self).process} unless @config["score_only"]
-      if parts.size > 1
+      if (parts.size > 1) && !config["no_score"]
         Score.new(self).process unless @config["parts_only"]
       end
     end
