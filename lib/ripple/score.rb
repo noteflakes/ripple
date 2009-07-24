@@ -43,6 +43,7 @@ module Ripple
       
       movement_files.each do |fn|
         p = File.basename(fn, '.*')
+        next if c["parts/#{p}/no_score"]
         parts << p
         
         c.set("parts/#{p}/staff_music", load_music(fn))
