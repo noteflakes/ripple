@@ -19,8 +19,12 @@ module Ripple
         Dir[File.join(@work.path, mvt, "#{@part}.lyrics*")].sort
       when 'none'
         []
-      else
+      when Array
+        lyrics.inject([]) {|m, i| m+= Dir[File.join(@work.path, mvt, i)].sort}
+      when String
         Dir[File.join(@work.path, mvt, lyrics)].sort
+      else
+        []
       end
     end
     
