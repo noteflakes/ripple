@@ -2,6 +2,16 @@ require 'erb'
 
 module Ripple
   module Templates
+    DEFAULT_ENDING_BAR = "|."
+    def self.end_bar(data)
+      case data["end_bar"]
+      when nil: "\\bar \"#{DEFAULT_ENDING_BAR}\""
+      when 'none': ''
+      else
+        "\\bar \"#{data["end_bar"]}\""
+      end
+    end
+    
     def self.render_part_music(data)
       t = ERB.new <<-EOF
 \\score {
@@ -10,6 +20,7 @@ module Ripple
   \\new Staff {
     <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
     <%= data["staff_music"] %>
+    <%= end_bar(data) %>
   }
   <% if data["staff_lyrics"] %>
     <% data["staff_lyrics"].each do |lyr| %>
@@ -68,6 +79,7 @@ EOF
     data["part"].to_instrument_title %>"
   <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
   <%= data["staff_music"] %>
+  <%= end_bar(data) %>
 }
 <% if data["staff_lyrics"] %>
   <% data["staff_lyrics"].each do |lyr| %>
