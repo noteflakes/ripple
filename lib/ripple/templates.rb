@@ -160,6 +160,7 @@ EOF
     def self.render_staff(content, data)
       t = ERB.new <<-EOF
 \\new Staff {
+  <% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
   <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
   <%= content %>
   <%= end_bar(data) %>
@@ -174,6 +175,15 @@ EOF
   \\lyricmode {
     <%= content %>
   }
+}
+EOF
+      t.result(binding)
+    end
+
+    def self.render_figures(content, data)
+      t = ERB.new <<-EOF
+\\figures {
+<%= content %>
 }
 EOF
       t.result(binding)
