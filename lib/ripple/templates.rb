@@ -4,28 +4,35 @@ module Ripple
   module Templates
     DEFAULT_ENDING_BAR = "|."
     
+    TREBLE = 'treble'
+    TREBLE_8 = 'treble_8'
+    ALTO = 'alto'
+    BASS = 'bass'
+    
     DEFAULT_CLEF = {
-      'soprano' => 'treble',
-      'alto' => 'treble',
-      'tenore' => 'treble_8',
-      'tenor' => 'treble_8',
-      'basso' => 'bass',
-      'bass' => 'bass',
-      'violin' => 'treble',
-      'violino' => 'treble',
-      'violin1' => 'treble',
-      'violin2' => 'treble',
-      'violino1' => 'treble',
-      'violino2' => 'treble',
-      'viola' => 'alto',
-      'fagott' => 'bass',
-      'fagotto' => 'bass',
-      'violoncello' => 'bass',
-      'cello' => 'bass',
-      'continuo' => 'bass',
-      'oboe' => 'treble',
-      'oboe1' => 'treble',
-      'oboe2' => 'treble'
+      'soprano' => TREBLE,
+      'alto' => TREBLE,
+      'tenore' => TREBLE_8,
+      'tenor' => TREBLE_8,
+      'basso' => BASS,
+      'bass' => BASS,
+      'violin' => TREBLE,
+      'violino' => TREBLE,
+      'violin1' => TREBLE,
+      'violin2' => TREBLE,
+      'violino1' => TREBLE,
+      'violino2' => TREBLE,
+      'violini' => TREBLE,
+      'viola' => ALTO,
+      'fagott' => BASS,
+      'fagotto' => BASS,
+      'violoncello' => BASS,
+      'cello' => BASS,
+      'continuo' => BASS,
+      'organo' => BASS,
+      'oboe' => TREBLE,
+      'oboe1' => TREBLE,
+      'oboe2' => TREBLE
     }
     
     def self.part_clef(data)
