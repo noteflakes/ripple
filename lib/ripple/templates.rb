@@ -3,6 +3,36 @@ require 'erb'
 module Ripple
   module Templates
     DEFAULT_ENDING_BAR = "|."
+    
+    DEFAULT_CLEF = {
+      'soprano' => 'treble',
+      'alto' => 'treble',
+      'tenore' => 'treble_8',
+      'tenor' => 'treble_8',
+      'basso' => 'bass',
+      'bass' => 'bass',
+      'violin' => 'treble',
+      'violino' => 'treble',
+      'violin1' => 'treble',
+      'violin2' => 'treble',
+      'violino1' => 'treble',
+      'violino2' => 'treble',
+      'viola' => 'alto',
+      'fagott' => 'bass',
+      'fagotto' => 'bass',
+      'violoncello' => 'bass',
+      'cello' => 'bass',
+      'continuo' => 'bass',
+      'oboe' => 'treble',
+      'oboe1' => 'treble',
+      'oboe2' => 'treble'
+    }
+    
+    def self.part_clef(data)
+      part = data["part"]
+      data.lookup("parts/#{part}/clef") || DEFAULT_CLEF[part]
+    end
+    
     def self.end_bar(data)
       case data["end_bar"]
       when nil: "\\bar \"#{DEFAULT_ENDING_BAR}\""
@@ -12,32 +42,52 @@ module Ripple
       end
     end
     
-    def self.render_part_music(data)
+    def self.render_staff_group(content, data)
       t = ERB.new <<-EOF
 \\score {
-  <<
+  \\new StaffGroup <<
   <%= data["part_macro"] %>
-  \\new Staff {
-    <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
-    <%= data["staff_music"] %>
-    <%= end_bar(data) %>
-  }
-  <% if data["staff_lyrics"] %>
-    <% data["staff_lyrics"].each do |lyr| %>
-      \\addlyrics {
-        \\lyricmode {
-          <%= lyr %>
-        }
-      }
-    <% end %>
-  <% end %>
+<%= content %>
   >>
   \\header { piece = "<%= data["movement"].to_movement_title %>" }
+}
+
+EOF
+      t.result(binding)      
+    end
+
+    def self.render_staff(content, data)
+      t = ERB.new <<-EOF
+\\new Staff {
+  <% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
+  <% if clef = part_clef(data) %>\\clef "<%= clef %>"<% end %>
+  <%= content %>
+  <%= end_bar(data) %>
 }
 EOF
       t.result(binding)
     end
-    
+
+    def self.render_lyrics(content, data)
+      t = ERB.new <<-EOF
+\\addlyrics {
+  \\lyricmode {
+    <%= content %>
+  }
+}
+EOF
+      t.result(binding)
+    end
+
+    def self.render_figures(content, data)
+      t = ERB.new <<-EOF
+\\figures {
+<%= content %>
+}
+EOF
+      t.result(binding)
+    end
+
     def self.render_part_tacet(data)
       t = ERB.new <<-EOF
 \\markup {
@@ -72,52 +122,6 @@ EOF
       t.result(binding)
     end
     
-    def self.render_score_staff(data)
-      t = ERB.new <<-EOF
-\\new Staff {
-  \\set Staff.instrumentName = #"<%= data.lookup("parts/#{data["part"]}/title") || 
-    data["part"].to_instrument_title %>"
-  <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
-  <%= data["staff_music"] %>
-  <%= end_bar(data) %>
-}
-<% if data["staff_lyrics"] %>
-  <% data["staff_lyrics"].each do |lyr| %>
-    \\addlyrics {
-      \\lyricmode {
-        <%= lyr %>
-      }
-    }
-  <% end %>
-<% end %>
-EOF
-      t.result(binding)
-    end
-    
-    def self.render_score_movement(parts, data)
-      order = data.lookup("score/order") || parts.sort
-      music = order.inject("") do |m, p|
-        if parts.include?(p)
-          staff_music = data.lookup("parts/#{p}/staff_music")
-          staff_lyrics = data.lookup("parts/#{p}/staff_lyrics")
-          d = data.merge('part' => p, 'staff_music' => staff_music, 
-            'staff_lyrics' => staff_lyrics)
-          m << render_score_staff(d)
-        end
-        m
-      end
-      t = ERB.new <<-EOF
-\\score {
-  \\new StaffGroup <<
-<%= music %>
-  >>
-  \\header { piece = "<%= data["movement"].to_movement_title %>" }
-}
-
-EOF
-      t.result(binding)
-    end
-    
     def self.render_score(content, config)
       # include files
       include = config["include"] || []
@@ -137,54 +141,6 @@ EOF
 
 \\version "2.12.2"
 
-EOF
-      t.result(binding)
-    end
-
-##########################################################################################
-
-    def self.render_staff_group(content, data)
-      t = ERB.new <<-EOF
-\\score {
-  \\new StaffGroup <<
-  <%= data["part_macro"] %>
-<%= content %>
-  >>
-  \\header { piece = "<%= data["movement"].to_movement_title %>" }
-}
-
-EOF
-      t.result(binding)      
-    end
-
-    def self.render_staff(content, data)
-      t = ERB.new <<-EOF
-\\new Staff {
-  <% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
-  <% if clef = data.lookup("parts/#{data["part"]}/clef") %>\\clef "<%= clef %>"<% end %>
-  <%= content %>
-  <%= end_bar(data) %>
-}
-EOF
-      t.result(binding)
-    end
-    
-    def self.render_lyrics(content, data)
-      t = ERB.new <<-EOF
-\\addlyrics {
-  \\lyricmode {
-    <%= content %>
-  }
-}
-EOF
-      t.result(binding)
-    end
-
-    def self.render_figures(content, data)
-      t = ERB.new <<-EOF
-\\figures {
-<%= content %>
-}
 EOF
       t.result(binding)
     end
