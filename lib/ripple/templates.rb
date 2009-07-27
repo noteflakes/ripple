@@ -40,6 +40,10 @@ module Ripple
       data.lookup("parts/#{part}/clef") || DEFAULT_CLEF[part]
     end
     
+    def self.show_ambitus(data)
+      data["ambitus"] || data.lookup("parts/#{data["part"]}/ambitus")
+    end
+    
     def self.end_bar(data)
       case data["end_bar"]
       when nil: "\\bar \"#{DEFAULT_ENDING_BAR}\""
@@ -65,7 +69,13 @@ EOF
 
     def self.render_staff(content, data)
       t = ERB.new <<-EOF
+<% if show_ambitus(data) %>
+\\new Staff \\with {
+  \\consists "Ambitus_engraver"
+} {
+<% else %>
 \\new Staff {
+<% end %>
   <% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
   <% if clef = part_clef(data) %>\\clef "<%= clef %>"<% end %>
   <%= content %>
