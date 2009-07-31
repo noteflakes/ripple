@@ -24,6 +24,7 @@ opts = OptionParser.new do |opts|
 
   opts.on("-p", "--parts PART", "Parts (comma-separated)") do |v|
     options["selected_parts"] = v
+    options["no_score"] = true
   end
   
   opts.on("-m", "--mvts MVT", "Movements (comma-separated)") do |v|

@@ -42,12 +42,13 @@ module Ripple
     end
     
     def process
-      if pp = @config["selected_parts"]
-        parts = pp.split(',')
+      if selected_parts = @config["selected_parts"]
+        parts = selected_parts.split(',')
       else
         parts = all_parts
       end
       parts.each {|p| Part.new(p, self).process} unless @config["score_only"]
+
       if (parts.size > 1) && !config["no_score"]
         Score.new(self).process unless @config["parts_only"]
       end
