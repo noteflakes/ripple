@@ -37,7 +37,12 @@ module Ripple
     
     def self.part_clef(data)
       part = data["part"]
-      data.lookup("parts/#{part}/clef") || DEFAULT_CLEF[part]
+      case c = data.lookup("parts/#{part}/clef")
+      when 'none': nil
+      when nil: DEFAULT_CLEF[part]
+      else
+        c
+      end
     end
     
     def self.show_ambitus(data)
