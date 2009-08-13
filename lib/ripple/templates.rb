@@ -65,7 +65,7 @@ module Ripple
   <%= data["part_macro"] %>
 <%= content %>
   >>
-  \\header { piece = "<%= data["movement"].to_movement_title %>" }
+  \\header { piece = \\markup \\bold \\large "<%= data["movement"].to_movement_title %>" }
 }
 
 EOF
@@ -112,8 +112,8 @@ EOF
 
     def self.render_part_tacet(data)
       t = ERB.new <<-EOF
-\\markup {
-  <%= data["movement"].to_movement_title %> - tacet
+\\markup { \\bold \\large
+  "<%= data["movement"].to_movement_title %> - tacet"
 }
 EOF
       t.result(binding)
