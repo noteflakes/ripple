@@ -4,49 +4,21 @@ module Ripple
   module Templates
     DEFAULT_ENDING_BAR = "|."
     
-    TREBLE = 'treble'
-    TREBLE_8 = 'treble_8'
-    ALTO = 'alto'
-    BASS = 'bass'
-    
-    DEFAULT_CLEF = {
-      'soprano' => TREBLE,
-      'alto' => TREBLE,
-      'tenore' => TREBLE_8,
-      'tenor' => TREBLE_8,
-      'basso' => BASS,
-      'bass' => BASS,
-      'violin' => TREBLE,
-      'violino' => TREBLE,
-      'violin1' => TREBLE,
-      'violin2' => TREBLE,
-      'violino1' => TREBLE,
-      'violino2' => TREBLE,
-      'violini' => TREBLE,
-      'viola' => ALTO,
-      'fagott' => BASS,
-      'fagotto' => BASS,
-      'violoncello' => BASS,
-      'cello' => BASS,
-      'continuo' => BASS,
-      'organo' => BASS,
-      'oboe' => TREBLE,
-      'oboe1' => TREBLE,
-      'oboe2' => TREBLE
-    }
-    
     def self.part_clef(data)
       part = data["part"]
       case c = data.lookup("parts/#{part}/clef")
       when 'none': nil
-      when nil: DEFAULT_CLEF[part]
       else
         c
       end
     end
     
     def self.show_ambitus(data)
-      data["ambitus"] || data.lookup("parts/#{data["part"]}/ambitus")
+      data["show_ambitus"] || data.lookup("parts/#{data["part"]}/show_ambitus")
+    end
+    
+    def self.auto_beam_off(data)
+      data.lookup("parts/#{data["part"]}/auto_beam") == false
     end
     
     def self.end_bar(data)
@@ -83,6 +55,7 @@ EOF
 <% end %>
   <% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
   <% if clef = part_clef(data) %>\\clef "<%= clef %>"<% end %>
+  <% if auto_beam_off(data) %>\\autoBeamOff<% end %>
   <%= content %>
   <%= end_bar(data) %>
 }

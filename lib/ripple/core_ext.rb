@@ -47,7 +47,7 @@ class Hash
   end
 
   def lookup(path)
-    path.split("/").inject(self) {|m,i| m[i] || (return nil)}
+    path.split("/").inject(self) {|m,i| m[i].nil? ? (return nil) : m[i]}
   end
   
   def set(path, value)

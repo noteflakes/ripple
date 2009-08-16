@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+trap("INT") {exit}
+trap("TERM") {exit}
+
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 help = <<HELP

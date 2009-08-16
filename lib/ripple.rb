@@ -23,23 +23,14 @@ module Ripple
   # Default options. Overriden by values in _config.yml or command-line opts.
   # Strings are used instead of symbols for YAML compatibility.
   CONFIG_FILE = '_ripple.yml'
-  AUTO = 'auto'
-  SOURCE = 'source'
-  LY_DIR = 'ly_dir'
-  PDF_DIR = 'pdf_dir'
   
-  DEFAULTS = {
-    AUTO      => false,
-    SOURCE    => '.',
-    LY_DIR    => File.join('.', '_ly'),
-    PDF_DIR   => File.join('.', '_pdf')
-  }
+  DEFAULTS = YAML.load(IO.read(File.join(File.dirname(__FILE__), 'defaults.yml')))
   
   def self.configuration(opts = {})
-    config = DEFAULTS.merge(opts)
-    config_file_path = File.join(config[SOURCE], CONFIG_FILE)
+    config = DEFAULTS.deep_merge(opts)
+    config_file_path = File.join(config['source'], CONFIG_FILE)
     if File.exists?(config_file_path)
-      config.merge!(YAML.load_file(config_file_path))
+      config.deep_merge!(YAML.load_file(config_file_path))
     end
     
     find_include_files(config)
@@ -75,7 +66,7 @@ module Ripple
   end
   
   def self.works(config)
-    paths = Dir[File.join(config[SOURCE], "**/_work.yml")].
+    paths = Dir[File.join(config['source'], "**/_work.yml")].
       map {|fn| Work.new(File.dirname(fn), config)}
   end
   
