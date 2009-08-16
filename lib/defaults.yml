@@ -1,0 +1,65 @@
+auto: false
+source: .
+ly_dir: ./_ly
+pdf_dir: ./_pdf
+parts:
+  soprano:
+    clef: treble
+    auto_beam: false
+  alto:
+    clef: treble
+    auto_beam: false
+  tenor:
+    clef: treble_8
+    auto_beam: false
+  tenore:
+    clef: treble_8
+    auto_beam: false
+  bass:
+    clef: bass
+    auto_beam: false
+  basso:
+    clef: bass
+    auto_beam: false
+  violin:
+    clef: treble
+  violon:
+    clef: treble
+  violino:
+    clef: treble
+  violin1:
+    clef: treble
+  violin2:
+    clef: treble
+  violon1:
+    clef: treble
+  violon2:
+    clef: treble
+  violino1:
+    clef: treble
+  violino2:
+    clef: treble
+  violini:
+    clef: treble
+  viola:
+    clef: alto
+  fagott:
+    clef: bass
+  fagotto:
+    clef: bass
+  violoncello:
+    clef: bass
+  cello:
+    clef: bass
+  continuo:
+    clef: bass
+  organo:
+    clef: bass
+  oboe:
+    clef: treble
+  oboe1:
+    clef: treble
+  oboe2:
+    clef: treble
+  
+  
