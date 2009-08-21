@@ -1,6 +1,6 @@
-# Ripple - a Lilypond Score Generator
+# Ripple - DRY for Lilypond
 
-Ripple is a small program that helps you generate scores and parts without performing complex includes or writing lisp expressions.
+Ripple is a small program that helps you generate scores and parts without repeating yourself, performing complex includes or writing lisp macros.
 
 Ripple does two things:
 
@@ -20,7 +20,7 @@ Ripple expects your files to be organized a certain way for it to function corre
           gamba.rpl
           cembalo.rpl
 
-The music is contained in .rpl files. The <code>\_work.yml</code> file is a YAML file that contains the attributes of the work (more about that later):
+The music is contained in <code>.ly</code> or <code>.rpl</code> files (the latter are assumed to be in Ripple syntax and are converted to normal Lilypond syntax). The <code>\_work.yml</code> file is a YAML file that contains the attributes of the work (more about that later):
 
     title: Sonata for Viola da Gamba and Harpsichord G-dur BWV1027
     composer: Johann Sebastian Bach
@@ -54,7 +54,7 @@ Ripple also supports multi-movement works. Consider the following file hierarchy
           gamba.rpl
           cembalo.rpl
 
-Ripple will generate gamba and cembalo parts containing all three movements, as well as a score containing the three movements.
+Ripple will generate gamba and cembalo parts containing all three movements, as well as a score containing the three movements. The directory names are converted into movement titles, e.g. "1. Allegro", "2. Adagio" and "3. Vivace".
 
 ## Configuration files
 
@@ -64,30 +64,6 @@ Each work should have its own <code>\_work.yml</code> file. This file can be use
     composer: Johann Sebastian Bach
     editor: Sharon Rosner
     copyright: © IBS 2009 - all rights reserved
-    parts:
-      oboe1:
-        clef: treble
-      oboe2:
-        clef: treble
-      violino1:
-        clef: treble
-      violino2:
-        clef: treble
-      viola:
-        clef: alto
-      soprano:
-        clef: treble
-      alto:
-        clef: alto
-      tenore:
-        clef: treble_8
-      basso:
-        clef: bass
-      continuo:
-        clef: bass
-      violino:
-        ignore: true
-        title: "Violino I, II"
     score:
       order:
         - oboe1
@@ -100,8 +76,6 @@ Each work should have its own <code>\_work.yml</code> file. This file can be use
         - tenore
         - basso
         - continuo
-
-When clefs are defined for a part, Ripple automatically inserts a <code>\\clef</code> statement at the relevant places. This is particularly useful when you need different parts containing the same music to have different clefs (for example, alto clef for singers and treble clef for violins).
 
 Each movement can also have its own <code>\_movement.yml</code> file containing overrides for the specific movement. You can for example specify colla parte without copying the music:
 
@@ -119,3 +93,22 @@ Each movement can also have its own <code>\_movement.yml</code> file containing 
 
 This configuration file specifies that the oboe1 and violino1 parts take their music from the soprano part, oboe2 and violino2 from the alto part, and the viola from the tenore part.
 
+In addition, default settings can be stored in a <code>_ripple.yml</code> file, which can be used for setting for example the editor's name or the copyright notice.
+
+Ripple also currently includes the following default settings for several voice types and instruments:
+
+1. Clef - the clef is automatically inserted by Ripple unless it is set to <code>none</code>.
+2. AutoBeam:false/true (default is true) - this setting is can be used in order to insert a <code>\autoBeamOff</code> macro in vocal parts.
+
+## Overriding default settings
+
+The settings used by Ripple to process the source files are merged from the different settings files (ripple/lib/defaults.yml, _ripple.yml, _work.yml, _movement.yml) and can further be overriden by supplying an --opt option to the command-line tool.
+
+    ripple BWV17 --opt "editor:Someone else but me"
+    
+# Auto-regeneration mode
+
+Ripple can be put into auto-regeneration mode, in which it watches the source directory and process the specified files each time a file is saved in that directory. To use ripple in auto-regenration mode, add <code>auto:true</code> to your <code>_ripple.yml</code> file, or specify the --auto option for the command-line tool.
+
+    ripple BWV17 --auto
+    
