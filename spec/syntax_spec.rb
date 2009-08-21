@@ -27,6 +27,14 @@ context "Syntax converter" do
     convert_rpl("a b c [\nd").should ==
       'a b c d['
   end
+  
+  specify "should convert [ before line-break" do
+    convert_rpl("[\nd8 c b").should ==
+      'd8[ c b'
+
+    convert_rpl("d8[\nd8 c b").should ==
+      "d8[\nd8 c b"
+  end
 
   specify "should move prefixed ( to after note" do
     convert_rpl('[a b c]').should ==
