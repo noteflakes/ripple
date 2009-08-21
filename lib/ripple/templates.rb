@@ -37,6 +37,7 @@ module Ripple
   <%= data["part_macro"] %>
 <%= content %>
   >>
+  <% if data["midi"] %>
   \\midi {
     <% if midi_tempo = data["midi_tempo"] %>
     \\context {
@@ -45,6 +46,7 @@ module Ripple
     }
     <% end %>
   }
+  <% end %>
   \\header { piece = \\markup \\bold \\large "<%= data["movement"].to_movement_title %>" }
 }
 

@@ -34,6 +34,14 @@ opts = OptionParser.new do |opts|
     options["selected_movements"] = v
   end
   
+  opts.on("--midi", "Generate midi file") do |v|
+    options["midi"] = true
+  end
+  
+  opts.on("--no-midi", "Disable midi file generation") do |v|
+    options["midi"] = false
+  end
+  
   opts.on("--opt OPT", "Option override (key:value,key:value)") do |v|
     v.split(",").each do |kv|
       if kv =~ /(.+):(.+)/ 
