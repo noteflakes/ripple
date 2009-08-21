@@ -93,7 +93,7 @@ $works = Ripple.works($config)
 
 def process
   if $work
-    Ripple::Work.new($work, $config).process
+    $work.split(',').each {|w| Ripple::Work.new(w, $config).process}
   elsif $works.empty?
     puts "No music found."
   else
