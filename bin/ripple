@@ -79,21 +79,64 @@ opts.parse!
 
 # Get source and destintation from command line
 case ARGV.size
-  when 0
-    work = nil
-  when 1
-    work = ARGV[0]
-  else
-    puts "Invalid options. Run `ripple --help` for assistance."
-    exit(1)
+when 0
+  $work = nil
+when 1
+  $work = ARGV[0]
+else
+  puts "Invalid options. Run `ripple --help` for assistance."
+  exit(1)
 end
 
-config = Ripple.configuration(options)
-works = Ripple.works(config)
-if work
-  Ripple::Work.new(work, config).process
-elsif works.empty?
-  puts "No music found."
+$config = Ripple.configuration(options)
+$works = Ripple.works($config)
+
+def process
+  if $work
+    Ripple::Work.new($work, $config).process
+  elsif $works.empty?
+    puts "No music found."
+  else
+    $works.each {|w| w.process}
+  end
+end
+
+# Files to watch
+def globs(source)
+  Dir.chdir(source) do
+    dirs = Dir['*'].select { |x| File.directory?(x) }
+    
+    # exclude _ly and _pdf dirs
+    if (d = $config['ly_dir']) =~ /^\.\/(.*)/
+      dirs -= [$1]
+    end
+    if (d = $config['pdf_dir']) =~ /^\.\/(.*)/
+      dirs -= [$1]
+    end
+    
+    dirs = dirs.map { |x| "#{x}/**/*" }
+    dirs += ['*']
+  end
+end
+
+if options["auto"]
+  require 'directory_watcher'
+  puts "Auto-regenerating enabled: #{$config['source']} -> #{$config['pdf_dir']}"
+
+  dw = DirectoryWatcher.new($config['source'])
+  dw.interval = 1
+  dw.glob = globs($config['source'])
+
+  dw.add_observer do |*args|
+    t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+    puts "[#{t}] regeneration: #{args.size} files changed"
+    process
+  end
+
+  dw.start
+
+  loop { sleep 1000 }
 else
-  works.each {|w| w.process}
+  # just process once
+  process
 end
