@@ -37,6 +37,14 @@ module Ripple
   <%= data["part_macro"] %>
 <%= content %>
   >>
+  \\midi {
+    <% if midi_tempo = data["midi_tempo"] %>
+    \\context {
+      \\Score
+      tempoWholesPerMinute = #(ly:make-moment <%= midi_tempo %>)
+    }
+    <% end %>
+  }
   \\header { piece = \\markup \\bold \\large "<%= data["movement"].to_movement_title %>" }
 }
 

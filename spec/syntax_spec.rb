@@ -79,3 +79,9 @@ context "Syntax converter" do
   end
 end
 
+context "Use cases" do
+  specify "01" do
+    convert_rpl("(a b2)\n   cs2\fermata cs4").should ==
+      "a( b2)\n   cis2\fermata cis4"
+  end
+end

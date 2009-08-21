@@ -6,7 +6,7 @@ module Ripple
     VALUE_RE = /\b([ra-g])([^\s]+)?([36])([^\d\w])?/
     VALUE = {'3' => '32', '6' => '16'}
     
-    BEAM_SLUR_RE = /([^\s\[]*)([\[\(])([^\[]*)/m
+    BEAM_SLUR_RE = /([^\s\[]*)([\[\(])(\s?[^\s]*)/
     BEAM_SLUR_INNER_RE = /([^\s]+)(.*)/
     
     APPOGGIATURE_RE = /(\s)?\^([a-g])/

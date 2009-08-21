@@ -1,6 +1,6 @@
 # Ripple - DRY for Lilypond
 
-Ripple is a small program that helps you generate scores and parts without repeating yourself, performing complex includes or writing lisp macros.
+Ripple is a small program that helps you generate scores and parts without repeating yourself, performing complex includes or writing scheme macros.
 
 Ripple does two things:
 
