@@ -30,7 +30,11 @@ module Ripple
     
     def movement_config(mvt)
       c = YAML.load(IO.read(File.join(@work.path, mvt, "_movement.yml"))) rescue {}
-      mvt_config = @config.deep_merge(c)
+      if mc = @config.lookup("movements/#{mvt}")
+        mvt_config = @config.deep_merge(mc).deep_merge(c)
+      else
+        mvt_config = @config.deep_merge(c)
+      end
       mvt_config["movement"] = mvt
       mvt_config
     end
