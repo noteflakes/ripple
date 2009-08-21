@@ -34,12 +34,14 @@ opts = OptionParser.new do |opts|
     options["selected_movements"] = v
   end
   
-  opts.on("-o", "--option OPT", "Option override (key:value)") do |v|
-    if v =~ /(.+):(.+)/
-      options[$1] = $2
-    else
-      puts "Invalid option specified, please use key:value format"
-      exit
+  opts.on("--opt OPT", "Option override (key:value,key:value)") do |v|
+    v.split(",").each do |kv|
+      if kv =~ /(.+):(.+)/ 
+        options[$1] = $2
+      else
+        puts "Invalid option specified, please use key:value format"
+        exit
+      end
     end
   end
   
@@ -47,7 +49,7 @@ opts = OptionParser.new do |opts|
     options["no_pdf"] = true
   end
   
-  opts.on("--score", "Generate only score, no parts") do
+  opts.on("-s", "--score", "Generate only score, no parts") do
     options["score_only"] = true
   end
   
@@ -55,13 +57,21 @@ opts = OptionParser.new do |opts|
     options["no_score"] = true
   end
   
-  opts.on("--open", "Open PDF file after processing") do
+  opts.on("-o", "--open", "Open PDF file after processing") do
     options["open_pdf"] = true
   end
 
-  opts.on("--version", "Display current version") do
+  opts.on("-v", "--version", "Display current version") do
     puts "Ripple " + Ripple.version
     exit 0
+  end
+  
+  opts.on("--auto", "Force auto mode") do
+    options["auto"] = true
+  end
+  
+  opts.on("--no-auto", "Disable auto mode") do
+    options["auto"] = false
   end
 end
 
