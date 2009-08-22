@@ -100,3 +100,75 @@ context "Use case" do
       "fis\\trill[( e])"
   end
 end
+
+context "\\partOnly sections" do
+  specify "should be included only in part mode" do
+    convert_rpl("a \\partOnly {{b c}}").should == 
+      "a "
+
+    convert_rpl("a \\partOnly {{b c}}", :part).should == 
+      "a b c"
+
+    convert_rpl("a \\partOnly {{b c}} d \\partOnly {{e f}}").should == 
+      "a  d "
+
+    convert_rpl("a \\partOnly {{b c}} d \\partOnly {{e f}}", :part).should == 
+      "a b c d e f"
+  end
+  
+  specify "should support line breaks" do
+    convert_rpl("a \\partOnly {{\nb c\n}}").should == 
+      "a "
+
+    convert_rpl("a \\partOnly {{\nb c\n}}", :part).should == 
+      "a \nb c\n"
+  end
+end
+
+context "\\scoreOnly sections" do
+  specify "should be included only in score mode" do
+    convert_rpl("a \\scoreOnly {{b c}}").should == 
+      "a "
+
+    convert_rpl("a \\scoreOnly {{b c}}", :score).should == 
+      "a b c"
+
+    convert_rpl("a \\scoreOnly {{b c}} d \\scoreOnly {{e f}}").should == 
+      "a  d "
+
+    convert_rpl("a \\scoreOnly {{b c}} d \\scoreOnly {{e f}}", :score).should == 
+      "a b c d e f"
+  end
+  
+  specify "should support line breaks" do
+    convert_rpl("a \\scoreOnly {{\nb c\n}}").should == 
+      "a "
+
+    convert_rpl("a \\scoreOnly {{\nb c\n}}", :score).should == 
+      "a \nb c\n"
+  end
+end
+
+context "\\midiOnly sections" do
+  specify "should be included only in midi mode" do
+    convert_rpl("a \\midiOnly {{b c}}").should == 
+      "a "
+
+    convert_rpl("a \\midiOnly {{b c}}", :midi).should == 
+      "a b c"
+
+    convert_rpl("a \\midiOnly {{b c}} d \\midiOnly {{e f}}").should == 
+      "a  d "
+
+    convert_rpl("a \\midiOnly {{b c}} d \\midiOnly {{e f}}", :midi).should == 
+      "a b c d e f"
+  end
+  
+  specify "should support line breaks" do
+    convert_rpl("a \\midiOnly {{\nb c\n}}").should == 
+      "a "
+
+    convert_rpl("a \\midiOnly {{\nb c\n}}", :midi).should == 
+      "a \nb c\n"
+  end
+end

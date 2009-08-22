@@ -44,7 +44,8 @@ module Ripple
         title = config.lookup("parts/#{p}/title") || p.to_instrument_title
         c = config.merge("part" => p, "staff_name" => title)
         music_fn = movement_music_file(p, mvt, c)
-        output += Templates.render_staff(load_music(music_fn), c)
+        mode = @config["midi"] ? :midi : :score
+        output += Templates.render_staff(load_music(music_fn, mode), c)
         if lyrics = movement_lyrics_file(p, mvt, c)
           lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
         end
@@ -58,7 +59,10 @@ module Ripple
     def render_movement(mvt)
       c = movement_config(mvt)
       
-      movement_files = Dir[File.join(@work.path, mvt, '*.rpl'), File.join(@work.path, mvt, '*.ly')]
+      movement_files = Dir[
+        File.join(@work.path, mvt, '*.rpl'), 
+        File.join(@work.path, mvt, '*.ly')
+      ]
       parts = []
       movement_files.each do |fn|
         p = File.basename(fn, '.*')
