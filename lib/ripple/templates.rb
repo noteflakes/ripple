@@ -13,6 +13,17 @@ module Ripple
       end
     end
     
+    def self.midi_instrument(data)
+      part = data["part"]
+      case i = data.lookup("parts/#{part}/midi_instrument")
+      when nil
+        # generate midi instrument name from part name
+        (i =~ /([^\d]+)(\d+)/) ? $1 : i
+      else
+        i
+      end
+    end
+    
     def self.show_ambitus(data)
       data["show_ambitus"] || data.lookup("parts/#{data["part"]}/show_ambitus")
     end
@@ -64,6 +75,7 @@ EOF
 \\new Staff {
 <% end %>
   <% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
+  <% if inst = midi_instrument(data) %>\\set Staff.midiInstrument = #"<%= inst %>"<% end %>
   <% if clef = part_clef(data) %>\\clef "<%= clef %>"<% end %>
   <% if auto_beam_off(data) %>\\autoBeamOff<% end %>
   <%= content %>

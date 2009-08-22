@@ -36,6 +36,7 @@ opts = OptionParser.new do |opts|
   
   opts.on("--midi", "Generate midi file") do |v|
     options["midi"] = true
+    options["score_only"] = true # implied
   end
   
   opts.on("--no-midi", "Disable midi file generation") do |v|

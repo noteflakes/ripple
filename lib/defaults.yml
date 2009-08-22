@@ -7,60 +7,86 @@ parts:
   soprano:
     clef: treble
     auto_beam: false
+    midi_instrument:  voice oohs
   alto:
     clef: treble
     auto_beam: false
-  tenor:
-    clef: treble_8
-    auto_beam: false
-  tenore:
-    clef: treble_8
-    auto_beam: false
-  bass:
-    clef: bass
-    auto_beam: false
-  basso:
-    clef: bass
-    auto_beam: false
+    midi_instrument: voice oohs
+  tenor:             
+    clef: treble_8   
+    auto_beam: false 
+    midi_instrument: voice oohs
+  tenore:            
+    clef: treble_8   
+    auto_beam: false 
+    midi_instrument: voice oohs
+  bass:              
+    clef: bass       
+    auto_beam: false 
+    midi_instrument: voice oohs
+  basso:             
+    clef: bass       
+    auto_beam: false 
+    midi_instrument: voice oohs
   violin:
     clef: treble
+    midi_instrument: violin
   violon:
     clef: treble
+    midi_instrument: violin
   violino:
     clef: treble
+    midi_instrument: violin
   violin1:
     clef: treble
+    midi_instrument: violin
   violin2:
     clef: treble
+    midi_instrument: violin
   violon1:
     clef: treble
+    midi_instrument: violin
   violon2:
     clef: treble
+    midi_instrument: violin
   violino1:
     clef: treble
+    midi_instrument: violin
   violino2:
     clef: treble
+    midi_instrument: violin
   violini:
     clef: treble
+    midi_instrument: violin
   viola:
     clef: alto
+    midi_instrument: viola
   fagott:
     clef: bass
+    midi_instrument: bassoon
   fagotto:
     clef: bass
+    midi_instrument: bassoon
   violoncello:
     clef: bass
+    midi_instrument: cello
   cello:
     clef: bass
+    midi_instrument: cello
   continuo:
     clef: bass
+    midi_instrument: church organ
   organo:
     clef: bass
+    midi_instrument: church organ
   oboe:
     clef: treble
+    midi_instrument: oboe
   oboe1:
     clef: treble
+    midi_instrument: oboe
   oboe2:
     clef: treble
+    midi_instrument: oboe
   
   
