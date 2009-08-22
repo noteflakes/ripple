@@ -75,7 +75,7 @@ parts:
     midi_instrument: cello
   continuo:
     clef: bass
-    midi_instrument: church organ
+    midi_instrument: cello
   organo:
     clef: bass
     midi_instrument: church organ
