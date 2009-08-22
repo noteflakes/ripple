@@ -6,7 +6,8 @@ module Ripple
     VALUE_RE = /\b([ra-g])([^\s]+)?([36])([^\d\w])?/
     VALUE = {'3' => '32', '6' => '16'}
     
-    BEAM_SLUR_RE = /([^\s\[]*)([\[\(])(\s?[^\s]*)/
+    BEAM_RE = /([^\s\[\(]*)\[(\s?[^\s]*)/
+    SLUR_RE = /([^\s\(\(]*)\((\s?[^\s]*)/
     BEAM_SLUR_INNER_RE = /([^\s]+)(.*)/
     
     APPOGGIATURE_RE = /(\s)?\^([a-g])/
@@ -16,10 +17,15 @@ module Ripple
       # m = m.gsub(BEAM_SLUR_RE) {"#{$1}#{$4}#{$2}"}
       m = m.gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}
       m = m.gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
-      m = m.gsub(BEAM_SLUR_RE) do |i| 
-        pre, sign, post = $1, $2, $3
+      m = m.gsub(BEAM_RE) do |i| 
+        pre, post = $1, $2
         (pre.empty? && post =~ BEAM_SLUR_INNER_RE) ?
-          "#{$1}#{sign}#{$2}" : i
+          "#{$1}[#{$2}" : i
+      end
+      m = m.gsub(SLUR_RE) do |i| 
+        pre, post = $1, $2
+        (pre.empty? && post =~ BEAM_SLUR_INNER_RE) ?
+          "#{$1}(#{$2}" : i
       end
       m
     end

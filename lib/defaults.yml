@@ -2,6 +2,7 @@ auto: false
 source: .
 ly_dir: ./_ly
 pdf_dir: ./_pdf
+midi_dir: ./_midi
 parts:
   soprano:
     clef: treble

@@ -103,9 +103,10 @@ module Ripple
       FileUtils.mkdir_p(File.dirname(ly_filename))
       File.open(ly_filename, 'w') {|f| f << render}
       
-      return if @config["no_pdf"]
-      FileUtils.mkdir_p(File.dirname(pdf_filename))
-      Ripple::Lilypond.process(ly_filename, pdf_filename, @config)
+      unless @config["no_pdf"]
+        FileUtils.mkdir_p(File.dirname(pdf_filename))
+        Lilypond.make_pdf(ly_filename, pdf_filename, @config)
+      end
     rescue LilypondError
       puts
       puts "Failed to generate #{@part} part."

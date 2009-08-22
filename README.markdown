@@ -111,4 +111,4 @@ The settings used by Ripple to process the source files are merged from the diff
 Ripple can be put into auto-regeneration mode, in which it watches the source directory and process the specified files each time a file is saved in that directory. To use ripple in auto-regenration mode, add <code>auto:true</code> to your <code>_ripple.yml</code> file, or specify the --auto option for the command-line tool.
 
     ripple BWV17 --auto
-    
+

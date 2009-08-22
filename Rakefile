@@ -7,13 +7,13 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = "ripple"
-    s.summary = %Q{Ripple is a lilypond generator.}
+    s.summary = %Q{Ripple is a Lilypond generator.}
     s.email = "ciconia@gmail.com"
     s.homepage = "http://github.com/ciconia/ripple"
-    s.description = "Ripple is a lilypond generator."
+    s.description = "Ripple is a Lilypond generator."
     s.authors = ["Sharon Rosner"]
     s.rubyforge_project = "ripple"
-    # s.add_dependency('directory_watcher', '>= 1.1.1')
+    s.add_dependency('directory_watcher', '>= 1.1.1')
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install jeweler --version '>= 0.11.0'"

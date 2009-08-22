@@ -74,36 +74,55 @@ module Ripple
       Templates.render_staff_group(content, c)
     end
     
-    def render
+    def movements
       if m = @config["selected_movements"]
         mvts = m.split(',')
       else
         mvts = @work.movements
       end
       mvts << "" if mvts.empty?
+      mvts
+    end
+    
+    def render(mvts = nil)
+      mvts ||= movements
       
       music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
       Templates.render_score(music, @config)
     end
 
-    def ly_filename
-      File.join(@config["ly_dir"], @work.relative_path, "score.ly")
+    def ly_filename(mvt = nil)
+      File.join(@config["ly_dir"], @work.relative_path, 
+        (mvt ? "#{mvt}.ly" : "score.ly"))
     end
     
     def pdf_filename
       File.join(@config["pdf_dir"], @work.relative_path, "score")
     end
     
+    def midi_filename(mvt)
+      File.join(@config["midi_dir"], @work.relative_path, mvt)
+    end
+    
     def process
-      mvts = @work.movements
-      
-      # create ly file
-      FileUtils.mkdir_p(File.dirname(ly_filename))
-      File.open(ly_filename, 'w') {|f| f << render}
-      
-      return if @config["no_pdf"]
-      FileUtils.mkdir_p(File.dirname(pdf_filename))
-      Ripple::Lilypond.process(ly_filename, pdf_filename, @config)
+      if @config["midi"]
+        movements.each do |m|
+          fn = ly_filename(m); mfn = midi_filename(m)
+          FileUtils.mkdir_p(File.dirname(fn))
+          File.open(fn, 'w') {|f| f << render([m])}
+          FileUtils.mkdir_p(File.dirname(mfn))
+          Lilypond.make_midi(fn, mfn, @config)
+        end
+      else
+        # create ly file
+        FileUtils.mkdir_p(File.dirname(ly_filename))
+        File.open(ly_filename, 'w') {|f| f << render}
+
+        unless @config["no_pdf"]
+          FileUtils.mkdir_p(File.dirname(pdf_filename))
+          Lilypond.make_pdf(ly_filename, pdf_filename, @config)
+        end
+      end
     rescue LilypondError
       puts
       puts "Failed to generate score."

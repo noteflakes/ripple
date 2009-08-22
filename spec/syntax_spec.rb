@@ -79,9 +79,24 @@ context "Syntax converter" do
   end
 end
 
-context "Use cases" do
+context "Use case" do
   specify "01" do
     convert_rpl("(a b2)\n   cs2\fermata cs4").should ==
       "a( b2)\n   cis2\fermata cis4"
+  end
+  
+  specify "02" do
+    convert_rpl("d8 [(cs6 b cs8)] a [b6 a gs fs]").should ==
+      "d8 cis16[( b cis8)] a b16[ a gis fis]"
+  end
+  
+  specify "03" do
+    convert_rpl("([fs\\trill e]) gs-. a-. ([d,\\trill cs]) gs'-. a-.").should ==
+      "fis\\trill[( e]) gis-. a-. d,\\trill[( cis]) gis'-. a-."
+  end
+
+  specify "03.1" do
+    convert_rpl("([fs\\trill e])").should ==
+      "fis\\trill[( e])"
   end
 end

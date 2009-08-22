@@ -65,8 +65,8 @@ opts = OptionParser.new do |opts|
     options["no_score"] = true
   end
   
-  opts.on("-o", "--open", "Open PDF file after processing") do
-    options["open_pdf"] = true
+  opts.on("-o", "--open", "Open PDF/Midi file after processing") do
+    options["open_target"] = true
   end
 
   opts.on("-v", "--version", "Display current version") do
@@ -114,11 +114,14 @@ def globs(source)
   Dir.chdir(source) do
     dirs = Dir['*'].select { |x| File.directory?(x) }
     
-    # exclude _ly and _pdf dirs
+    # exclude _ly, _pdf, _midi dirs
     if (d = $config['ly_dir']) =~ /^\.\/(.*)/
       dirs -= [$1]
     end
     if (d = $config['pdf_dir']) =~ /^\.\/(.*)/
+      dirs -= [$1]
+    end
+    if (d = $config['midi_dir']) =~ /^\.\/(.*)/
       dirs -= [$1]
     end
     
