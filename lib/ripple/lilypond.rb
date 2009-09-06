@@ -7,8 +7,12 @@ module Ripple
       FileUtils.rm("#{pdf_file}.ps") rescue nil
     end
     
-    def self.run(args)
-      IO.popen("ly #{args}", 'w+') {}
+    def self.cmd(config)
+      File.join(config["lilypond_dir"], config["lilypond_cmd"])
+    end
+    
+    def self.run(args, config)
+      IO.popen("#{cmd(config)} #{args}", 'w+') {}
       case $?.exitstatus
       when nil:
         puts
@@ -21,13 +25,13 @@ module Ripple
     end
     
     def self.make_pdf(ly_file, pdf_file, config)
-      run("--pdf -o \"#{pdf_file}\" \"#{ly_file}\"")
+      run("--pdf -o \"#{pdf_file}\" \"#{ly_file}\"", config)
       delete_ps_file(pdf_file)
       system "open #{pdf_file}.pdf" if config["open_target"]
     end
     
     def self.make_midi(ly_file, midi_file, config)
-      run("-o \"#{midi_file}\" \"#{ly_file}\"")
+      run("-o \"#{midi_file}\" \"#{ly_file}\"", config)
       system "open #{midi_file}.midi" if config["open_target"]
     end
   end

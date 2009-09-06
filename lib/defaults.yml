@@ -3,6 +3,8 @@ source: .
 ly_dir: ./_ly
 pdf_dir: ./_pdf
 midi_dir: ./_midi
+lilypond_dir: /usr/local/bin
+lilypond_cmd: lilypond
 parts:
   soprano:
     clef: treble
