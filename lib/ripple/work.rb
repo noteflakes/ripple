@@ -34,7 +34,7 @@ module Ripple
         reject {|fn| !File.file?(fn) || File.basename(fn) =~ /^_/}.
         map  {|fn| File.basename(fn, ".*")}
 
-      # (@config.lookup("parts") || {}).each do |p, opts|
+      # (@config["parts"] || {}).each do |p, opts|
       #   @parts << p if opts["source"] && !opts["ignore"]
       # end
 

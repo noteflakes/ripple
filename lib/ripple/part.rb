@@ -8,13 +8,13 @@ module Ripple
     end
     
     def movement_music_file(part, mvt, config)
-      part = config.lookup("parts/#{part}/source") || part
+      part = config["parts/#{part}/source"] || part
       Dir[File.join(@work.path, mvt, "#{part}.rpl"), 
         File.join(@work.path, mvt, "#{part}.ly")].first
     end
     
     def movement_lyrics_files(part, mvt, config)
-      case lyrics = config.lookup("parts/#{part}/lyrics")
+      case lyrics = config["parts/#{part}/lyrics"]
       when nil
         Dir[File.join(@work.path, mvt, "#{part}.lyrics*")].sort
       when 'none'
@@ -30,7 +30,7 @@ module Ripple
     
     def movement_config(mvt)
       c = YAML.load(IO.read(File.join(@work.path, mvt, "_movement.yml"))) rescue {}
-      if mc = @config.lookup("movements/#{mvt}")
+      if mc = @config["movements/#{mvt}"]
         mvt_config = @config.deep_merge(mc).deep_merge(c)
       else
         mvt_config = @config.deep_merge(c)
@@ -45,7 +45,7 @@ module Ripple
       parts.each do |p|
         c = config.merge("part" => p)
         music_fn = movement_music_file(p, mvt, c)
-        output += Templates.render_staff(load_music(music_fn, :part), c)
+        output += Templates.render_staff(music_fn, load_music(music_fn, :part), c)
         if lyrics = movement_lyrics_files(p, mvt, c)
           lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
         end
@@ -59,8 +59,8 @@ module Ripple
     def render_movement(mvt)
       c = movement_config(mvt)
       
-      before_parts = c.lookup("parts/#{@part}/before_include")
-      after_parts = c.lookup("parts/#{@part}/after_include")
+      before_parts = c["parts/#{@part}/before_include"]
+      after_parts = c["parts/#{@part}/after_include"]
 
       if movement_music_file(@part, mvt, c)
         content = ''
@@ -97,7 +97,7 @@ module Ripple
     end
     
     def process
-      return if @config.lookup("parts/#{@part}/no_part")
+      return if @config["parts/#{@part}/no_part"]
       
       # create ly file
       FileUtils.mkdir_p(File.dirname(ly_filename))

@@ -6,7 +6,7 @@ module Ripple
     
     def self.part_clef(data)
       part = data["part"]
-      case c = data.lookup("parts/#{part}/clef")
+      case c = data["parts/#{part}/clef"]
       when 'none': nil
       else
         c
@@ -15,7 +15,7 @@ module Ripple
     
     def self.midi_instrument(data)
       part = data["part"]
-      case i = data.lookup("parts/#{part}/midi_instrument")
+      case i = data["parts/#{part}/midi_instrument"]
       when nil
         # generate midi instrument name from part name
         (i =~ /([^\d]+)(\d+)/) ? $1 : i
@@ -25,11 +25,11 @@ module Ripple
     end
     
     def self.show_ambitus(data)
-      data["show_ambitus"] || data.lookup("parts/#{data["part"]}/show_ambitus")
+      data["show_ambitus"] || data["parts/#{data["part"]}/show_ambitus"]
     end
     
     def self.auto_beam_off(data)
-      data.lookup("parts/#{data["part"]}/auto_beam") == false
+      data["parts/#{data["part"]}/auto_beam"] == false
     end
     
     def self.end_bar(data)
@@ -65,21 +65,23 @@ EOF
       t.result(binding)      
     end
 
-    def self.render_staff(content, data)
+    def self.render_staff(fn, content, data)
       t = ERB.new <<-EOF
 <% if show_ambitus(data) %>
 \\new Staff \\with {
-  \\consists "Ambitus_engraver"
+\\consists "Ambitus_engraver"
 } {
 <% else %>
 \\new Staff {
 <% end %>
-  <% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
-  <% if inst = midi_instrument(data) %>\\set Staff.midiInstrument = #"<%= inst %>"<% end %>
-  <% if clef = part_clef(data) %>\\clef "<%= clef %>"<% end %>
-  <% if auto_beam_off(data) %>\\autoBeamOff<% end %>
-  <%= content %>
-  <%= end_bar(data) %>
+<% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
+<% if inst = midi_instrument(data) %>\\set Staff.midiInstrument = #"<%= inst %>"<% end %>
+<% if clef = part_clef(data) %>\\clef "<%= clef %>"<% end %>
+<% if auto_beam_off(data) %>\\autoBeamOff<% end %>
+%% <%= fn %>
+<%= content %>
+%%
+<%= end_bar(data) %>
 }
 EOF
       t.result(binding)
@@ -127,7 +129,7 @@ EOF
 \\header {
   title = "<%= config["title"] %>"
   composer = "<%= config["composer"] %>"
-  instrument = "<%= config.lookup("parts/#{config["part"]}/title") || 
+  instrument = "<%= config["parts/#{config["part"]}/title"] || 
     config["part"].to_instrument_title %>"
 }
 

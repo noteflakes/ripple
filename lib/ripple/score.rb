@@ -8,13 +8,13 @@ module Ripple
     end
     
     def movement_music_file(part, mvt, config)
-      part = config.lookup("parts/#{part}/source") || part
+      part = config["parts/#{part}/source"] || part
       Dir[File.join(@work.path, mvt, "#{part}.rpl"), 
         File.join(@work.path, mvt, "#{part}.ly")].first
     end
     
     def movement_lyrics_file(part, mvt, config)
-      case lyrics = config.lookup("parts/#{part}/lyrics")
+      case lyrics = config["parts/#{part}/lyrics"]
       when nil
         Dir[File.join(@work.path, mvt, "#{part}.lyrics*")].sort
       when 'none'
@@ -28,7 +28,7 @@ module Ripple
     
     def movement_config(mvt)
       c = YAML.load(IO.read(File.join(@work.path, mvt, "_movement.yml"))) rescue {}
-      if mc = @config.lookup("movements/#{mvt}")
+      if mc = @config["movements/#{mvt}"]
         mvt_config = @config.deep_merge(mc).deep_merge(c)
       else
         mvt_config = @config.deep_merge(c)
@@ -41,11 +41,11 @@ module Ripple
       parts = [parts] unless parts.is_a?(Array)
       output = ''
       parts.each do |p|
-        title = config.lookup("parts/#{p}/title") || p.to_instrument_title
+        title = config["parts/#{p}/title"] || p.to_instrument_title
         c = config.merge("part" => p, "staff_name" => title)
         music_fn = movement_music_file(p, mvt, c)
         mode = @config["midi"] ? :midi : :score
-        output += Templates.render_staff(load_music(music_fn, mode), c)
+        output += Templates.render_staff(music_fn, load_music(music_fn, mode), c)
         if lyrics = movement_lyrics_file(p, mvt, c)
           lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
         end
@@ -71,7 +71,7 @@ module Ripple
       end
 
       # determine staff order
-      order = c.lookup("score/order") || parts.sort
+      order = c["score/order"] || parts.sort
       parts = order.select {|p| parts.include?(p)}
 
       content = render_parts(parts, mvt, c)
