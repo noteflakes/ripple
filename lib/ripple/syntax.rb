@@ -28,20 +28,22 @@ module Ripple
       end
     end
     
-    def convert_rpl(m, mode = nil)
-      convert_prefixed_beams_and_slurs(m).
-        gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
-        gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
-        gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}.
-
-        gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
+    def convert_syntax(m, rpl_mode = true, mode = nil)
+      if rpl_mode
+        m = convert_prefixed_beams_and_slurs(m).
+          gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
+          gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
+          gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
+      end
+      
+      m.gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
         gsub(SCORE_ONLY_RE) {(mode == :score) ? $1 : ''}.
         gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}
     end
     
     def load_music(fn, mode = nil)
-      m = IO.read(fn)
-      fn =~ /\.rpl$/ ? convert_rpl(m, mode) : m
+      rpl_mode = fn =~ /\.rpl$/
+      convert_syntax(IO.read(fn), rpl_mode, mode)
     end
   end
 end
