@@ -45,7 +45,11 @@ module Ripple
       t = ERB.new <<-EOF
 \\score {
   \\new StaffGroup <<
-  <%= data["part_macro"] %>
+  <% if (data["mode"] == :part) && (m = data["part_macro"]) %>
+    <%= m %>
+  <% elsif (data["mode"] == :score) && (m = data["score_macro"]) %>
+    <%= m %>
+  <% end %>
 <%= content %>
   >>
   <% if data["midi"] %>

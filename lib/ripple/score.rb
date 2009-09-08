@@ -109,6 +109,8 @@ module Ripple
     end
     
     def process
+      @config["mode"] = :score
+
       if @config["midi"]
         movements.each do |m|
           fn = ly_filename(m); mfn = midi_filename(m)

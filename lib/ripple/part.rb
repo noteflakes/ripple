@@ -99,6 +99,8 @@ module Ripple
     def process
       return if @config["parts/#{@part}/no_part"]
       
+      @config["mode"] = :part
+
       # create ly file
       FileUtils.mkdir_p(File.dirname(ly_filename))
       File.open(ly_filename, 'w') {|f| f << render}
