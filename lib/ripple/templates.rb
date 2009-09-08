@@ -71,13 +71,16 @@ EOF
 
     def self.render_staff(fn, content, data)
       t = ERB.new <<-EOF
-<% if show_ambitus(data) %>
 \\new Staff \\with {
-\\consists "Ambitus_engraver"
+  <% if show_ambitus(data) %>
+    \\consists "Ambitus_engraver"
+  <% end %>
+  <% if data["aux_staff"] %>
+    fontSize = #-3
+    \\override StaffSymbol #'staff-space = #(magstep -3)
+    \\override StaffSymbol #'thickness = #(magstep -3)
+  <% end %>
 } {
-<% else %>
-\\new Staff {
-<% end %>
 <% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
 <% if inst = midi_instrument(data) %>\\set Staff.midiInstrument = #"<%= inst %>"<% end %>
 <% if clef = part_clef(data) %>\\clef "<%= clef %>"<% end %>
@@ -95,6 +98,9 @@ EOF
       t = ERB.new <<-EOF
 \\addlyrics {
   \\lyricmode {
+    <% if data["aux_staff"] %>
+      \\override LyricText #'font-size = #-3
+    <% end %>
     <%= content %>
   }
 }

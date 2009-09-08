@@ -65,13 +65,13 @@ module Ripple
       if movement_music_file(@part, mvt, c)
         content = ''
         if before_parts
-          content = render_part(before_parts, mvt, c)
+          content = render_part(before_parts, mvt, c.merge("aux_staff" => true))
         end
         content += render_part(@part, mvt, c)
         if after_parts
           content += render_part(after_parts, mvt, c)
         end
-        Templates.render_staff_group(content, c)
+        Templates.render_staff_group(content, c.merge("aux_staff" => true))
       else
         Templates.render_part_tacet(c)
       end
