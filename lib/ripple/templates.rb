@@ -2,6 +2,12 @@ require 'erb'
 
 module Ripple
   module Templates
+    TEMPLATES_DIR = File.join(File.dirname(__FILE__), 'templates')
+    
+    def self.template(name)
+      ERB.new IO.read(File.join(TEMPLATES_DIR, "#{name}.ly"))
+    end
+
     DEFAULT_ENDING_BAR = "|."
     
     def self.part_clef(data)
@@ -42,88 +48,23 @@ module Ripple
     end
     
     def self.render_staff_group(content, data)
-      t = ERB.new <<-EOF
-\\score {
-  \\new StaffGroup <<
-  <% if (data["mode"] == :part) && (m = data["part_macro"]) %>
-    <%= m %>
-  <% elsif (data["mode"] == :score) && (m = data["score_macro"]) %>
-    <%= m %>
-  <% end %>
-<%= content %>
-  >>
-  <% if data["midi"] %>
-  \\midi {
-    <% if midi_tempo = data["midi_tempo"] %>
-    \\context {
-      \\Score
-      tempoWholesPerMinute = #(ly:make-moment <%= midi_tempo %>)
-    }
-    <% end %>
-  }
-  <% end %>
-  \\header { piece = \\markup \\bold \\large "<%= data["movement"].to_movement_title %>" }
-}
-
-EOF
-      t.result(binding)      
+      template(:staff_group).result(binding)
     end
 
     def self.render_staff(fn, content, data)
-      t = ERB.new <<-EOF
-\\new Staff \\with {
-  <% if show_ambitus(data) %>
-    \\consists "Ambitus_engraver"
-  <% end %>
-  <% if data["aux_staff"] %>
-    fontSize = #-3
-    \\override StaffSymbol #'staff-space = #(magstep -3)
-    \\override StaffSymbol #'thickness = #(magstep -3)
-  <% end %>
-} {
-<% if name = data["staff_name"] %>\\set Staff.instrumentName = #"<%= name %>"<% end %>
-<% if inst = midi_instrument(data) %>\\set Staff.midiInstrument = #"<%= inst %>"<% end %>
-<% if clef = part_clef(data) %>\\clef "<%= clef %>"<% end %>
-<% if auto_beam_off(data) %>\\autoBeamOff<% end %>
-%% <%= fn %>
-<%= content %>
-%%
-<%= end_bar(data) %>
-}
-EOF
-      t.result(binding)
+      template(:staff).result(binding)
     end
 
     def self.render_lyrics(content, data)
-      t = ERB.new <<-EOF
-\\addlyrics {
-  \\lyricmode {
-    <% if data["aux_staff"] %>
-      \\override LyricText #'font-size = #-3
-    <% end %>
-    <%= content %>
-  }
-}
-EOF
-      t.result(binding)
+      template(:lyrics).result(binding)
     end
 
     def self.render_figures(content, data)
-      t = ERB.new <<-EOF
-\\figures {
-<%= content %>
-}
-EOF
-      t.result(binding)
+      template(:figures).result(binding)
     end
 
     def self.render_part_tacet(data)
-      t = ERB.new <<-EOF
-\\markup { \\bold \\large
-  "<%= data["movement"].to_movement_title %> - tacet"
-}
-EOF
-      t.result(binding)
+      template(:tacet).result(binding)
     end
     
     def self.render_part(content, config)
@@ -133,22 +74,7 @@ EOF
         include += config["part_include"]
       end
       
-      t = ERB.new <<-EOF
-<% include.each do |inc| %>\\include "<%= inc %>"
-<% end %>
-\\header {
-  title = "<%= config["title"] %>"
-  composer = "<%= config["composer"] %>"
-  instrument = "<%= config["parts/#{config["part"]}/title"] || 
-    config["part"].to_instrument_title %>"
-}
-
-<%= content %>
-
-\\version "2.12.2"
-
-EOF
-      t.result(binding)
+      template(:part).result(binding)
     end
     
     def self.render_score(content, config)
@@ -157,20 +83,8 @@ EOF
       if config["score_include"]
         include += config["score_include"]
       end
-
-      t = ERB.new <<-EOF
-<% include.each do |inc| %>\\include "<%= inc %>"
-<% end %>
-\\header {
-  title = "<%= config["title"] %>"
-  composer = "<%= config["composer"] %>"
-}
-
-<%= content %>
-
-\\version "2.12.2"
-
-EOF
+      
+      template(:score).result(binding)
       t.result(binding)
     end
   end

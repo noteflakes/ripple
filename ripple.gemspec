@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ripple}
-  s.version = "0.2.2"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sharon Rosner"]
@@ -27,7 +27,14 @@ Gem::Specification.new do |s|
     "lib/ripple/score.rb",
     "lib/ripple/syntax.rb",
     "lib/ripple/templates.rb",
-    "lib/ripple/work.rb"
+    "lib/ripple/work.rb",
+    "lib/ripple/templates/staff_group.ly",
+    "lib/ripple/templates/staff.ly",
+    "lib/ripple/templates/lyrics.ly",
+    "lib/ripple/templates/figures.ly",
+    "lib/ripple/templates/tacet.ly",
+    "lib/ripple/templates/part.ly",
+    "lib/ripple/templates/score.ly"
   ]
   s.homepage = %q{http://github.com/ciconia/ripple}
   s.rdoc_options = ["--charset=UTF-8"]
