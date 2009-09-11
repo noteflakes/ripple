@@ -1,11 +1,17 @@
 <% include.each do |inc| %>\include "<%= inc %>"
 <% end %>
-\header {
-  title = "<%= config["title"] %>"
-  composer = "<%= config["composer"] %>"
+
+\book {
+<% if config["include_toc"] %>
+	\markuplines \table-of-contents
+	\pageBreak
+<% end %>
+	\header {
+	  title = <%= piece_title(config) %>
+	  composer = "<%= config["composer"] %>"
+	}
+
+	<%= content %>
 }
 
-<%= content %>
-
 \version "2.12.2"
-

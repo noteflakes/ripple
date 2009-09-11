@@ -90,6 +90,7 @@ module Ripple
     
     def render(mvts = nil)
       mvts ||= movements
+      @config["include_toc"] = (mvts.size > 1) && !(@config["toc"] == false)
       
       music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
       Templates.render_score(music, @config)

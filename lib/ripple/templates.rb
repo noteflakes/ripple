@@ -8,20 +8,25 @@ module Ripple
       ERB.new IO.read(File.join(TEMPLATES_DIR, "#{name}.ly"))
     end
 
+    def self.piece_title(config)
+      lines = config["title"].lines.map {|l| "\\fill-line { \"#{l}\" }"}
+      "\\markup \\column {#{lines}}"
+    end
+
     DEFAULT_ENDING_BAR = "|."
     
-    def self.part_clef(data)
-      part = data["part"]
-      case c = data["parts/#{part}/clef"]
+    def self.part_clef(config)
+      part = config["part"]
+      case c = config["parts/#{part}/clef"]
       when 'none': nil
       else
         c
       end
     end
     
-    def self.midi_instrument(data)
-      part = data["part"]
-      case i = data["parts/#{part}/midi_instrument"]
+    def self.midi_instrument(config)
+      part = config["part"]
+      case i = config["parts/#{part}/midi_instrument"]
       when nil
         # generate midi instrument name from part name
         (i =~ /([^\d]+)(\d+)/) ? $1 : i
@@ -30,40 +35,40 @@ module Ripple
       end
     end
     
-    def self.show_ambitus(data)
-      data["show_ambitus"] || data["parts/#{data["part"]}/show_ambitus"]
+    def self.show_ambitus(config)
+      config["show_ambitus"] || config["parts/#{config["part"]}/show_ambitus"]
     end
     
-    def self.auto_beam_off(data)
-      data["parts/#{data["part"]}/auto_beam"] == false
+    def self.auto_beam_off(config)
+      config["parts/#{config["part"]}/auto_beam"] == false
     end
     
-    def self.end_bar(data)
-      case data["end_bar"]
+    def self.end_bar(config)
+      case config["end_bar"]
       when nil: "\\bar \"#{DEFAULT_ENDING_BAR}\""
       when 'none': ''
       else
-        "\\bar \"#{data["end_bar"]}\""
+        "\\bar \"#{config["end_bar"]}\""
       end
     end
     
-    def self.render_movement(content, data)
+    def self.render_movement(content, config)
       template(:movement).result(binding)
     end
 
-    def self.render_staff(fn, content, data)
+    def self.render_staff(fn, content, config)
       template(:staff).result(binding)
     end
 
-    def self.render_lyrics(content, data)
+    def self.render_lyrics(content, config)
       template(:lyrics).result(binding)
     end
 
-    def self.render_figures(content, data)
+    def self.render_figures(content, config)
       template(:figures).result(binding)
     end
 
-    def self.render_part_tacet(data)
+    def self.render_part_tacet(config)
       template(:tacet).result(binding)
     end
     
@@ -84,8 +89,9 @@ module Ripple
         include += config["score_include"]
       end
       
+      toc = config["multi_movement"] && !(config["toc"] == false)
+      
       template(:score).result(binding)
-      t.result(binding)
     end
   end
 end
