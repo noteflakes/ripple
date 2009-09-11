@@ -47,8 +47,8 @@ module Ripple
       end
     end
     
-    def self.render_staff_group(content, data)
-      template(:staff_group).result(binding)
+    def self.render_movement(content, data)
+      template(:movement).result(binding)
     end
 
     def self.render_staff(fn, content, data)

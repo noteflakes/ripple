@@ -71,7 +71,7 @@ module Ripple
         if after_parts
           content += render_part(after_parts, mvt, c)
         end
-        Templates.render_staff_group(content, c.merge("aux_staff" => true))
+        Templates.render_movement(content, c.merge("aux_staff" => true))
       else
         Templates.render_part_tacet(c)
       end

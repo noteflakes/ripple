@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
     "lib/ripple/syntax.rb",
     "lib/ripple/templates.rb",
     "lib/ripple/work.rb",
-    "lib/ripple/templates/staff_group.ly",
+    "lib/ripple/templates/movement.ly",
     "lib/ripple/templates/staff.ly",
     "lib/ripple/templates/lyrics.ly",
     "lib/ripple/templates/figures.ly",

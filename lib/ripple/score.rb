@@ -75,7 +75,7 @@ module Ripple
       parts = order.select {|p| parts.include?(p)}
 
       content = render_parts(parts, mvt, c)
-      Templates.render_staff_group(content, c)
+      Templates.render_movement(content, c)
     end
     
     def movements
