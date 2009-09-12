@@ -8,11 +8,6 @@ module Ripple
       ERB.new IO.read(File.join(TEMPLATES_DIR, "#{name}.ly"))
     end
 
-    def self.piece_title(config)
-      lines = config["title"].lines.map {|l| "\\fill-line { \"#{l}\" }"}
-      "\\markup \\column {#{lines}}"
-    end
-
     DEFAULT_ENDING_BAR = "|."
     
     def self.part_clef(config)
