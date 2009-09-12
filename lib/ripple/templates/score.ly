@@ -6,7 +6,12 @@
 	\markuplines \table-of-contents
 <% end %>
 	\header {
-	  title = <%= piece_title(config) %>
+		<% if config["title"] %>
+	  	title = <%= config["title"].inspect %>
+		<% end %>
+		<% if config["subtitle"] %>
+			subtitle = <%= config["subtitle"].inspect %>
+		<% end %>
 	  composer = "<%= config["composer"] %>"
 	}
 

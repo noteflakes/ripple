@@ -1,7 +1,12 @@
 <% include.each do |inc| %>\include "<%= inc %>"
 <% end %>
 \header {
-  title = <%= piece_title(config) %>
+	<% if config["title"] %>
+  	title = <%= config["title"].inspect %>
+	<% end %>
+	<% if config["subtitle"] %>
+		subtitle = <%= config["subtitle"].inspect %>
+	<% end %>
   composer = "<%= config["composer"] %>"
   instrument = "<%= config["parts/#{config["part"]}/title"] || 
     config["part"].to_instrument_title %>"
