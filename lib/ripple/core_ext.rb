@@ -22,6 +22,11 @@ class String
   def to_title
     gsub(/\b('?[a-z])/) {$1.capitalize}
   end
+  
+  # Works like inspect, except it unescapes Unicode sequences
+  def ly_inspect
+    inspect.gsub(/(\\(\d{3}))/) {[$2.oct].pack("c")}
+  end
 end
 
 class Hash
@@ -73,5 +78,17 @@ class Hash
     else
       old_set(k, v)
     end
+  end
+end
+
+class Array
+  # Returns the index of an array of items inside the array:
+  # 
+  #   [1,2,3,4,5].array_index([3,4]) #=> 2
+  #   [1,2,3,4,5].array_index([3,5]) #=> nil
+  def array_index(arr)
+    f = arr[0]
+    return nil unless idx = index(f)
+    return idx if self[idx, arr.size] == arr
   end
 end

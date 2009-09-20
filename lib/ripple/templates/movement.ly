@@ -3,6 +3,9 @@
 	<% end %>
 	\score {
 	  \new StaffGroup <<
+		<% if (p = config["score/rendered_parts"]) && config["score/groups"] %>
+			\set StaffGroup.systemStartDelimiterHierarchy = <%= staff_hierarchy(p, config) %>
+		<% end %>
 	  <% if (config["mode"] == :part) && (m = config["part_macro"]) %>
 	    <%= m %>
 	  <% elsif (config["mode"] == :score) && (m = config["score_macro"]) %>

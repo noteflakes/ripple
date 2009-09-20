@@ -73,6 +73,7 @@ module Ripple
       # determine staff order
       order = c["score/order"] || parts.sort
       parts = order.select {|p| parts.include?(p)}
+      c["score/rendered_parts"] = parts
 
       content = render_parts(parts, mvt, c)
       Templates.render_movement(content, c)

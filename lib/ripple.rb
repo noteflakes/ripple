@@ -13,10 +13,10 @@ require 'yaml'
 # internal requires
 require 'ripple/core_ext'
 require 'ripple/syntax'
+require 'ripple/templates'
 require 'ripple/work'
 require 'ripple/part'
 require 'ripple/score'
-require 'ripple/templates'
 require 'ripple/lilypond'
 
 module Ripple

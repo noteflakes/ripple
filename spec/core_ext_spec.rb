@@ -117,3 +117,32 @@ context "Hash#[]=" do
     @h.should == {"a" => 1, "b" => 2, 3 => 4, "c" => {"d" => 7, "e" => {"f" => 9}}}
   end
 end
+
+context "Array#array_index" do
+  setup do
+    @a = [1,2,3,4,5]
+  end
+  
+  specify "should return the index of the passed argument in the array" do
+    @a.array_index([1,2,3]).should == 0
+    @a.array_index([1,2,3,4]).should == 0
+    @a.array_index([1,2,3,4,5]).should == 0
+    @a.array_index([5]).should == 4
+    @a.array_index([5,6]).should == nil
+
+    @a.array_index([3,4]).should == 2
+    @a.array_index([3,5]).should == nil
+  end
+end
+
+context "String#ly_inspect" do
+  specify "should properly escape quotes" do
+    s = "r \"i\" p"
+    s.ly_inspect.should == "\"r \\\"i\\\" p\""
+  end
+  
+  specify "should not escape unicode characters" do
+    s = "\"Allein Gott in der Höh' sei Ehr'\""
+    s.ly_inspect.should == "\"\\\"Allein Gott in der H\303\266h' sei Ehr'\\\"\""
+  end
+end

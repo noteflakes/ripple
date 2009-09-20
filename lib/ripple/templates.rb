@@ -47,6 +47,45 @@ module Ripple
       end
     end
     
+    def self.staff_groups(parts, config)
+      return nil unless groups = config["score/groups"]
+      grouped = parts.dup
+
+      # groups should be an array of hashes
+      groups.each do |g| 
+        kind = g.keys.first
+        # select the group parts that appear in the movement
+        group_parts = g.values.first.select {|p| parts.include?(p)}
+
+        # group only if more than one part in the group appears in the movement
+        if (group_parts.size > 1) && (idx = grouped.array_index(group_parts))
+          before = grouped[0...idx]
+          after = grouped[(idx + group_parts.size)..-1]
+          grouped = before + [{kind => group_parts}] + after
+        end
+      end
+      
+      grouped
+    end
+    
+    SYSTEM_START = {
+      "brace" => "SystemStartBrace",
+      "bracket" => "SystemStartBracket"
+    }
+    
+    # renders a systemStartDelimiterHierarchy expression
+    def self.staff_hierarchy(parts, config)
+      groups = staff_groups(parts, config)
+      expr = groups.map do |g|
+        if g.is_a?(Hash)
+          "(#{SYSTEM_START[g.keys.first]} #{g.values.first.join(' ')})"
+        else
+          g
+        end
+      end
+      "#'(SystemStartBracket #{expr.join(' ')})"
+    end
+    
     def self.render_movement(content, config)
       template(:movement).result(binding)
     end

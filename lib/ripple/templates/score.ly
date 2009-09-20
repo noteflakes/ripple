@@ -7,10 +7,10 @@
 <% end %>
 	\header {
 		<% if config["title"] %>
-	  	title = <%= config["title"].inspect %>
+	  	title = <%= config["title"].ly_inspect %>
 		<% end %>
 		<% if config["subtitle"] %>
-			subtitle = <%= config["subtitle"].inspect %>
+			subtitle = <%= config["subtitle"].ly_inspect %>
 		<% end %>
 	  composer = "<%= config["composer"] %>"
 	}
