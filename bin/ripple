@@ -27,7 +27,6 @@ opts = OptionParser.new do |opts|
 
   opts.on("-p", "--parts PART", "Parts (comma-separated)") do |v|
     options["selected_parts"] = v
-    options["no_score"] = true
   end
   
   opts.on("-m", "--mvts MVT", "Movements (comma-separated)") do |v|
@@ -60,10 +59,6 @@ opts = OptionParser.new do |opts|
   
   opts.on("-s", "--score", "Generate only score, no parts") do
     options["score_only"] = true
-  end
-  
-  opts.on("--no-score", "Generate only parts, no score") do
-    options["no_score"] = true
   end
   
   opts.on("-o", "--open", "Open PDF/Midi file after processing") do
