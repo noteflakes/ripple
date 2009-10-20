@@ -65,6 +65,7 @@ Each work should have its own <code>\_work.yml</code> file. This file can be use
     editor: Sharon Rosner
     copyright: © IBS 2009 - all rights reserved
     score:
+      hide_empty_staves: true
       order:
         - oboe1
         - oboe2

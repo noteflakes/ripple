@@ -1,6 +1,22 @@
 <% include.each do |inc| %>\include "<%= inc %>"
 <% end %>
 
+<% if config["score/hide_empty_staves"] %>
+\layout {
+  \context { 
+    % add the RemoveEmptyStaffContext that erases rest-only staves
+    \RemoveEmptyStaffContext 
+  }
+  <% if config["score/hide_empty_staves"].to_s == 'all' %>
+  \context {
+    \Score
+    % Remove all-rest staves also in the first system
+    \override VerticalAxisGroup #'remove-first = ##t
+  }
+  <% end %>
+}
+<% end %>
+
 \book {
 <% if config["include_toc"] %>
 	\markuplines \table-of-contents
