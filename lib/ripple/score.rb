@@ -107,6 +107,9 @@ module Ripple
     end
     
     def midi_filename(mvt)
+      if mvt.nil? || mvt.empty?
+        mvt = 'score'
+      end
       File.join(@config["midi_dir"], @work.relative_path, mvt)
     end
     

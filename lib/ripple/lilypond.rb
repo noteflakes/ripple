@@ -3,8 +3,13 @@ end
 
 module Ripple
   module Lilypond
-    def self.delete_ps_file(pdf_file)
-      FileUtils.rm("#{pdf_file}.ps") rescue nil
+    def self.delete_ps_file(fn)
+      FileUtils.rm("#{fn}.ps") rescue nil
+    end
+    
+    def self.delete_pdf_and_ps_files(fn)
+      FileUtils.rm("#{fn}.ps") rescue nil
+      FileUtils.rm("#{fn}.pdf") rescue nil
     end
     
     def self.cmd(config)
@@ -32,6 +37,7 @@ module Ripple
     
     def self.make_midi(ly_file, midi_file, config)
       run("-o \"#{midi_file}\" \"#{ly_file}\"", config)
+      delete_pdf_and_ps_files(midi_file)
       system "open #{midi_file}.midi" if config["open_target"]
     end
   end
