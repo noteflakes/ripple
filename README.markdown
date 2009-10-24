@@ -113,3 +113,6 @@ Ripple can be put into auto-regeneration mode, in which it watches the source di
 
     ripple BWV17 --auto
 
+# Proof mode
+
+Proof mode is similar to auto-regeneration mode, except that each time a file is changed or added, it is compiled into PDF (as a single movement and part) and opened in the background. This mode is very useful when entering parts. To use ripple in proof mode, add <code>proof:true</code> to your <code>_ripple.yml</code> file, or specify the --proof option for the command-line tool.

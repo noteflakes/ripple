@@ -28,6 +28,7 @@ module Ripple
   
   def self.configuration(opts = {})
     config = DEFAULTS.deep_merge(opts)
+    config.deep = true
     config_file_path = File.join(config['source'], CONFIG_FILE)
     if File.exists?(config_file_path)
       config = config.deep_merge(YAML.load_file(config_file_path))

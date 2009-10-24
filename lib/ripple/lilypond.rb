@@ -29,16 +29,24 @@ module Ripple
       end
     end
     
+    def self.open(fn, config)
+      if config["open_in_background"]
+        system "open -g #{fn}"
+      else
+        system "open #{fn}"
+      end
+    end
+    
     def self.make_pdf(ly_file, pdf_file, config)
       run("--pdf -o \"#{pdf_file}\" \"#{ly_file}\"", config)
       delete_ps_file(pdf_file)
-      system "open #{pdf_file}.pdf" if config["open_target"]
+      open("#{pdf_file}.pdf", config) if config["open_target"]
     end
     
     def self.make_midi(ly_file, midi_file, config)
       run("-o \"#{midi_file}\" \"#{ly_file}\"", config)
       delete_pdf_and_ps_files(midi_file)
-      system "open #{midi_file}.midi" if config["open_target"]
+      open("#{midi_file}.midi", config) if config["open_target"]
     end
   end
 end

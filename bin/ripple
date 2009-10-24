@@ -19,6 +19,7 @@ HELP
 
 require 'optparse'
 require 'ripple'
+require 'pp'
 
 exec = {}
 options = {}
@@ -77,6 +78,13 @@ opts = OptionParser.new do |opts|
   opts.on("--no-auto", "Disable auto mode") do
     options["auto"] = false
   end
+  
+  opts.on("--proof", "Proof mode") do
+    options["proof"] = true
+    options["auto"] = true
+    options["open_target"] = true
+    options["open_in_background"] = true
+  end
 end
 
 opts.parse!
@@ -85,6 +93,10 @@ opts.parse!
 case ARGV.size
 when 0
   $work = nil
+  if options["proof"]
+    puts "Work must be specified in proof mode."
+    exit(1)
+  end
 when 1
   $work = ARGV[0]
 else
@@ -95,9 +107,9 @@ end
 $config = Ripple.configuration(options)
 $works = Ripple.works($config)
 
-def process
+def process(opts = {})
   if $work
-    $work.split(',').each {|w| Ripple::Work.new(w, $config).process}
+    $work.split(',').each {|w| Ripple::Work.new(w, $config.merge(opts)).process}
   elsif $works.empty?
     puts "No music found."
   else
@@ -108,22 +120,35 @@ end
 # Files to watch
 def globs(source)
   Dir.chdir(source) do
-    dirs = Dir['*'].select { |x| File.directory?(x) }
-    
-    # exclude _ly, _pdf, _midi dirs
-    if (d = $config['ly_dir']) =~ /^\.\/(.*)/
-      dirs -= [$1]
-    end
-    if (d = $config['pdf_dir']) =~ /^\.\/(.*)/
-      dirs -= [$1]
-    end
-    if (d = $config['midi_dir']) =~ /^\.\/(.*)/
-      dirs -= [$1]
+    if $work
+      dirs = $work.split(',').map {|w| Dir[w]}
+    else
+      dirs = Dir['*'].select { |x| File.directory?(x) }
+      # exclude _ly, _pdf, _midi dirs
+      ['ly_dir', 'pdf_dir', 'midi_dir'].map {|d| $config[d]}.each do |d|
+        if d =~ /^\.\/(.*)/
+          dirs -= [$1]
+        end
+      end
     end
     
     dirs = dirs.map { |x| "#{x}/**/*" }
     dirs += ['*']
   end
+end
+
+def proof_options(path)
+  part = File.basename(path, '.*')
+  dir = File.dirname(path)
+  if dir =~ /^\.\/(.+)$/
+    dir = $1
+  end
+  if dir =~ /^#{$work}\/([^\/]+)/
+    mvt = $1
+  else
+    mvt = nil
+  end
+  {"selected_parts" => part, "selected_movements" => mvt}
 end
 
 if options["auto"]
@@ -133,16 +158,30 @@ if options["auto"]
   dw = DirectoryWatcher.new($config['source'])
   dw.interval = 1
   dw.glob = globs($config['source'])
-
-  dw.add_observer do |*args|
-    t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-    puts "[#{t}] regeneration: #{args.size} files changed"
-    process
+  
+  if $config['proof']
+    dw.reset(true)
+    dw.add_observer do |*args|
+      t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+      args.each do |e|
+        case e.type
+        when :added, :modified
+          puts "[#{t}] Changed: #{e.path}"
+          process(proof_options(e.path))
+        end
+      end
+    end
+  else
+    dw.add_observer do |*args|
+      t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+      puts "[#{t}] regeneration: #{args.size} files changed"
+      process
+    end
   end
-
+  
   dw.start
-
-  loop { sleep 1000 }
+  loop {sleep 1000}
+  dw.stop
 else
   # just process once
   process

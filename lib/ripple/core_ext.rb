@@ -61,10 +61,12 @@ class Hash
     h = leafs.inject(self) {|m, i| m[i].is_a?(Hash) ? m[i] : (m[i] = {})}
     h[k] = value
   end
+  
+  attr_accessor :deep
 
   alias_method :old_get, :[]
   def [](k)
-    if k.is_a?(String) && k =~ /\//
+    if @deep && k.is_a?(String) && k =~ /\//
       lookup(k)
     else
       old_get(k)
@@ -73,7 +75,7 @@ class Hash
   
   alias_method :old_set, :[]=
   def []=(k, v)
-    if k.is_a?(String) && k =~ /\//
+    if @deep && k.is_a?(String) && k =~ /\//
       set(k, v)
     else
       old_set(k, v)
