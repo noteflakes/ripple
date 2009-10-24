@@ -153,7 +153,11 @@ end
 
 if options["auto"]
   require 'directory_watcher'
-  puts "Auto-regenerating enabled: #{$config['source']} -> #{$config['pdf_dir']}"
+  if $config['proof']
+    puts "Proof mode: #{$config['source']} -> #{$config['pdf_dir']}"
+  else
+    puts "Auto-regeneration: #{$config['source']} -> #{$config['pdf_dir']}"
+  end
 
   dw = DirectoryWatcher.new($config['source'])
   dw.interval = 1
@@ -164,8 +168,7 @@ if options["auto"]
     dw.add_observer do |*args|
       t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       args.each do |e|
-        case e.type
-        when :added, :modified
+        if e.type = :modified
           puts "[#{t}] Changed: #{e.path}"
           process(proof_options(e.path))
         end
