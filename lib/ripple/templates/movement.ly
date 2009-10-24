@@ -1,6 +1,9 @@
 	<% if config["include_toc"] %>
 		\tocItem \markup { <%= config["movement"].to_movement_title %> }
 	<% end %>
+	<% if should_break(config) %>
+	  \pageBreak
+	<% end %>
 	\score {
 	  \new StaffGroup <<
 		<% if (p = config["score/rendered_parts"]) && config["score/groups"] %>

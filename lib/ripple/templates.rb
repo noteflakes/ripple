@@ -86,6 +86,21 @@ module Ripple
       "#'(SystemStartBracket #{expr.join(' ')})"
     end
     
+    def self.should_break(config)
+      breaks = (config["mode"] == :part) ?
+        config["parts/#{config["part"]}/breaks"] :
+        config["score/breaks"]
+      breaks = [breaks] unless breaks.is_a?(Array)
+      breaks.include?(config["movement"])
+    end
+    
+    def self.smart_page_turns(config)
+      v = (config["mode"] == :part) && 
+        (config["smart_page_turn"] || config["parts/#{config["part"]}/smart_page_turn"])
+      v = "1 1" if v == true
+      v
+    end
+    
     def self.render_movement(content, config)
       template(:movement).result(binding)
     end

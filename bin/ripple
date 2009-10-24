@@ -151,6 +151,8 @@ def proof_options(path)
   {"selected_parts" => part, "selected_movements" => mvt}
 end
 
+$last_proof_path = nil
+
 if options["auto"]
   require 'directory_watcher'
   if $config['proof']
@@ -170,7 +172,8 @@ if options["auto"]
       args.each do |e|
         if e.type = :modified
           puts "[#{t}] Changed: #{e.path}"
-          process(proof_options(e.path))
+          $last_proof_path = e.path unless File.extname(e.path) == '.yml'
+          process(proof_options($last_proof_path)) if $last_proof_path
         end
       end
     end
