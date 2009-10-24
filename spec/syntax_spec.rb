@@ -92,12 +92,22 @@ context "Use case" do
   
   specify "03" do
     convert_syntax("([fs\\trill e]) gs-. a-. ([d,\\trill cs]) gs'-. a-.").should ==
-      "fis\\trill[( e]) gis-. a-. d,\\trill[( cis]) gis'-. a-."
+      "fis[(\\trill e]) gis-. a-. d,[(\\trill cis]) gis'-. a-."
   end
 
   specify "03.1" do
     convert_syntax("([fs\\trill e])").should ==
-      "fis\\trill[( e])"
+      "fis[(\\trill e])"
+  end
+  
+  specify "04" do
+    convert_syntax('(c,8.^"oboe II tacet" d6)').should ==
+      'c,8.(^"oboe II tacet" d16)'
+  end
+
+  specify "04.1" do
+    convert_syntax('(c,8.\p^"oboe II tacet" d6)').should ==
+      'c,8.(\p^"oboe II tacet" d16)'
   end
 end
 

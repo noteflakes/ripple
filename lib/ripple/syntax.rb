@@ -8,8 +8,11 @@ module Ripple
     
     APPOGGIATURE_RE = /(\s)?\^([a-g])/
 
-    BEAM_RE = /([^\s\[\(]*)\[(\s?[^\s]*)/
-    SLUR_RE = /([^\s\(\(]*)\((\s?[^\s]*)/
+    BEAM_RE = /([^\s\[\(]*)\[(\s?[^\s\^\\]*)/
+    SLUR_RE = /([^\s\[\(]*)\((\s?[^\s\^\\]*)/
+
+    # BEAM_RE = /([^\s\[\(]*)\[(\s?[^\s]*)/
+    # SLUR_RE = /([^\s\(\(]*)\((\s?[^\s]*)/
     BEAM_SLUR_INNER_RE = /([^\s]+)(.*)/
     
     PART_ONLY_RE = /\\partOnly\s*\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
