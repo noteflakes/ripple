@@ -2,9 +2,9 @@ module Ripple
   class Score
     include Syntax
     
-    def initialize(work)
+    def initialize(work, config = nil)
       @work = work
-      @config = work.config
+      @config = config || work.config
     end
     
     def movement_music_file(part, mvt, config)

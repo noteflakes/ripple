@@ -27,4 +27,13 @@
 	  }
 	  <% end %>
 	  \header { piece = \markup \bold \large "<%= config["movement"].to_movement_title %>" }
+	  <% if (config["mode"] == :score) && (config["score/indent"]) %>
+	  \layout {
+      indent = <%= config["score/indent"] %>
+    }
+	  <% elsif (config["mode"] == :part) && (config["aux_staves"]) %>
+	  \layout {
+      indent = <%= config["score/indent"] || '2.7\cm' %>
+    }
+	  <% end %>
 	}

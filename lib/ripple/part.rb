@@ -43,7 +43,9 @@ module Ripple
       parts = [parts] unless parts.is_a?(Array)
       output = ''
       parts.each do |p|
-        c = config.merge("part" => p)
+        title = (config["parts/#{@part}/before_include"] || config["parts/#{@part}/after_include"]) ?
+          config["parts/#{p}/title"] || p.to_instrument_title : nil
+        c = config.merge("part" => p, "staff_name" => title)
         music_fn = movement_music_file(p, mvt, c)
         output += Templates.render_staff(music_fn, load_music(music_fn, :part), c)
         if lyrics = movement_lyrics_files(p, mvt, c)
@@ -59,19 +61,20 @@ module Ripple
     def render_movement(mvt)
       c = movement_config(mvt)
       
-      before_parts = c["parts/#{@part}/before_include"]
-      after_parts = c["parts/#{@part}/after_include"]
-
-      if movement_music_file(@part, mvt, c)
+      if c["parts/#{@part}/score_in_part"]
+        Score.new(@work, c.merge('mode' => :score)).render_movement(mvt)
+      elsif movement_music_file(@part, mvt, c)
+        before_parts = c["parts/#{@part}/before_include"]
+        after_parts = c["parts/#{@part}/after_include"]
         content = ''
         if before_parts
           content = render_part(before_parts, mvt, c.merge("aux_staff" => true))
         end
         content += render_part(@part, mvt, c)
         if after_parts
-          content += render_part(after_parts, mvt, c)
+          content += render_part(after_parts, mvt, c.merge("aux_staff" => true))
         end
-        Templates.render_movement(content, c.merge("aux_staff" => true))
+        Templates.render_movement(content, c.merge("aux_staves" => (before_parts || after_parts)))
       else
         Templates.render_part_tacet(c)
       end

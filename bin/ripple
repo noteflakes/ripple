@@ -22,31 +22,31 @@ require 'ripple'
 require 'pp'
 
 exec = {}
-options = {}
+$options = {}
 opts = OptionParser.new do |opts|
   opts.banner = help
 
   opts.on("-p", "--parts PART", "Parts (comma-separated)") do |v|
-    options["selected_parts"] = v
+    $options["selected_parts"] = v
   end
   
   opts.on("-m", "--mvts MVT", "Movements (comma-separated)") do |v|
-    options["selected_movements"] = v
+    $options["selected_movements"] = v
   end
   
   opts.on("--midi", "Generate midi file") do |v|
-    options["midi"] = true
-    options["score_only"] = true # implied
+    $options["midi"] = true
+    $options["score_only"] = true # implied
   end
   
   opts.on("--no-midi", "Disable midi file generation") do |v|
-    options["midi"] = false
+    $options["midi"] = false
   end
   
   opts.on("--opt OPT", "Option override (key:value,key:value)") do |v|
     v.split(",").each do |kv|
       if kv =~ /(.+):(.+)/ 
-        options[$1] = $2
+        $options[$1] = $2
       else
         puts "Invalid option specified, please use key:value format"
         exit
@@ -55,15 +55,15 @@ opts = OptionParser.new do |opts|
   end
   
   opts.on("--no-pdf", "Generate Lilypond file only") do
-    options["no_pdf"] = true
+    $options["no_pdf"] = true
   end
   
   opts.on("-s", "--score", "Generate only score, no parts") do
-    options["score_only"] = true
+    $options["score_only"] = true
   end
   
   opts.on("-o", "--open", "Open PDF/Midi file after processing") do
-    options["open_target"] = true
+    $options["open_target"] = true
   end
 
   opts.on("-v", "--version", "Display current version") do
@@ -72,18 +72,18 @@ opts = OptionParser.new do |opts|
   end
   
   opts.on("--auto", "Force auto mode") do
-    options["auto"] = true
+    $options["auto"] = true
   end
   
   opts.on("--no-auto", "Disable auto mode") do
-    options["auto"] = false
+    $options["auto"] = false
   end
   
   opts.on("--proof", "Proof mode") do
-    options["proof"] = true
-    options["auto"] = true
-    options["open_target"] = true
-    options["open_in_background"] = true
+    $options["proof"] = true
+    $options["auto"] = true
+    $options["open_target"] = true
+    $options["open_in_background"] = true
   end
 end
 
@@ -93,7 +93,7 @@ opts.parse!
 case ARGV.size
 when 0
   $work = nil
-  if options["proof"]
+  if $options["proof"]
     puts "Work must be specified in proof mode."
     exit(1)
   end
@@ -104,7 +104,7 @@ else
   exit(1)
 end
 
-$config = Ripple.configuration(options)
+$config = Ripple.configuration($options)
 $works = Ripple.works($config)
 
 def process(opts = {})
@@ -148,12 +148,16 @@ def proof_options(path)
   else
     mvt = nil
   end
-  {"selected_parts" => part, "selected_movements" => mvt}
+  if $options['score_only']
+    {"selected_movements" => mvt}
+  else
+    {"selected_parts" => part, "selected_movements" => mvt}
+  end
 end
 
 $last_proof_path = nil
 
-if options["auto"]
+if $options["auto"]
   require 'directory_watcher'
   if $config['proof']
     puts "Proof mode: #{$config['source']} -> #{$config['pdf_dir']}"

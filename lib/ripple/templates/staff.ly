@@ -5,7 +5,7 @@
   <% if (smart_turns = smart_page_turns(config)) %>
     \consists "Page_turn_engraver"
   <% end %>
-  <% if config["aux_staff"] %>
+  <% if false && config["aux_staff"] %>
     fontSize = #-3
     \override StaffSymbol #'staff-space = #(magstep -3)
     \override StaffSymbol #'thickness = #(magstep -3)
