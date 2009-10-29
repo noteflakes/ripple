@@ -138,7 +138,6 @@ module Ripple
       puts
       puts "Failed to generate score."
     end
-
   end
 end
     

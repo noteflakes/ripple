@@ -17,6 +17,7 @@ require 'ripple/templates'
 require 'ripple/work'
 require 'ripple/part'
 require 'ripple/score'
+require 'ripple/vocal_score'
 require 'ripple/lilypond'
 
 module Ripple

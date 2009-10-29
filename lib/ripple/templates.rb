@@ -101,6 +101,16 @@ module Ripple
       v
     end
     
+    SOLO_TAG = ['soloText', 'soloIIText', 'soloIIIText', 'soloIVText']
+    
+    def self.combined_solo_text(idx, title)
+      "\\set Staff.#{SOLO_TAG[idx]} = #\"#{title}\""
+    end
+    
+    def self.render_combined(parts, titles, content, config)
+      template(:combined).result(binding)
+    end
+    
     def self.render_movement(content, config)
       template(:movement).result(binding)
     end

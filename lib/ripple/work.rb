@@ -51,17 +51,24 @@ module Ripple
       
       do_parts = true
       do_score = true
+      do_vocal = @config["vocal"]
 
       # inhibit part rendering if score_only specified and no parts specified.
       if selected_parts && !@config["score_only"]
         do_score = false
+        do_vocal = false
       # inhibit score rendering if parts specified and not score_only.
       elsif !selected_parts && @config["score_only"]
         do_parts = false
+      elsif @config["vocal_only"]
+        do_parts = false
+        do_score = false
+        do_vocal = true # force even if no vocal config is found
       end
       
       parts.each {|p| Part.new(p, self).process} if do_parts
       Score.new(self).process if do_score
+      VocalScore.new(self).process if do_vocal
     end
   end
 end

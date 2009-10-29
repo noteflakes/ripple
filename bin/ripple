@@ -62,6 +62,10 @@ opts = OptionParser.new do |opts|
     $options["score_only"] = true
   end
   
+  opts.on("--vocal", "Generate only vocal score") do
+    $options["vocal_only"] = true
+  end
+  
   opts.on("-o", "--open", "Open PDF/Midi file after processing") do
     $options["open_target"] = true
   end
