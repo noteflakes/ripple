@@ -2,9 +2,10 @@ require 'find'
 
 module Ripple
   class Work
-    attr_reader :path, :config
+    attr_reader :name, :path, :config
     
     def initialize(path, config = {})
+      @name = path
       @path = File.expand_path(path)
       @config = config.deep_merge(work_config)
     end

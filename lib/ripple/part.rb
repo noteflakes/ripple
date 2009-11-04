@@ -96,7 +96,7 @@ module Ripple
     end
     
     def pdf_filename
-      File.join(@config["pdf_dir"], @work.relative_path, "#{@part}")
+      File.join(@config["pdf_dir"], @work.relative_path, "#{@work.name}-#{@part}")
     end
     
     def process

@@ -103,7 +103,7 @@ module Ripple
     end
     
     def pdf_filename
-      File.join(@config["pdf_dir"], @work.relative_path, "score")
+      File.join(@config["pdf_dir"], @work.relative_path, "#{@work.name}-score")
     end
     
     def midi_filename(mvt)
