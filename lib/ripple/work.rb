@@ -50,8 +50,8 @@ module Ripple
         parts = all_parts
       end
       
-      do_parts = true
-      do_score = true
+      do_parts = !@config["no_parts"]
+      do_score = !@config["no_score"]
       do_vocal = @config["vocal"]
 
       # inhibit part rendering if score_only specified and no parts specified.
