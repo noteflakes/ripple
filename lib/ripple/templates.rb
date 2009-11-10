@@ -94,12 +94,13 @@ module Ripple
       breaks.include?(config["movement"])
     end
     
-    def self.movement_breaks(config)
+    def self.movement_blank_pages(config)
       breaks = (config["mode"] == :part) ?
         config["parts/#{config["part"]}/breaks"] :
         config["score/breaks"]
       breaks = [breaks] unless breaks.is_a?(Array)
-      breaks.count(config["movement"])
+      count = breaks.count(config["movement"])
+      (count > 1) ? (count - 1) : 0
     end
     
     def self.smart_page_turns(config)

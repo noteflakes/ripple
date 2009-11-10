@@ -1,7 +1,17 @@
-<% movement_breaks(config).times do %>
+<% if should_break(config) %>
   }
   \bookpart {
     \pageBreak
+    <% movement_blank_pages(config).times do %>
+      \markup \column {
+      \null \null \null \null \null \null
+      \null \null \null \null \null \null
+      \null \null \null \null \null \null
+      \null \null \null \null \null \null
+      \fill-line { "(this page has been left blank to facilitate page turning)" } 
+  		}
+      \pageBreak 
+    <% end %>
 <% end %>
 	<% if config["include_toc"] %>
 		\tocItem \markup { <%= config["movement"].to_movement_title %> }
