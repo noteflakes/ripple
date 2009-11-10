@@ -1,8 +1,10 @@
+<% if should_break(config) %>
+  }
+  \bookpart {
+    \pageBreak
+<% end %>
 	<% if config["include_toc"] %>
 		\tocItem \markup { <%= config["movement"].to_movement_title %> }
-	<% end %>
-	<% if should_break(config) %>
-	  \pageBreak
 	<% end %>
 	\score {
 	  \new StaffGroup <<
@@ -33,7 +35,7 @@
     }
 	  <% elsif (config["mode"] == :part) && (config["aux_staves"]) %>
 	  \layout {
-      indent = <%= config["score/indent"] || '2.7\cm' %>
+      indent = <%= config["score/indent"] || '2.5\cm' %>
     }
 	  <% end %>
 	}

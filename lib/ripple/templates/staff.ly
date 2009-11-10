@@ -5,10 +5,10 @@
   <% if (smart_turns = smart_page_turns(config)) %>
     \consists "Page_turn_engraver"
   <% end %>
-  <% if false && config["aux_staff"] %>
-    fontSize = #-3
-    \override StaffSymbol #'staff-space = #(magstep -3)
-    \override StaffSymbol #'thickness = #(magstep -3)
+  <% if config["aux_staff"] %>
+    fontSize = #-2
+    \override StaffSymbol #'staff-space = #(magstep -2)
+    \override StaffSymbol #'thickness = #(magstep -2)
   <% end %>
 } {
 <% if name = config["staff_name"] %>\set Staff.instrumentName = #"<%= name %>"<% end %>
