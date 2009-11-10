@@ -1,4 +1,4 @@
-<% if should_break(config) %>
+<% movement_breaks(config).times do %>
   }
   \bookpart {
     \pageBreak
