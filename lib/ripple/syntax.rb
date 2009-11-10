@@ -33,14 +33,14 @@ module Ripple
     
     INLINE_INCLUDE_RE = /\\inlineInclude\s(\S+)/
     
-    def convert_inline_includes(m, fn, mode, config)
+    def convert_inline_includes(m, fn, mode)
       m.gsub(INLINE_INCLUDE_RE) do |i|
         include_fn = File.join(File.dirname(fn), $1)
-        load_music(include_fn, mode, config)
+        load_music(include_fn, mode)
       end
     end
     
-    def convert_syntax(m, fn, rpl_mode, mode, config)
+    def convert_syntax(m, fn, rpl_mode, mode)
       if rpl_mode
         m = convert_prefixed_beams_and_slurs(m).
           gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
@@ -52,12 +52,12 @@ module Ripple
         gsub(SCORE_ONLY_RE) {(mode == :score) ? $1 : ''}.
         gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}
       
-      convert_inline_includes(m, fn, mode, config)
+      convert_inline_includes(m, fn, mode)
     end
     
-    def load_music(fn, mode, config)
+    def load_music(fn, mode)
       rpl_mode = fn =~ /\.rpl$/
-      convert_syntax(IO.read(fn), fn, rpl_mode, mode, config)
+      convert_syntax(IO.read(fn), fn, rpl_mode, mode)
     end
   end
 end
