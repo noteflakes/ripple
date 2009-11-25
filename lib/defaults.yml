@@ -10,6 +10,14 @@ parts:
     clef: treble
     auto_beam: false
     midi_instrument:  voice oohs
+  soprano1:
+    clef: treble
+    auto_beam: false
+    midi_instrument:  voice oohs
+  soprano2:
+    clef: treble
+    auto_beam: false
+    midi_instrument:  voice oohs
   alto:
     clef: treble
     auto_beam: false
