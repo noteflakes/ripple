@@ -38,7 +38,7 @@ opts = OptionParser.new do |opts|
     $options["no_score"] = true
   end
   
-  opts.on("--midi", "Generate midi file") do |v|
+  opts.on("-M", "--midi", "Generate midi file") do |v|
     $options["midi"] = true
     $options["score_only"] = true # implied
   end
@@ -66,7 +66,7 @@ opts = OptionParser.new do |opts|
     $options["score_only"] = true
   end
   
-  opts.on("--vocal", "Generate only vocal score") do
+  opts.on("-V", "--vocal", "Generate only vocal score") do
     $options["vocal_only"] = true
   end
   
@@ -79,7 +79,7 @@ opts = OptionParser.new do |opts|
     exit 0
   end
   
-  opts.on("--auto", "Force auto mode") do
+  opts.on("-a", "--auto", "Force auto mode") do
     $options["auto"] = true
   end
   
@@ -87,7 +87,7 @@ opts = OptionParser.new do |opts|
     $options["auto"] = false
   end
   
-  opts.on("--proof", "Proof mode") do
+  opts.on("-P", "--proof", "Proof-reading mode") do
     $options["proof"] = true
     $options["auto"] = true
     $options["open_target"] = true
