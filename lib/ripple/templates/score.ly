@@ -1,6 +1,10 @@
 <% include.each do |inc| %>\include "<%= inc %>"
 <% end %>
 
+<% if staff_size = config["score/staff_size"] %>
+#(set-global-staff-size <%= staff_size %>)
+<% end %>
+
 <% if config["score/hide_empty_staves"] %>
 \layout {
   \context { 
