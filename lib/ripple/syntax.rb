@@ -15,8 +15,8 @@ module Ripple
     # SLUR_RE = /([^\s\(\(]*)\((\s?[^\s]*)/
     BEAM_SLUR_INNER_RE = /([^\s]+)(.*)/
     
-    PART_ONLY_RE = /p\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
-    SCORE_ONLY_RE = /s\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
+    PART_ONLY_RE = /\[\[((?:(?:\](?!\]))|[^\]])+)\]\]/m
+    SCORE_ONLY_RE = /\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     MIDI_ONLY_RE = /m\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     
     def convert_prefixed_beams_and_slurs(m)
@@ -42,15 +42,15 @@ module Ripple
     
     def convert_syntax(m, fn, rpl_mode, mode)
       if rpl_mode
+        m = m.gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}.
+          gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
+          gsub(SCORE_ONLY_RE) {(mode == :score) ? $1 : ''}
+
         m = convert_prefixed_beams_and_slurs(m).
           gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
           gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
           gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
       end
-      
-      m = m.gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
-        gsub(SCORE_ONLY_RE) {(mode == :score) ? $1 : ''}.
-        gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}
       
       convert_inline_includes(m, fn, mode)
     end

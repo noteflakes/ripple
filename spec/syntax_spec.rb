@@ -115,50 +115,50 @@ context "Use case" do
   end
 end
 
-context "p{{}} sections" do
+context "[[]] sections" do
   specify "should be included only in part mode" do
-    cvt("a p{{b c}}").should == 
+    cvt("a [[b c]]").should == 
       "a "
 
-    cvt("a p{{b c}}", :part).should == 
+    cvt("a [[b c]]", :part).should == 
       "a b c"
 
-    cvt("a p{{b c}} d p{{e f}}").should == 
+    cvt("a [[b c]] d [[e f]]").should == 
       "a  d "
     
-    cvt("a p{{b c}} d p{{e f}}", :part).should == 
-      "a b c d e f"
+    cvt("a [[b c]] d [[(e f)]]", :part).should == 
+      "a b c d e( f)"
   end
   
   specify "should support line breaks" do
-    cvt("a p{{\nb c\n}}").should == 
+    cvt("a [[\nb c\n]]").should == 
       "a "
 
-    cvt("a p{{\nb c\n}}", :part).should == 
+    cvt("a [[\nb c\n]]", :part).should == 
       "a \nb c\n"
   end
 end
 
-context "s{{}} sections" do
+context "{{}} sections" do
   specify "should be included only in score mode" do
-    cvt("a s{{b c}}").should == 
+    cvt("a {{b c}}").should == 
       "a "
 
-    cvt("a s{{b c}}", :score).should == 
+    cvt("a {{b c}}", :score).should == 
       "a b c"
 
-    cvt("a s{{b c}} d s{{e f}}").should == 
+    cvt("a {{b c}} d {{e f}}").should == 
       "a  d "
 
-    cvt("a s{{b c}} d s{{e f}}", :score).should == 
+    cvt("a {{b c}} d {{e f}}", :score).should == 
       "a b c d e f"
   end
   
   specify "should support line breaks" do
-    cvt("a s{{\nb c\n}}").should == 
+    cvt("a {{\nb c\n}}").should == 
       "a "
 
-    cvt("a s{{\nb c\n}}", :score).should == 
+    cvt("a {{\nb c\n}}", :score).should == 
       "a \nb c\n"
   end
 end
