@@ -15,9 +15,9 @@ module Ripple
     # SLUR_RE = /([^\s\(\(]*)\((\s?[^\s]*)/
     BEAM_SLUR_INNER_RE = /([^\s]+)(.*)/
     
-    PART_ONLY_RE = /\\partOnly\s*\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
-    SCORE_ONLY_RE = /\\scoreOnly\s*\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
-    MIDI_ONLY_RE = /\\midiOnly\s*\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
+    PART_ONLY_RE = /p\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
+    SCORE_ONLY_RE = /s\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
+    MIDI_ONLY_RE = /m\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     
     def convert_prefixed_beams_and_slurs(m)
       m.gsub(BEAM_RE) do |i| 
