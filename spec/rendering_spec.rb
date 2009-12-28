@@ -1,7 +1,7 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/ripple'))
 
 context "Staff group hierarchy algorithm" do
-  setup do
+  before(:each) do
     yaml = <<EOF
 score:
   order:

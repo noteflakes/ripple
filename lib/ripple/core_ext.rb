@@ -1,19 +1,29 @@
+class Fixnum
+  ROMAN = %w[0 I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI XVII XVIII XIX
+    XX XXI XXII XXIII XXIV XXV XXVI XXVII XXVIII XXIX XXX]
+  
+  def to_roman
+    ROMAN[self]
+  end
+end
+
 class String
   def to_movement_title
-    if self =~ /^(\d+)\-(.+)$/
+    case self
+    when /^(\d+)\-(.+)$/
       num = $1.to_i
       name = $2.gsub("-", " ").gsub(/\b('?[a-z])/) {$1.capitalize}
       "#{num}. #{name}"
+    when /^(\d+)$/
+      num = $1.to_i.to_roman
     else
       self
     end
   end
   
-  ROMAN = %w[0 I II III IV V VI VII VIII IX X]
-  
   def to_instrument_title
     if self =~ /^([^\d]+)(\d+)$/
-      "#{$1.capitalize} #{ROMAN[$2.to_i]}"
+      "#{$1.capitalize} #{$2.to_i.to_roman}"
     else
       self.capitalize
     end
