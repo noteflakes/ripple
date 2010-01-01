@@ -40,12 +40,46 @@ module Ripple
       end
     end
     
-    def convert_syntax(m, fn, rpl_mode, mode)
+    MACRO_GOBBLE_RE = /([a-gr](?:[bs]?)(?:[,'!?]+)?)([\\\^_]\S+)?/
+    MACRO_REPLACE_RE = /#([^\s\)]+)?/
+
+    def convert_macro_region(pattern, m)
+      size = pattern.count('#')
+      accum = []; buffer = ''
+      m.gsub(MACRO_GOBBLE_RE) do |i|
+        accum << [$1, $2]
+        if accum.size == size
+          buffer << pattern.gsub(MACRO_REPLACE_RE) do |i|
+            note = accum.shift
+            "#{note[0]}#{$1}#{note[1]}"
+          end
+          buffer << " "
+          accum = []
+        end
+      end
+      buffer
+    end
+    
+    INLINE_MACRO_RE = /\$([^\$]+)\$(?::([a-z0-9\._]+))?([^\$]+)(?:\$\$)?/m
+    NAMED_MACRO_RE = /\$(?:([a-z0-9\._]+)\s)([^\$]+)(?:\$\$)?/m
+    
+    def convert_macros(m, config)
+      m.gsub(NAMED_MACRO_RE) {
+        convert_macro_region(config.lookup("macros/#{$1}"), $2)
+      }.gsub(INLINE_MACRO_RE) {
+        config.set("macros/#{$2}", $1) if $2
+        convert_macro_region($1, $3)
+      }
+    end
+    
+    def convert_syntax(m, fn, rpl_mode, mode, config)
       if rpl_mode
         m = m.gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}.
           gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
           gsub(SCORE_ONLY_RE) {(mode == :score) ? $1 : ''}
 
+        m = convert_macros(m, config)
+        
         m = convert_prefixed_beams_and_slurs(m).
           gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
           gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
@@ -55,9 +89,9 @@ module Ripple
       convert_inline_includes(m, fn, mode)
     end
     
-    def load_music(fn, mode)
+    def load_music(fn, mode, config)
       rpl_mode = fn =~ /\.rpl$/
-      convert_syntax(IO.read(fn), fn, rpl_mode, mode)
+      convert_syntax(IO.read(fn), fn, rpl_mode, mode, config)
     end
   end
 end

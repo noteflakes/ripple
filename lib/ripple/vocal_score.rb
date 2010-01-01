@@ -22,7 +22,7 @@ module Ripple
           c = config.merge("part" => p, "staff_name" => title)
           music_fn = movement_music_file(p, mvt, c)
           mode = @config["midi"] ? :midi : :score
-          output += Templates.render_staff(music_fn, load_music(music_fn, mode), c)
+          output += Templates.render_staff(music_fn, load_music(music_fn, mode, c), c)
           if lyrics = movement_lyrics_file(p, mvt, c)
             lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
           end

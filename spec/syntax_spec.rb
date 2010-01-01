@@ -2,8 +2,8 @@ require File.expand_path(File.join(File.dirname(__FILE__), '../lib/ripple'))
 
 include Ripple::Syntax
 
-def cvt(input, mode = nil)
-  convert_syntax(input, 'blah.rpl', true, mode)
+def cvt(input, mode = nil, config = {})
+  convert_syntax(input, 'blah.rpl', true, mode, config)
 end
 
 context "Syntax converter" do
@@ -184,5 +184,60 @@ context "m{{}} sections" do
 
     cvt("a m{{\nb c\n}}", :midi).should == 
       "a \nb c\n"
+  end
+end
+
+context "macro mode" do
+  specify "should be entered using $...$ syntax" do
+    cvt("$(#8. #6)$ g g g g g g").should ==
+      "g8.( g16) g8.( g16) g8.( g16) "
+  end
+  
+  specify "should be exited using $$ syntax" do
+    cvt("$(#8. #6)$ g g g g g g $$ g2").should ==
+      "g8.( g16) g8.( g16) g8.( g16)  g2"
+  end
+  
+  specify "should allow named macros" do
+    cvt("$(#8. #6)$:8.6 g g g g g g $$ g2 $8.6 g g $$ g4").should ==
+      "g8.( g16) g8.( g16) g8.( g16)  g2 g8.( g16)  g4"
+  end
+  
+  specify "should support macros defined in config" do
+    cvt("$8.6 g g $$ g4", nil, {"macros" => {"8.6" => "(#8. #6)"}}).should ==
+      "g8.( g16)  g4"
+  end
+end
+
+context "macro use case" do
+  specify "01" do
+    src = "$8.6 g g
+g g g g g g 
+g g g g g g 
+g g g g g g $$
+g4 r g'
+fs e d 
+cs d cs
+b g a
+$8.6 d, d d d d  d 
+d d d d d d 
+d d d d d d 
+d d d d d d $$
+d2."
+    
+    cvt(src, nil, {"macros" => {"8.6" => "(#8. #6)"}}).should == 
+      "g8.( g16) g8.( g16) g8.( g16) g8.( g16) g8.( g16) g8.( g16) g8.( g16) g8.( g16) g8.( g16) g8.( g16) 
+g4 r g'
+fis e d 
+cis d cis
+b g a
+d,8.( d16) d8.( d16) d8.( d16) d8.( d16) d8.( d16) d8.( d16) d8.( d16) d8.( d16) d8.( d16) d8.( d16) d8.( d16) d8.( d16) 
+d2."
+  end
+  
+  specify "02" do
+    src = "$8.6 g g g\\p g g g $$"
+    cvt(src, nil, {"macros" => {"8.6" => "(#8. #6)"}}).should == 
+      "g8.( g16) g8.(\\p g16) g8.( g16) "
   end
 end

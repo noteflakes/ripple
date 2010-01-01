@@ -47,7 +47,7 @@ module Ripple
           config["parts/#{p}/title"] || p.to_instrument_title : nil
         c = config.merge("part" => p, "staff_name" => title)
         music_fn = movement_music_file(p, mvt, c)
-        output += Templates.render_staff(music_fn, load_music(music_fn, :part), c)
+        output += Templates.render_staff(music_fn, load_music(music_fn, :part, c), c)
         if lyrics = movement_lyrics_files(p, mvt, c)
           lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
         end
