@@ -41,17 +41,18 @@ module Ripple
     end
     
     MACRO_GOBBLE_RE = /([a-gr](?:[bs]?)(?:[,'!?]+)?)([\\\^_]\S+)?/
-    MACRO_REPLACE_RE = /#([^\s\)]+)?/
+    MACRO_REPLACE_RE = /([#\@])([^\s\)]+)?/
 
     def convert_macro_region(pattern, m)
       size = pattern.count('#')
-      accum = []; buffer = ''
+      accum = []; buffer = ''; last_note = nil
       m.gsub(MACRO_GOBBLE_RE) do |i|
         accum << [$1, $2]
         if accum.size == size
           buffer << pattern.gsub(MACRO_REPLACE_RE) do |i|
-            note = accum.shift
-            "#{note[0]}#{$1}#{note[1]}"
+            note = ($1 == '@') ? last_note : accum.shift
+            last_note = note
+            "#{note[0]}#{$2}#{note[1]}"
           end
           buffer << " "
           accum = []
@@ -60,15 +61,15 @@ module Ripple
       buffer
     end
     
-    INLINE_MACRO_RE = /\$([^\$]+)\$(?::([a-z0-9\._]+))?([^\$]+)(?:\$\$)?/m
+    INLINE_MACRO_RE = /\$\!([^\$]+)\$(?::([a-z0-9\._]+))?([^\$]+)(?:\$\$)?/m
     NAMED_MACRO_RE = /\$(?:([a-z0-9\._]+)\s)([^\$]+)(?:\$\$)?/m
     
     def convert_macros(m, config)
-      m.gsub(NAMED_MACRO_RE) {
-        convert_macro_region(config.lookup("macros/#{$1}"), $2)
-      }.gsub(INLINE_MACRO_RE) {
+      m.gsub(INLINE_MACRO_RE) {
         config.set("macros/#{$2}", $1) if $2
         convert_macro_region($1, $3)
+      }.gsub(NAMED_MACRO_RE) { |i|
+        convert_macro_region(config.lookup("macros/#{$1}"), $2)
       }
     end
     

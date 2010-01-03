@@ -188,24 +188,29 @@ context "m{{}} sections" do
 end
 
 context "macro mode" do
-  specify "should be entered using $...$ syntax" do
-    cvt("$(#8. #6)$ g g g g g g").should ==
+  specify "should be entered using $!...$ syntax" do
+    cvt("$!(#8. #6)$ g g g g g g").should ==
       "g8.( g16) g8.( g16) g8.( g16) "
   end
   
   specify "should be exited using $$ syntax" do
-    cvt("$(#8. #6)$ g g g g g g $$ g2").should ==
+    cvt("$!(#8. #6)$ g g g g g g $$ g2").should ==
       "g8.( g16) g8.( g16) g8.( g16)  g2"
   end
   
   specify "should allow named macros" do
-    cvt("$(#8. #6)$:8.6 g g g g g g $$ g2 $8.6 g g $$ g4").should ==
+    cvt("$!(#8. #6)$:8.6 g g g g g g $$ g2 $8.6 g g $$ g4").should ==
       "g8.( g16) g8.( g16) g8.( g16)  g2 g8.( g16)  g4"
   end
   
   specify "should support macros defined in config" do
     cvt("$8.6 g g $$ g4", nil, {"macros" => {"8.6" => "(#8. #6)"}}).should ==
       "g8.( g16)  g4"
+  end
+  
+  specify "should support note repetition" do
+    cvt("$!(#8. @6 #8 #)$ g b d").should ==
+      "g8.( g16 b8 d) "
   end
 end
 
