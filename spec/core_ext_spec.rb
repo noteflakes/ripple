@@ -117,4 +117,9 @@ context "String#to_movement_title" do
     "01".to_movement_title.should == 'I'
     "09".to_movement_title.should == 'IX'
   end
+  
+  specify "should omit number when prefixed with a dash" do
+    "-01-Blah".to_movement_title.should == 'Blah'
+    "-09-Versus-VIII".to_movement_title.should == 'Versus VIII'
+  end
 end

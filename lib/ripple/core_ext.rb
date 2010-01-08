@@ -10,6 +10,8 @@ end
 class String
   def to_movement_title
     case self
+    when /^\-\d+\-(.+)$/
+      $1.gsub("-", " ").gsub(/\b('?[a-z])/) {$1.capitalize}
     when /^(\d+)\-(.+)$/
       num = $1.to_i
       name = $2.gsub("-", " ").gsub(/\b('?[a-z])/) {$1.capitalize}
