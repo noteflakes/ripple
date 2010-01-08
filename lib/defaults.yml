@@ -71,6 +71,12 @@ parts:
   viola:
     clef: alto
     midi_instrument: viola
+  viola1:
+    clef: alto
+    midi_instrument: viola
+  viola2:
+    clef: alto
+    midi_instrument: viola
   fagott:
     clef: bass
     midi_instrument: bassoon
