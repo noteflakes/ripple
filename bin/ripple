@@ -165,6 +165,26 @@ end
 
 $last_proof_path = nil
 
+def make_proof_score
+  return unless $last_proof_path
+  opts = proof_options($last_proof_path)
+  opts["selected_parts"] = nil
+  opts["score_only"] = true
+  process(opts)
+end
+
+def proof_interrupt
+  trap("INT") {exit}
+  puts "Proof mode interrupted. (S)core, (M)IDI or e(x)it? "
+  if i = STDIN.gets
+    case i.chomp.downcase
+    when 's': make_proof_score
+    when 'x': exit
+    end
+  end
+  trap("INT") {proof_interrupt}
+end
+
 if $options["auto"]
   require 'directory_watcher'
   if $config['proof']
@@ -179,6 +199,7 @@ if $options["auto"]
   
   if $config['proof']
     dw.reset(true)
+    trap("INT") {proof_interrupt}
     dw.add_observer do |*args|
       t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       args.each do |e|
@@ -200,6 +221,7 @@ if $options["auto"]
   dw.start
   loop {sleep 1000}
   dw.stop
+
 else
   # just process once
   process
