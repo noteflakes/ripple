@@ -4,8 +4,8 @@ Ripple is a small program that helps you generate scores and parts without repea
 
 Ripple does two things:
 
-- Put together scores and parts from files in organized in a specific directory hierarchy.
-- Allow you to use a somewhat better syntax for writing music (not done yet).
+- Put together scores and parts from files organized in a specific directory hierarchy.
+- Allow you to use a better syntax for writing music, with support for macros (very useful for notating recurring rhythms), better accidentals, prefixed beams and slurs, and shorthand notation for stuff like divisi, appogiaturas, etc.
 
 For comprehensive examples of usage checkout out my [music scores project](http://github.com/ciconia/music/tree) (mainly Bach stuff).
 

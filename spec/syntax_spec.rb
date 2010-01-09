@@ -214,6 +214,13 @@ context "macro mode" do
   end
 end
 
+context "divisi shorthand" do
+  specify "should be entered using /1 ... /2 ... /u syntax" do
+    cvt("/1 a4 /2 b4 /u c2").should == 
+      "<< { \\voiceOne a4 } \\new Voice { \\voiceTwo b4 } >> \\oneVoice c2"
+  end
+end
+
 context "macro use case" do
   specify "01" do
     src = "$8.6 g g

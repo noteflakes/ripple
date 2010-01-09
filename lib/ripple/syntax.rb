@@ -19,6 +19,8 @@ module Ripple
     SCORE_ONLY_RE = /\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     MIDI_ONLY_RE = /m\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     
+    DIVISE_RE = /\/1\s([^\/]+)\/2\s([^\/]+)\/u\s/
+    
     def convert_prefixed_beams_and_slurs(m)
       m.gsub(BEAM_RE) do |i| 
         pre, post = $1, $2
@@ -82,6 +84,7 @@ module Ripple
         m = convert_macros(m, config)
         
         m = convert_prefixed_beams_and_slurs(m).
+          gsub(DIVISE_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}.
           gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
           gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
           gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
