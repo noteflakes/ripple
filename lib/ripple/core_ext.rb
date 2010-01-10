@@ -8,14 +8,18 @@ class Fixnum
 end
 
 class String
+  def titlize(all_capitals = false)
+    all_capitals ? 
+      self.gsub("-", " ").gsub(/\b('?[a-z])/) {$1.capitalize} :
+      self.gsub("-", " ").capitalize
+  end
+  
   def to_movement_title
     case self
     when /^\-\d+\-(.+)$/
-      $1.gsub("-", " ").gsub(/\b('?[a-z])/) {$1.capitalize}
+      $1.titlize(true)
     when /^(\d+)\-(.+)$/
-      num = $1.to_i
-      name = $2.gsub("-", " ").gsub(/\b('?[a-z])/) {$1.capitalize}
-      "#{num}. #{name}"
+      "#{$1.to_i}. #{$2.titlize(true)}"
     when /^(\d+)$/
       num = $1.to_i.to_roman
     else
@@ -25,14 +29,10 @@ class String
   
   def to_instrument_title
     if self =~ /^([^\d]+)(\d+)$/
-      "#{$1.capitalize} #{$2.to_i.to_roman}"
+      "#{$1.titlize} #{$2.to_i.to_roman}"
     else
-      self.capitalize
+      self.titlize
     end
-  end
-  
-  def to_title
-    gsub(/\b('?[a-z])/) {$1.capitalize}
   end
   
   # Works like inspect, except it unescapes Unicode sequences

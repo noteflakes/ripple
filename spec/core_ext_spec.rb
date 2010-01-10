@@ -106,6 +106,10 @@ context "String#to_instrument_title" do
     "violino1".to_instrument_title.should == 'Violino I'
     "violino3".to_instrument_title.should == 'Violino III'
   end
+  
+  specify "should handle multiple words in title" do
+    "viola-da-gamba1".to_instrument_title.should == 'Viola da gamba I'
+  end
 end
 
 context "String#to_movement_title" do

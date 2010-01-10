@@ -1,5 +1,7 @@
 module Ripple
   module Syntax
+    SKIP_QUOTES_RE = /([^"]+)("[^"]+")?/m
+    
     ACCIDENTAL = {'s' => 'is', 'b' => 'es', 'ss' => 'isis', 'bb' => 'eses'}
     ACCIDENTAL_RE = /\b([a-g])([sb]{1,2})([^a-z])?/
     
@@ -19,7 +21,7 @@ module Ripple
     SCORE_ONLY_RE = /\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     MIDI_ONLY_RE = /m\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     
-    DIVISE_RE = /\/1\s([^\/]+)\/2\s([^\/]+)\/u\s/
+    DIVISI_RE = /\/1\s([^\/]+)\/2\s([^\/]+)\/u\s/
     
     def convert_prefixed_beams_and_slurs(m)
       m.gsub(BEAM_RE) do |i| 
@@ -81,13 +83,15 @@ module Ripple
           gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
           gsub(SCORE_ONLY_RE) {(mode == :score) ? $1 : ''}
 
-        m = convert_macros(m, config)
-        
-        m = convert_prefixed_beams_and_slurs(m).
-          gsub(DIVISE_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}.
-          gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
-          gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
-          gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
+        m = m.gsub(SKIP_QUOTES_RE) do
+          a,q = convert_macros($1, config), $2
+          a = convert_prefixed_beams_and_slurs(a).
+            gsub(DIVISI_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}.
+            gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
+            gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
+            gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
+          "#{a}#{q}"
+        end
       end
       
       convert_inline_includes(m, fn, mode)

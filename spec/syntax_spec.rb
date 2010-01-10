@@ -21,6 +21,11 @@ context "Syntax converter" do
       'cis1 bes- eis! aes('
   end
   
+  specify "should not convert accidentals inside quotes" do
+    cvt('as as "assai"').should ==
+      'ais ais "assai"'
+  end
+  
   specify "should move prefixed [ to after note" do
     cvt('[a b c]').should ==
       'a[ b c]'

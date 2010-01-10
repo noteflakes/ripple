@@ -175,7 +175,7 @@ end
 
 def proof_interrupt
   trap("INT") {exit}
-  puts "Proof mode interrupted. (S)core, (M)IDI or e(x)it? "
+  puts "Proof mode interrupted. (S)core, (M)IDI or e(x)it?"
   if i = STDIN.gets
     case i.chomp.downcase
     when 's': make_proof_score
