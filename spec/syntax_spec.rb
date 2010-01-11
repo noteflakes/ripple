@@ -190,6 +190,22 @@ context "m{{}} sections" do
   end
 end
 
+context "m{{}} use case" do
+  specify "01" do
+    cvt('\bar "||" \time 3/4
+
+     m{{\tempo 4=104}}
+
+    d, c b a6 g fis8 d
+    g fis g a b c').strip.should == '\bar "||" \time 3/4
+
+     
+
+    d, c b a16 g fis8 d
+    g fis g a b c'
+  end
+end
+
 context "macro mode" do
   specify "should be entered using $!...$ syntax" do
     cvt("$!(#8. #6)$ g g g g g g").should ==

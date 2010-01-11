@@ -78,11 +78,11 @@ module Ripple
     end
     
     def convert_syntax(m, fn, rpl_mode, mode, config)
-      if rpl_mode
-        m = m.gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}.
-          gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
-          gsub(SCORE_ONLY_RE) {(mode == :score) ? $1 : ''}
+      m = m.gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}.
+        gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
+        gsub(SCORE_ONLY_RE) {(mode == :score) ? $1 : ''}
 
+      if rpl_mode
         m = m.gsub(SKIP_QUOTES_RE) do
           a,q = convert_macros($1, config), $2
           a = convert_prefixed_beams_and_slurs(a).
