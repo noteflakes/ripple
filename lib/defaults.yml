@@ -77,6 +77,15 @@ parts:
   viola2:
     clef: alto
     midi_instrument: viola
+  viola-da-gamba:
+    clef: bass
+    midi_instrument: viola
+  viola-da-gamba1:
+    clef: bass
+    midi_instrument: viola
+  viola-da-gamba2:
+    clef: bass
+    midi_instrument: viola
   fagott:
     clef: bass
     midi_instrument: bassoon
@@ -104,5 +113,9 @@ parts:
   oboe2:
     clef: treble
     midi_instrument: oboe
-  
-  
+  flauto:
+    clef: treble
+    midi_instrument: recorder
+  flauto1:
+    clef: treble
+    midi_instrument: recorder

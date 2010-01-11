@@ -165,11 +165,12 @@ end
 
 $last_proof_path = nil
 
-def make_proof_score
+def make_proof_score(midi = false)
   return unless $last_proof_path
   opts = proof_options($last_proof_path)
   opts["selected_parts"] = nil
   opts["score_only"] = true
+  opts["midi"] = midi
   process(opts)
 end
 
@@ -178,7 +179,8 @@ def proof_interrupt
   puts "Proof mode interrupted. (S)core, (M)IDI or e(x)it?"
   if i = STDIN.gets
     case i.chomp.downcase
-    when 's': make_proof_score
+    when 's': make_proof_score(false)
+    when 'm': make_proof_score(true)
     when 'x': exit
     end
   end

@@ -101,5 +101,19 @@ module Ripple
       rpl_mode = fn =~ /\.rpl$/
       convert_syntax(IO.read(fn), fn, rpl_mode, mode, config)
     end
+    
+    class Proxy
+      class << self
+        include Ripple::Syntax
+      
+        def cvt(m, mode = nil, config = {})
+          convert_syntax(m, '', true, mode, config)
+        end
+      end
+    end
+    
+    def self.cvt(m, mode = nil, config = {})
+      Proxy.cvt(m, mode, config)
+    end
   end
 end

@@ -1,9 +1,7 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/ripple'))
 
-include Ripple::Syntax
-
 def cvt(input, mode = nil, config = {})
-  convert_syntax(input, 'blah.rpl', true, mode, config)
+  Ripple::Syntax.cvt(input, mode, config)
 end
 
 context "Syntax converter" do

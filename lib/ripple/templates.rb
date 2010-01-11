@@ -123,8 +123,26 @@ module Ripple
     def self.render_movement(content, config)
       template(:movement).result(binding)
     end
+    
+    def self.get_transposition(config)
+      if config['midi'] && (t = config["parts/#{config["part"]}/midi_transpose"])
+        t
+      else
+        config["parts/#{config["part"]}/transpose"]
+      end
+    end
+    
+    def self.transpose(content, config)
+      if t = get_transposition(config)
+        t = Ripple::Syntax.cvt(t)
+        "\\transpose #{t} { #{content} }"
+      else
+        content
+      end
+    end
 
     def self.render_staff(fn, content, config)
+      content = transpose(content, config)
       template(:staff).result(binding)
     end
 
