@@ -5,9 +5,8 @@ module Ripple
     ACCIDENTAL = {'s' => 'is', 'b' => 'es', 'ss' => 'isis', 'bb' => 'eses'}
     ACCIDENTAL_RE = /\b([a-g])([sb]{1,2})([^a-z])?/
     
-    # VALUE_RE = /\b([ra-g])([^\s]+)?([36])([^\d\w])?/
-    VALUE_RE = /([a-gr](?:[bs]+)?(?:[',]+)?(?:[!\?])?)([36])/
-    VALUE = {'3' => '32', '6' => '16'}
+    VALUE_RE = /([a-gr](?:[bs]+)?(?:[',]+)?(?:[!\?])?)([36]4?)/
+    VALUE = {'3' => '32', '6' => '16', '64' => '64'}
     
     APPOGGIATURE_RE = /(\s)?\^([a-g])/
 
