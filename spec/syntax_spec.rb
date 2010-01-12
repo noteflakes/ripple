@@ -28,29 +28,21 @@ context "Syntax converter" do
     cvt('[a b c]').should ==
       'a[ b c]'
 
-    cvt('[ a,4 b c]').should ==
+    cvt('[a,4 b c]').should ==
       'a,4[ b c]'
 
-    cvt("a b c [\nd").should ==
+    cvt("a b c [d").should ==
       'a b c d['
   end
   
-  specify "should convert [ before line-break" do
-    cvt("[\nd8 c b").should ==
-      'd8[ c b'
-
-    cvt("d8[\nd8 c b").should ==
-      "d8[\nd8 c b"
-  end
-
   specify "should move prefixed ( to after note" do
     cvt('[a b c]').should ==
       'a[ b c]'
 
-    cvt('[ a,4 b c]').should ==
+    cvt('[a,4 b c]').should ==
       'a,4[ b c]'
 
-    cvt("a b c [\nd").should ==
+    cvt("a b c [d").should ==
       'a b c d['
   end
   
@@ -99,12 +91,12 @@ context "Use case" do
   
   specify "03" do
     cvt("([fs\\trill e]) gs-. a-. ([d,\\trill cs]) gs'-. a-.").should ==
-      "fis[(\\trill e]) gis-. a-. d,[(\\trill cis]) gis'-. a-."
+      "fis([\\trill e]) gis-. a-. d,([\\trill cis]) gis'-. a-."
   end
 
   specify "03.1" do
     cvt("([fs\\trill e])").should ==
-      "fis[(\\trill e])"
+      "fis([\\trill e])"
   end
   
   specify "04" do
@@ -115,6 +107,26 @@ context "Use case" do
   specify "04.1" do
     cvt('(c,8.\p^"oboe II tacet" d6)').should ==
       'c,8.(\p^"oboe II tacet" d16)'
+  end
+  
+  specify "05" do
+    cvt("\\times 2/3 { [(bb6 c bb)] } \\times 2/3 { [(a!6 bb a)] } ").should ==
+      "\\times 2/3 { bes16[( c bes)] } \\times 2/3 { a!16[( bes a)] } "
+  end
+
+  specify "06" do
+    cvt("\\times 2/3 { bb6([ c bb)] } \\times 2/3 { a!6([ bb a)] } ").should ==
+      "\\times 2/3 { bes16([ c bes)] } \\times 2/3 { a!16([ bes a)] } "
+  end
+  
+  specify "07" do
+    cvt("(c6*2/3 db c)").should ==
+      "c16*2/3( des c)"
+  end
+  
+  specify "08" do
+    cvt("(a!8 b)").should ==
+      "a!8( b)"
   end
 end
 
@@ -270,5 +282,11 @@ d2."
     src = "$8.6 g g g\\p g g g $$"
     cvt(src, nil, {"macros" => {"8.6" => "(#8. #6)"}}).should == 
       "g8.( g16) g8.(\\p g16) g8.( g16) "
+  end
+  
+  specify "03" do
+    src = "$t2 bb c bb a! bb a $$"
+    cvt(src, nil, {"macros" => {"t2" => "\\times 2/3 { #6[( # #)] }"}}).should ==
+      "\\times 2/3 { bes16[( c bes)] } \\times 2/3 { a!16[( bes a)] } "
   end
 end

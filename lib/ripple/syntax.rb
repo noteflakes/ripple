@@ -5,34 +5,22 @@ module Ripple
     ACCIDENTAL = {'s' => 'is', 'b' => 'es', 'ss' => 'isis', 'bb' => 'eses'}
     ACCIDENTAL_RE = /\b([a-g])([sb]{1,2})([^a-z])?/
     
-    VALUE_RE = /\b([ra-g])([^\s]+)?([36])([^\d\w])?/
+    # VALUE_RE = /\b([ra-g])([^\s]+)?([36])([^\d\w])?/
+    VALUE_RE = /([a-gr](?:[bs]+)?(?:[',]+)?(?:[!\?])?)([36])/
     VALUE = {'3' => '32', '6' => '16'}
     
     APPOGGIATURE_RE = /(\s)?\^([a-g])/
 
-    BEAM_RE = /([^\s\[\(]*)\[(\s?[^\s\^\\]*)/
-    SLUR_RE = /([^\s\[\(]*)\((\s?[^\s\^\\]*)/
-
-    # BEAM_RE = /([^\s\[\(]*)\[(\s?[^\s]*)/
-    # SLUR_RE = /([^\s\(\(]*)\((\s?[^\s]*)/
-    BEAM_SLUR_INNER_RE = /([^\s]+)(.*)/
-    
     PART_ONLY_RE = /\[\[((?:(?:\](?!\]))|[^\]])+)\]\]/m
     SCORE_ONLY_RE = /\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     MIDI_ONLY_RE = /m\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     
     DIVISI_RE = /\/1\s([^\/]+)\/2\s([^\/]+)\/u\s/
     
+    BEAM_SLUR_RE = /([\[\(]+)([a-g](?:[bs]+)?(?:[',]+)?(?:[!\?])?([\d*\/]+)?\.?)/m
+    
     def convert_prefixed_beams_and_slurs(m)
-      m.gsub(BEAM_RE) do |i| 
-        pre, post = $1, $2
-        (pre.empty? && post =~ BEAM_SLUR_INNER_RE) ?
-          "#{$1}[#{$2}" : i
-      end.gsub(SLUR_RE) do |i| 
-        pre, post = $1, $2
-        (pre.empty? && post =~ BEAM_SLUR_INNER_RE) ?
-          "#{$1}(#{$2}" : i
-      end
+      m.gsub(BEAM_SLUR_RE) {"#{$2}#{$1}"}
     end
     
     INLINE_INCLUDE_RE = /\\inlineInclude\s(\S+)/
@@ -45,7 +33,7 @@ module Ripple
     end
     
     MACRO_GOBBLE_RE = /([a-gr](?:[bs]?)(?:[,'!?]+)?)([\\\^_]\S+)?/
-    MACRO_REPLACE_RE = /([#\@])([^\s\)]+)?/
+    MACRO_REPLACE_RE = /([#\@])([^\s]+)?/
 
     def convert_macro_region(pattern, m)
       size = pattern.count('#')
@@ -87,7 +75,8 @@ module Ripple
           a,q = convert_macros($1, config), $2
           a = convert_prefixed_beams_and_slurs(a).
             gsub(DIVISI_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}.
-            gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
+            # gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
+            gsub(VALUE_RE) {"#{$1}#{VALUE[$2]}"}.
             gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
             gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
           "#{a}#{q}"
