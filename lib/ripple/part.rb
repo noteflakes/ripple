@@ -80,6 +80,21 @@ module Ripple
       end
     end
     
+    def render_unified_movements(mvts)
+      puts "unified movements ..."
+      last_mvt = mvts.last
+      music = mvts.inject("") do |m, mvt|
+        c = movement_config(mvt)
+        music_fn = movement_music_file(@part, mvt, c)
+        m << load_music(music_fn, :part, c)
+        m << " \\bar \"||\"\n\n" unless mvt == last_mvt
+        m
+      end
+      c = movement_config("")
+      combined = Templates.render_staff("Combined movements", music, c)
+      Templates.render_movement(combined, c)
+    end
+    
     def render
       if m = @config["selected_movements"]
         mvts = m.split(',')
@@ -87,7 +102,11 @@ module Ripple
         mvts = @work.movements
       end
       
-      music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
+      if @config["unified_movements"]
+        music = render_unified_movements(mvts)
+      else
+        music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
+      end
       Templates.render_part(music, @config)
     end
     
