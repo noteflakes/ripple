@@ -128,6 +128,11 @@ context "Use case" do
     cvt("(a!8 b)").should ==
       "a!8( b)"
   end
+  
+  specify "09" do
+    cvt("(g2.*3/2 a)").should ==
+      "g2.*3/2( a)"
+  end
 end
 
 context "[[]] sections" do
