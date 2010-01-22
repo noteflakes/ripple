@@ -30,6 +30,11 @@ module Ripple
       end
     end
     
+    def self.hidden_staff?(config)
+      return false if config["mode"] == :part
+      (config["score/auto_hide"] == true) || config["score/auto_hide"].include?(config["part"])
+    end
+    
     def self.show_ambitus(config)
       config["show_ambitus"] || config["parts/#{config["part"]}/show_ambitus"]
     end

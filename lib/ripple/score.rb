@@ -37,21 +37,42 @@ module Ripple
       mvt_config
     end
     
+    def render_part_music(part, mvt, config)
+      mode = @config["midi"] ? :midi : :score
+      mvts = mvt.is_a?(Array) ? mvt : [mvt]
+      music_fn = ""
+      music = mvts.inject("") do |m, mvt|
+        music_fn = movement_music_file(part, mvt, config)
+        m << load_music(music_fn, mode, config)
+      end
+      Templates.render_staff(music_fn, music, config)
+    end
+    
+    def render_part_lyrics(part, mvt, config)
+      output = ""
+      if lyrics = movement_lyrics_file(part, mvt, config)
+        lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), config)}
+      end
+      output
+    end
+    
+    def render_part_figures(part, mvt, config)
+      output = ""
+      if figures_fn = Dir[File.join(@work.path, mvt, "#{part}.figures")].first
+        output += Templates.render_figures(IO.read(figures_fn), config)
+      end
+      output
+    end
+    
     def render_parts(parts, mvt, config)
       parts = [parts] unless parts.is_a?(Array)
       output = ''
       parts.each do |p|
         title = config["parts/#{p}/title"] || p.to_instrument_title
         c = config.merge("part" => p, "staff_name" => title)
-        music_fn = movement_music_file(p, mvt, c)
-        mode = @config["midi"] ? :midi : :score
-        output += Templates.render_staff(music_fn, load_music(music_fn, mode, c), c)
-        if lyrics = movement_lyrics_file(p, mvt, c)
-          lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
-        end
-        if figures_fn = Dir[File.join(@work.path, mvt, "#{p}.figures")].first
-          output += Templates.render_figures(IO.read(figures_fn), c)
-        end
+        output += render_part_music(p, mvt, c)
+        output += render_part_lyrics(p, mvt, c)
+        output += render_part_figures(p, mvt, c)
       end
       output
     end
