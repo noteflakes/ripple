@@ -31,7 +31,7 @@ module Ripple
     end
     
     def self.hidden_staff?(config)
-      return false if config["mode"] == :part
+      return false if config["mode"] == :part || !config["score/auto_hide"]
       (config["score/auto_hide"] == true) || config["score/auto_hide"].include?(config["part"])
     end
     
