@@ -68,7 +68,7 @@ module Ripple
     def convert_syntax(m, fn, rpl_mode, mode, config)
       m = m.gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}.
         gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
-        gsub(SCORE_ONLY_RE) {(mode == :score) ? $1 : ''}
+        gsub(SCORE_ONLY_RE) {(mode == :score || mode == :midi) ? $1 : ''}
 
       if rpl_mode
         m = m.gsub(SKIP_QUOTES_RE) do

@@ -160,12 +160,15 @@ context "[[]] sections" do
 end
 
 context "{{}} sections" do
-  specify "should be included only in score mode" do
+  specify "should be included only in score or midi mode" do
     cvt("a {{b c}}").should == 
       "a "
 
     cvt("a {{b c}}", :score).should == 
       "a b c"
+
+      cvt("a {{b c}}", :midi).should == 
+        "a b c"
 
     cvt("a {{b c}} d {{e f}}").should == 
       "a  d "
