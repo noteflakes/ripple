@@ -26,7 +26,12 @@
 	  <% elsif (config["mode"] == :score) && (m = config["score_macro"]) %>
 	    <%= m %>
 	  <% end %>
-	<%= content %>
+		<% if p = config["bar_number"] %>
+		  \set Score.currentBarNumber = #<%= p %>
+		  \set Score.barNumberVisibility = #all-bar-numbers-visible
+		  \bar ""
+		<% end %>
+	  <%= content %>
 	  >>
 	  <% if config["midi"] %>
 	  \midi {
