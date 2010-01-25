@@ -1,5 +1,5 @@
 \new Staff {
-  <% if clef = part_clef(config.merge('part' => parts[0])) %>\clef "<%= clef %>"<% end %>
+  <% if clef = combined_part_clef(parts, config) %>\clef "<%= clef %>"<% end %>
   \set Staff.soloText = #""
   \set Staff.soloIIText = #""
   \set Staff.aDueText = #""

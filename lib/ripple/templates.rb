@@ -19,6 +19,18 @@ module Ripple
       end
     end
     
+    def self.combined_part_clef(parts, config)
+      clefs = parts.map {|p| config["parts/#{p}/clef"]}.uniq
+      case clefs.size
+      when 0
+        'treble'
+      when 1
+        clefs[0]
+      else
+        clefs.include?('bass') ? 'bass' : clefs[0]
+      end
+    end
+    
     def self.midi_instrument(config)
       part = config["part"]
       case i = config["parts/#{part}/midi_instrument"]

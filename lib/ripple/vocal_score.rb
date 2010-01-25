@@ -6,7 +6,7 @@ module Ripple
         titles << (config["parts/#{p}/title"] || p.to_instrument_title)
         c = config.merge("part" => p)
         music_fn = movement_music_file(p, mvt, c)
-        m += load_music(music_fn, :score)
+        m += load_music(music_fn, :score, c)
       end
       Templates.render_combined(parts, titles, content, config)
     end
