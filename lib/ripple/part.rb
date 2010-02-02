@@ -51,7 +51,7 @@ module Ripple
         if lyrics = movement_lyrics_files(p, mvt, c)
           lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
         end
-        if figures_fn = Dir[File.join(@work.path, mvt, "#{p}.figures")].first
+        if !config["parts/#{@part}/suppres_figures"] && figures_fn = Dir[File.join(@work.path, mvt, "#{p}.figures")].first
           output += Templates.render_figures(IO.read(figures_fn), c)
         end
       end

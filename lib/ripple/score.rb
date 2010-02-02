@@ -58,7 +58,7 @@ module Ripple
     
     def render_part_figures(part, mvt, config)
       output = ""
-      if figures_fn = Dir[File.join(@work.path, mvt, "#{part}.figures")].first
+      if !config["score/supress_figures"] && figures_fn = Dir[File.join(@work.path, mvt, "#{part}.figures")].first
         output += Templates.render_figures(IO.read(figures_fn), config)
       end
       output
