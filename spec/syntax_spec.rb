@@ -298,3 +298,12 @@ d2."
       "\\times 2/3 { bes16[( c bes)] } \\times 2/3 { a!16[( bes a)] } "
   end
 end
+
+context "variable references" do
+  specify "should be converted to their values" do
+    config = {"blah" => {"bluh" => "tenor"}}
+    config.deep = true
+    cvt("\\clef %blah/bluh% c4", nil, config).should ==
+      "\\clef tenor c4"
+  end
+end

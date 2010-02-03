@@ -14,6 +14,7 @@ module Ripple
     SCORE_ONLY_RE = /\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     MIDI_ONLY_RE = /m\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     
+    VARIABLE_RE = /%(\S+)%/
     DIVISI_RE = /\/1\s([^\/]+)\/2\s([^\/]+)\/u\s/
     
     # BEAM_SLUR_RE = /([\[\(]+)([a-g](?:[bs]+)?(?:[',]+)?(?:[!\?])?([\d*\/]+)?\.?)/m
@@ -74,6 +75,7 @@ module Ripple
         m = m.gsub(SKIP_QUOTES_RE) do
           a,q = convert_macros($1, config), $2
           a = convert_prefixed_beams_and_slurs(a).
+            gsub(VARIABLE_RE) {config[$1]}.
             gsub(DIVISI_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}.
             # gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
             gsub(VALUE_RE) {"#{$1}#{VALUE[$2]}"}.
