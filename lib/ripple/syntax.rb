@@ -24,6 +24,17 @@ module Ripple
       m.gsub(BEAM_SLUR_RE) {"#{$2}#{$1}"}
     end
     
+    CROSSBAR_DOT_RE = /((([a-gr](?:[bs]+)?)(?:[',]+)?)(?:[!\?])?((?:[\d]+)?\.?(?:[\d*\/]+)?))\.\|(\S+)?/m
+    CROSSBAR_DOT_VALUE = {'1' => '2', '2' => '4', '4' => '8', '8' => '16', '16' => '32'}
+    CROSSBAR_NOTE = "\\once \\override NoteHead #'transparent = ##t \\once \\override Stem #'transparent = ##t"
+    CROSSBAR_TIE = "\\once \\override Tie #'transparent = ##t"
+    
+    def convert_crossbar_dot(m)
+      m.gsub(CROSSBAR_DOT_RE) {
+        "#{CROSSBAR_TIE} #{$1}#{$5} ~ #{CROSSBAR_NOTE} #{$3}#{$4}.*0 s#{CROSSBAR_DOT_VALUE[$4]}"
+      }
+    end
+    
     INLINE_INCLUDE_RE = /\\inlineInclude\s(\S+)/
     
     def convert_inline_includes(m, fn, mode)
@@ -74,7 +85,7 @@ module Ripple
       if rpl_mode
         m = m.gsub(SKIP_QUOTES_RE) do
           a,q = convert_macros($1, config), $2
-          a = convert_prefixed_beams_and_slurs(a).
+          a = convert_prefixed_beams_and_slurs(convert_crossbar_dot(a)).
             gsub(VARIABLE_RE) {config[$1]}.
             gsub(DIVISI_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}.
             # gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
