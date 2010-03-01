@@ -69,7 +69,7 @@ module Ripple
       output = ''
       parts.each do |p|
         title = config["parts/#{p}/title"] || p.to_instrument_title
-        c = config.merge(config["parts/#{p}"]).merge("part" => p, "staff_name" => title)
+        c = config.merge(config["parts/#{p}"] || {}).merge("part" => p, "staff_name" => title)
         output += render_part_music(p, mvt, c)
         output += render_part_lyrics(p, mvt, c)
         output += render_part_figures(p, mvt, c)
