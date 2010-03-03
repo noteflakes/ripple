@@ -1,4 +1,4 @@
-\new Staff \with {
+\new Staff = <%= staff_name(config) %> \with {
   <% if show_ambitus(config) %>
     \consists "Ambitus_engraver"
   <% end %>
@@ -16,7 +16,11 @@
   	\override Beam #'auto-knee-gap = #'() 
   	\override VerticalAxisGroup #'remove-empty = ##t  
 	<% end %>
-} {
+}
+
+<% if figures = config["figures"] %>\figuremode {<%= figures %>}<% end %>
+
+\context Staff = <%= staff_name(config) %> {
 <% if name = config["staff_name"] %>\set Staff.instrumentName = #"<%= name %>"<% end %>
 <% if inst = midi_instrument(config) %>\set Staff.midiInstrument = #"<%= inst %>"<% end %>
 <% if clef = part_clef(config) %>\clef "<%= clef %>"<% end %>

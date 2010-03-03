@@ -47,11 +47,19 @@ module Ripple
           config["parts/#{p}/title"] || p.to_instrument_title : nil
         c = config.merge(config["parts/#{@part}"] || {}).merge("part" => p, "staff_name" => title)
         music_fn = movement_music_file(p, mvt, c)
+
+        if !c["parts/#{@part}/hide_figures"] && figures_fn = Dir[File.join(@work.path, mvt, "#{p}.figures")].first
+          figures = IO.read(figures_fn)
+          # check if should embed figures in staff
+          c["figures"] = figures if c["embed_figures"]
+        end
+
         output += Templates.render_staff(music_fn, load_music(music_fn, :part, c), c)
         if lyrics = movement_lyrics_files(p, mvt, c)
           lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
         end
-        if !config["parts/#{@part}/suppres_figures"] && figures_fn = Dir[File.join(@work.path, mvt, "#{p}.figures")].first
+        if figures && !c["embed_figures"]
+          # if not embedding figures, they are rendered separately
           output += Templates.render_figures(IO.read(figures_fn), c)
         end
       end

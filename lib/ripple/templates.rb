@@ -162,6 +162,12 @@ module Ripple
       content = transpose(content, config)
       template(:staff).result(binding)
     end
+    
+    def self.staff_name(config)
+      name = config["staff_name"]
+      name = 'part' if name.nil? || name.empty?
+      "#{name.gsub(' ', '')}Staff"
+    end
 
     def self.render_lyrics(content, config)
       template(:lyrics).result(binding)
