@@ -7,10 +7,13 @@ module Ripple
       @config = work.config.merge("part" => part)
     end
     
-    def movement_music_file(part, mvt, config)
+    def movement_music_files(part, mvt, config)
       part = config["parts/#{part}/source"] || part
-      Dir[File.join(@work.path, mvt, "#{part}.rpl"), 
-        File.join(@work.path, mvt, "#{part}.ly")].first
+      test = Dir[
+        File.join(@work.path, mvt, "#{part}.rpl"), 
+        File.join(@work.path, mvt, "#{part}.?.rpl"),
+        File.join(@work.path, mvt, "#{part}.ly")
+      ].sort
     end
     
     def movement_lyrics_files(part, mvt, config)
@@ -46,15 +49,28 @@ module Ripple
         title = (config["parts/#{@part}/before_include"] || config["parts/#{@part}/after_include"]) ?
           config["parts/#{p}/title"] || p.to_instrument_title : nil
         c = config.merge(config["parts/#{@part}"] || {}).merge("part" => p, "staff_name" => title)
-        music_fn = movement_music_file(p, mvt, c)
-
-        if !c["parts/#{@part}/hide_figures"] && figures_fn = Dir[File.join(@work.path, mvt, "#{p}.figures")].first
+        music_files = movement_music_files(p, mvt, c)
+        
+        if !c["hide_figures"] && figures_fn = Dir[File.join(@work.path, mvt, "#{p}.figures")].first
           figures = IO.read(figures_fn)
           # check if should embed figures in staff
           c["figures"] = figures if c["embed_figures"]
         end
-
-        output += Templates.render_staff(music_fn, load_music(music_fn, :part, c), c)
+        
+        if c["keyboard"]
+          staves = music_files.inject("") do |m, fn|
+            cc = c.merge("staff_name" => nil)
+            
+            staff_number = (fn =~ /\.(\d)\.rpl$/) && $1.to_i
+            cc["parts/#{p}/clef"] = [nil, 'treble', 'bass'][staff_number]
+            m += Templates.render_staff(fn, load_music(fn, :part, cc), cc)
+          end
+          output += Templates.render_keyboard_part(staves, c)
+        else
+          music_files.each do |fn|
+            output += Templates.render_staff(fn, load_music(fn, :part, c), c)
+          end
+        end
         if lyrics = movement_lyrics_files(p, mvt, c)
           lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
         end
@@ -71,7 +87,7 @@ module Ripple
       
       if c["parts/#{@part}/score_in_part"]
         Score.new(@work, c.merge('mode' => :score)).render_movement(mvt)
-      elsif movement_music_file(@part, mvt, c)
+      elsif movement_music_files(@part, mvt, c)[0]
         before_parts = c["parts/#{@part}/before_include"]
         after_parts = c["parts/#{@part}/after_include"]
         content = ''
@@ -89,11 +105,10 @@ module Ripple
     end
     
     def render_unified_movements(mvts)
-      puts "unified movements ..."
       last_mvt = mvts.last
       music = mvts.inject("") do |m, mvt|
         c = movement_config(mvt)
-        music_fn = movement_music_file(@part, mvt, c)
+        music_fn = movement_music_files(@part, mvt, c)[0]
         m << load_music(music_fn, :part, c)
         m << " \\bar \"||\"\n\n" unless mvt == last_mvt
         m
@@ -139,9 +154,12 @@ module Ripple
         FileUtils.mkdir_p(File.dirname(pdf_filename))
         Lilypond.make_pdf(ly_filename, pdf_filename, @config)
       end
-    rescue LilypondError
-      puts
+    rescue LilypondError => e
+      puts e.message
       puts "Failed to generate #{@part} part."
+    rescue => e
+      puts "#{e.class}: #{e.message}"
+      puts e.backtrace[0]
     end
   end
 end

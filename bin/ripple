@@ -147,6 +147,10 @@ end
 
 def proof_options(path)
   part = File.basename(path, '.*')
+  # check if the file belongs to a keyboard part (e.g. organo.r.rpl)
+  if part =~ /^(.*)\.\d$/
+    part = $1
+  end
   dir = File.dirname(path)
   if dir =~ /^\.\/(.+)$/
     dir = $1

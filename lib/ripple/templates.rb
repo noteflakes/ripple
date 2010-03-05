@@ -66,7 +66,14 @@ module Ripple
     
     def self.staff_groups(parts, config)
       return nil unless groups = config["score/groups"]
-      grouped = parts.dup
+      grouped = parts.map do |p|
+        if config["parts/#{p}/keyboard"]
+          ['organo.1', 'organo.2']
+          # {'brace' => ['organo.1', 'organo.2']}
+        else
+          p
+        end
+      end.flatten
 
       # groups should be an array of hashes
       groups.each do |g| 
@@ -161,6 +168,10 @@ module Ripple
     def self.render_staff(fn, content, config)
       content = transpose(content, config)
       template(:staff).result(binding)
+    end
+    
+    def self.render_keyboard_part(content, config)
+      template(:keyboard_part).result(binding)
     end
     
     def self.staff_name(config)

@@ -25,7 +25,7 @@ module Ripple
         exit
       when 0: # success, do nothing
       else
-        raise LilypondError
+        raise LilypondError, "#{cmd(config)} #{args}"
       end
     end
     

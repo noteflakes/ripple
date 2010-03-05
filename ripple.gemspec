@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
     "lib/ripple/work.rb",
     "lib/ripple/templates/movement.ly",
     "lib/ripple/templates/staff.ly",
+    "lib/ripple/templates/keyboard_part.ly",
     "lib/ripple/templates/combined.ly",
     "lib/ripple/templates/lyrics.ly",
     "lib/ripple/templates/figures.ly",

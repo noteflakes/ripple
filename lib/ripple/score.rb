@@ -7,10 +7,13 @@ module Ripple
       @config = config || work.config
     end
     
-    def movement_music_file(part, mvt, config)
+    def movement_music_files(part, mvt, config)
       part = config["parts/#{part}/source"] || part
-      Dir[File.join(@work.path, mvt, "#{part}.rpl"), 
-        File.join(@work.path, mvt, "#{part}.ly")].first
+      Dir[
+        File.join(@work.path, mvt, "#{part}.rpl"), 
+        File.join(@work.path, mvt, "#{part}.?.rpl"),
+        File.join(@work.path, mvt, "#{part}.ly")
+      ].sort
     end
     
     def movement_lyrics_file(part, mvt, config)
@@ -40,12 +43,26 @@ module Ripple
     def render_part_music(part, mvt, config)
       mode = @config["midi"] ? :midi : :score
       mvts = mvt.is_a?(Array) ? mvt : [mvt]
-      music_fn = ""
+      keyboard_mode = config["keyboard"]
+      fn = ""
       music = mvts.inject("") do |m, mvt|
-        music_fn = movement_music_file(part, mvt, config)
-        m << load_music(music_fn, mode, config)
+        movement_music_files(part, mvt, config).each do |fn|
+          if keyboard_mode
+            cc = config.merge("staff_name" => nil)
+            staff_number = (fn =~ /\.(\d)\.rpl$/) && $1.to_i
+            cc["parts/#{part}/clef"] = [nil, 'treble', 'bass'][staff_number]
+            m << Templates.render_staff(fn, load_music(fn, :part, cc), cc)
+          else
+            m << load_music(fn, mode, config)
+          end
+        end
+        m
       end
-      Templates.render_staff(music_fn, music, config)
+      if keyboard_mode
+        Templates.render_keyboard_part(music, config)
+      else
+        Templates.render_staff(fn, music, config)
+      end
     end
     
     def render_part_lyrics(part, mvt, config)
@@ -82,11 +99,15 @@ module Ripple
       
       movement_files = Dir[
         File.join(@work.path, mvt, '*.rpl'), 
+        File.join(@work.path, mvt, '*.?.rpl'), 
         File.join(@work.path, mvt, '*.ly')
       ]
       parts = []
       movement_files.each do |fn|
         p = File.basename(fn, '.*')
+        if p =~ /^(.*)\.\d$/
+          p = $1
+        end
         next if c["parts/#{p}/no_score"]
         parts << p
       end

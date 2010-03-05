@@ -53,7 +53,7 @@ module Ripple
       do_parts = !@config["no_parts"]
       do_score = !@config["no_score"]
       do_vocal = @config["vocal"]
-
+      
       # inhibit part rendering if score_only specified and no parts specified.
       if selected_parts && !@config["score_only"]
         do_score = false

@@ -60,6 +60,7 @@ class Hash
       target[key] = hash[key]
     end
 
+    target.deep = true
     target
   end
 
@@ -91,6 +92,15 @@ class Hash
       set(k, v)
     else
       old_set(k, v)
+    end
+  end
+  
+  alias_method :old_merge, :merge
+  def merge(hash)
+    if deep || hash.deep
+      deep_merge(hash)
+    else
+      old_merge(hash)
     end
   end
 end
