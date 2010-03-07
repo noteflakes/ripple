@@ -18,7 +18,13 @@
 	<% end %>
 }
 
-<% if figures = config["figures"] %>\figuremode {<%= figures %>}<% end %>
+<% if figures = config["figures"] %>
+  \figuremode {
+    \set figuredBassAlterationDirection = #RIGHT
+    \set figuredBassPlusDirection = #RIGHT
+    <%= figures %>
+  }
+<% end %>
 
 \context Staff = <%= staff_name(config) %> {
 <% if name = config["staff_name"] %>\set Staff.instrumentName = #"<%= name %>"<% end %>
