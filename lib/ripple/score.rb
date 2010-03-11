@@ -28,6 +28,12 @@ module Ripple
         Dir[File.join(@work.path, mvt, lyrics)].sort
       end
     end
+
+    def movement_figures_file(part, mvt, config)
+      part = config["parts/#{part}/source"] || part
+      Dir[File.join(@work.path, mvt, "#{part}.figures")].first
+    end
+    
     
     def movement_config(mvt)
       c = YAML.load(IO.read(File.join(@work.path, mvt, "_movement.yml"))) rescue {}
@@ -75,7 +81,7 @@ module Ripple
     
     def render_part_figures(part, mvt, config)
       output = ""
-      if !config["score/hide_figures"] && figures_fn = Dir[File.join(@work.path, mvt, "#{part}.figures")].first
+      if !config["score/hide_figures"] && figures_fn = movement_figures_file(part, mvt, config)
         output += Templates.render_figures(IO.read(figures_fn), config)
       end
       output

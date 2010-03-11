@@ -9,7 +9,7 @@ module Ripple
     
     def movement_music_files(part, mvt, config)
       part = config["parts/#{part}/source"] || part
-      test = Dir[
+      Dir[
         File.join(@work.path, mvt, "#{part}.rpl"), 
         File.join(@work.path, mvt, "#{part}.?.rpl"),
         File.join(@work.path, mvt, "#{part}.ly")
@@ -29,6 +29,11 @@ module Ripple
       else
         []
       end
+    end
+    
+    def movement_figures_file(part, mvt, config)
+      part = config["parts/#{part}/source"] || part
+      Dir[File.join(@work.path, mvt, "#{part}.figures")].first
     end
     
     def movement_config(mvt)
@@ -51,7 +56,7 @@ module Ripple
         c = config.merge(config["parts/#{@part}"] || {}).merge("part" => p, "staff_name" => title)
         music_files = movement_music_files(p, mvt, c)
         
-        if !c["hide_figures"] && figures_fn = Dir[File.join(@work.path, mvt, "#{p}.figures")].first
+        if !c["hide_figures"] && figures_fn = movement_figures_file(p, mvt, c)
           figures = IO.read(figures_fn)
           # check if should embed figures in staff
           c["figures"] = figures if c["embed_figures"]
