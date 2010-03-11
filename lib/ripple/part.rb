@@ -61,7 +61,7 @@ module Ripple
           staves = music_files.inject("") do |m, fn|
             cc = c.merge("staff_name" => nil)
             
-            staff_number = (fn =~ /\.(\d)\.rpl$/) && $1.to_i
+            staff_number = (fn =~ /\.(\d)\.rpl$/) ? $1.to_i : 0
             cc["parts/#{p}/clef"] = [nil, 'treble', 'bass'][staff_number]
             m += Templates.render_staff(fn, load_music(fn, :part, cc), cc)
           end
