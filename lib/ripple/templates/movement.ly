@@ -14,7 +14,7 @@
     <% end %>
 <% end %>
 	<% if config["include_toc"] %>
-		\tocItem \markup { <%= config["movement"].to_movement_title %> }
+		\tocItem \markup { <%= movement_title(config) %> }
 	<% end %>
 	\score {
 	  \new StaffGroup <<
@@ -43,7 +43,7 @@
 	    <% end %>
 	  }
 	  <% end %>
-	  \header { piece = \markup \bold \large "<%= config["movement"].to_movement_title %>" }
+	  \header { piece = \markup \bold \large "<%= movement_title(config) %>" }
 	  <% if (config["mode"] == :score) && (config["score/indent"]) %>
 	  \layout {
       indent = <%= config["score/indent"] %>

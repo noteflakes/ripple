@@ -179,6 +179,12 @@ module Ripple
       name = 'part' if name.nil? || name.empty?
       "#{name.gsub(' ', '')}Staff"
     end
+    
+    def self.movement_title(config)
+      mvt = config["movement"]
+      title = config["movement_title"] || config["movements/#{mvt}/title"] || mvt
+      title.to_movement_title
+    end
 
     def self.render_lyrics(content, config)
       template(:lyrics).result(binding)

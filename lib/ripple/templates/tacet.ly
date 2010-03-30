@@ -4,6 +4,6 @@
     \pageBreak
 <% end %>
 \markup { \fill-line {\bold \large
-    "<%= config["movement"].to_movement_title %> - tacet"
+    "<%= movement_title(config) %> - tacet"
   }
 }

@@ -121,4 +121,10 @@ parts:
     midi_instrument: recorder
   flauto2:
     clef: treble
-    midi_instrument: recorder  
+    midi_instrument: recorder
+  flute:
+    midi_instrument: flute
+  flute1:
+    midi_instrument: flute
+  flute2:
+    midi_instrument: flute
