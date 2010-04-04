@@ -5,7 +5,7 @@ module Ripple
     attr_reader :name, :path, :config
     
     def initialize(path, config = {})
-      @name = path
+      @name = (path =~ /([^\/]+)$/) && $1
       @path = File.expand_path(path)
       @config = config.deep_merge(work_config)
     end
