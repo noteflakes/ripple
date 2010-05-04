@@ -174,10 +174,10 @@ module Ripple
       template(:keyboard_part).result(binding)
     end
     
-    def self.staff_name(config)
+    def self.staff_id(config)
       name = config["staff_name"]
       name = 'part' if name.nil? || name.empty?
-      "#{name.gsub(' ', '')}Staff"
+      "#{name.gsub(/[\s,\._]/, '')}Staff"
     end
     
     def self.movement_title(config)

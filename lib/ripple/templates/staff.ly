@@ -1,4 +1,4 @@
-\new Staff = <%= staff_name(config) %> \with {
+\new Staff = <%= staff_id(config) %> \with {
   <% if show_ambitus(config) %>
     \consists "Ambitus_engraver"
   <% end %>
@@ -26,7 +26,7 @@
   }
 <% end %>
 
-\context Staff = <%= staff_name(config) %> {
+\context Staff = <%= staff_id(config) %> {
 <% if name = config["staff_name"] %>\set Staff.instrumentName = #"<%= name %>"<% end %>
 <% if inst = midi_instrument(config) %>\set Staff.midiInstrument = #"<%= inst %>"<% end %>
 <% if clef = part_clef(config) %>\clef "<%= clef %>"<% end %>
