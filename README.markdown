@@ -103,16 +103,16 @@ Ripple also currently includes the following default settings for several voice 
 
 ## Overriding default settings
 
-The settings used by Ripple to process the source files are merged from the different settings files (ripple/lib/defaults.yml, _ripple.yml, _work.yml, _movement.yml) and can further be overriden by supplying an --opt option to the command-line tool.
+The settings used by Ripple to process the source files are merged from the different settings files (<code>ripple/lib/defaults.yml</code>, <code>_ripple.yml</code>, <code>_work.yml</code>, <code>_movement.yml</code>) and can further be overriden by supplying an <code>--opt</code> option to the command-line tool.
 
     ripple BWV17 --opt "editor:Someone else but me"
     
 # Auto-regeneration mode
 
-Ripple can be put into auto-regeneration mode, in which it watches the source directory and process the specified files each time a file is saved in that directory. To use ripple in auto-regenration mode, add <code>auto:true</code> to your <code>_ripple.yml</code> file, or specify the --auto option for the command-line tool.
+Ripple can be put into auto-regeneration mode, in which it watches the source directory and process the specified files each time a file is saved in that directory. To use ripple in auto-regenration mode, add <code>auto:true</code> to your <code>_ripple.yml</code> file, or specify the <code>--auto</code> option for the command-line tool.
 
     ripple BWV17 --auto
 
 # Proof mode
 
-Proof mode is similar to auto-regeneration mode, except that each time a file is changed or added, it is compiled into PDF (as a single movement and part) and opened in the background. This mode is very useful when entering parts. To use ripple in proof mode, add <code>proof:true</code> to your <code>_ripple.yml</code> file, or specify the --proof option for the command-line tool.
+Proof mode is similar to auto-regeneration mode, except that each time a file is changed or added, it is compiled into PDF (as a single movement and part) and opened in the background. This mode is very useful when entering parts. To use ripple in proof mode, add <code>proof:true</code> to your <code>_ripple.yml</code> file, or specify the <code>--proof</code> or <code>-P</code> option for the command-line tool.
