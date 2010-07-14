@@ -48,6 +48,9 @@ context "Syntax converter" do
 
     cvt("a b c [d").should ==
       'a b c d['
+      
+    cvt("[r a b c]").should ==
+      'r[ a b c]'
   end
   
   specify "should not convert postfixed [" do
