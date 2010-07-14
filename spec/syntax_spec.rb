@@ -71,6 +71,9 @@ context "Syntax converter" do
   specify "should convert values with ` postfix to 2/3 value" do
     cvt('a8 b8` c8').should == 
       'a8 b8*2/3 c8'
+      
+    cvt('g8 (g6` f g)').should ==
+      'g8 g16*2/3( f g)'
   end
   
   specify "should convert appoggiatura shorthand" do

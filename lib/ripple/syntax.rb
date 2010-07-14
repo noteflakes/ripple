@@ -21,7 +21,7 @@ module Ripple
     DIVISI_RE = /\/1\s([^\/]+)\/2\s([^\/]+)\/u\s/
     
     # BEAM_SLUR_RE = /([\[\(]+)([a-g](?:[bs]+)?(?:[',]+)?(?:[!\?])?([\d*\/]+)?\.?)/m
-    BEAM_SLUR_RE = /([\[\(]+)([a-g](?:[bs]+)?(?:[',]+)?(?:[!\?])?(?:[\d]+)?\.?(?:[\d*\/]+)?)/m
+    BEAM_SLUR_RE = /([\[\(]+)([a-g](?:[bs]+)?(?:[',]+)?(?:[!\?])?(?:[\d]+)?\.?`?(?:[\d*\/]+)?)/m
     
     def convert_prefixed_beams_and_slurs(m)
       m.gsub(BEAM_SLUR_RE) {"#{$2}#{$1}"}
