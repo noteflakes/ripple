@@ -24,6 +24,10 @@ context "Syntax converter" do
       'ais ais "assai"'
   end
   
+  specify "should not convert non-note-name accidentals" do
+    cvt('ab\espressivo').should == 'aes\espressivo'
+  end
+  
   specify "should move prefixed [ to after note" do
     cvt('[a b c]').should ==
       'a[ b c]'
@@ -62,6 +66,11 @@ context "Syntax converter" do
       
     cvt('r6 b3 [a6').should ==
       'r16 b32 a16['
+  end
+  
+  specify "should convert values with ` postfix to 2/3 value" do
+    cvt('a8 b8` c8').should == 
+      'a8 b8*2/3 c8'
   end
   
   specify "should convert appoggiatura shorthand" do
@@ -324,3 +333,4 @@ context "crossbar dot .|" do
       "c d4\\p \\once \\override NoteHead #'transparent = ##t \\once \\override Stem #'transparent = ##t d4.*0 s8 e8 f g"
   end
 end
+

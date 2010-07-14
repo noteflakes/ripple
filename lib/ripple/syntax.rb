@@ -3,10 +3,13 @@ module Ripple
     SKIP_QUOTES_RE = /([^"]+)("[^"]+")?/m
     
     ACCIDENTAL = {'s' => 'is', 'b' => 'es', 'ss' => 'isis', 'bb' => 'eses'}
-    ACCIDENTAL_RE = /\b([a-g])([sb]{1,2})([^a-z])?/
+    #ACCIDENTAL_RE = /\b([a-g])([sb]{1,2})([^a-z])?/
+    ACCIDENTAL_RE = /\b([a-g])([sb]{1,2})((?:\\[a-z]+)*)([^a-z])?/
     
     VALUE_RE = /([a-gr](?:[bs]+)?(?:[',]+)?(?:[!\?])?)([36]4?)/
     VALUE = {'3' => '32', '6' => '16', '64' => '64'}
+    
+    TWOTHIRDS_RE = /(\d+)`/
     
     APPOGGIATURE_RE = /(\s)?\^([a-g])/
 
@@ -88,9 +91,9 @@ module Ripple
           a = convert_prefixed_beams_and_slurs(convert_crossbar_dot(a)).
             gsub(VARIABLE_RE) {config[$1]}.
             gsub(DIVISI_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}.
-            # gsub(VALUE_RE) {"#{$1}#{$2}#{VALUE[$3]}#{$4}"}.
             gsub(VALUE_RE) {"#{$1}#{VALUE[$2]}"}.
-            gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}"}.
+            gsub(TWOTHIRDS_RE) {"#{$1}*2/3"}.
+            gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}#{$4}"}.
             gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
           "#{a}#{q}"
         end
