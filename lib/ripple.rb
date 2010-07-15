@@ -18,6 +18,7 @@ require 'ripple/work'
 require 'ripple/part'
 require 'ripple/score'
 require 'ripple/vocal_score'
+require 'ripple/compilation'
 require 'ripple/lilypond'
 
 module Ripple
@@ -68,8 +69,12 @@ module Ripple
   end
   
   def self.works(config)
-    paths = Dir[File.join(config['source'], "**/_work.yml")].
-      map {|fn| Work.new(File.dirname(fn), config)}
+    if config["compile"]
+      [Compilation.new(config)]
+    else
+      paths = Dir[File.join(config['source'], "**/_work.yml")].
+        map {|fn| Work.new(File.dirname(fn), config)}
+    end
   end
   
   def self.format_movement_title(mvt)
@@ -87,3 +92,6 @@ module Ripple
     "#{yml[:major]}.#{yml[:minor]}.#{yml[:patch]}"
   end
 end
+
+C = Ripple::Compilation
+$c = C.new(Ripple.configuration("compile" => 'compilations/herzelia-july-2010.yml', "open_target" => true))

@@ -45,6 +45,7 @@ Gem::Specification.new do |s|
      "lib/ripple/templates/tacet.ly",
      "lib/ripple/vocal_score.rb",
      "lib/ripple/work.rb",
+     "lib/ripple/compilation.rb",
      "ripple.gemspec",
      "spec/core_ext_spec.rb",
      "spec/rendering_spec.rb",

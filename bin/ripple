@@ -93,6 +93,10 @@ opts = OptionParser.new do |opts|
     $options["open_target"] = true
     $options["open_in_background"] = true
   end
+
+  opts.on("-c", "--compile", "Compilation mode") do |v|
+    $options["compile"] = v
+  end
 end
 
 opts.parse!
