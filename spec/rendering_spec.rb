@@ -69,3 +69,10 @@ EOF
     Ripple::Templates.staff_hierarchy(parts, @config).should == "#'(SystemStartBracket violino (SystemStartBracket soprano alto) continuo)"
   end
 end
+
+context "staff id" do
+  specify "should strip non-alphabet characters" do
+    Ripple::Templates.staff_id("staff_name" => "Vno I &oboe d'amore I").should ==
+      "VnoIoboedamoreIStaff"
+  end
+end

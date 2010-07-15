@@ -177,7 +177,7 @@ module Ripple
     def self.staff_id(config)
       name = config["staff_name"]
       name = 'part' if name.nil? || name.empty?
-      "#{name.gsub(/[\s,\._]/, '')}Staff"
+      "#{name.gsub(/[^a-z0-9]/i, '')}Staff"
     end
     
     def self.movement_title(config)
