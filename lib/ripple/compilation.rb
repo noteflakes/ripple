@@ -2,8 +2,8 @@ module Ripple
   class Compilation
     attr_reader :config, :path
     
-    def initialize(config = {})
-      @path = File.expand_path(config["compile"])
+    def initialize(path, config = {})
+      @path = File.expand_path(path)
       @path += ".yml" if @path !~ /\.yml/
       @config = config.deep_merge(compilation_config)
       compute_movement_titles
@@ -40,7 +40,7 @@ module Ripple
     def all_parts
       # for now return an empty array. later we'll go over all
       # movements and compute a union
-      []
+      compilation_config["parts"].keys
     end
     
     def process
@@ -64,7 +64,7 @@ module Ripple
         do_score = false
       end
       
-      parts.each {|p| Part.new(p, self).process} if do_parts
+      parts.each {|p| CompilationPart.new(p, self).process} if do_parts
       CompilationScore.new(self).process if do_score
     end
   end
@@ -80,8 +80,6 @@ module Ripple
     def movements
       @compilation.config["movements"]
     end
-    
-    
     
     def ly_filename(mvt = nil)
       File.join(@compilation_config["ly_dir"], @compilation.relative_path, 
@@ -103,6 +101,9 @@ module Ripple
     def movement_config(mvt)
       c = super(mvt)
       c["movements"][mvt]["title"] = @work.config["compiled_movement_title"]
+      c["compiled"] = true
+      c["breaks"] = @config["breaks"]
+      c["include_toc"] = true
       c
     end
     
@@ -110,7 +111,71 @@ module Ripple
       @work = Work.new(mvt["work"], @compilation.clean_config)
       @config = @work.config
       @work.config["compiled_movement_title"] = mvt["title"]
+      @work.config["breaks"] = mvt["score_breaks"]
       super(mvt["movement"])
+    end
+    
+    def render(mvts = nil)
+      mvts ||= movements
+      music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
+      @config = @compilation_config.deep_merge("part" => @part)
+      @config["include_toc"] = true
+      Templates.render_score(music, @config)
+    end
+  end
+  
+  class CompilationPart < Part
+    def initialize(part, compilation)
+      @part = part
+      @compilation = compilation
+      @compilation_config = compilation.config
+      @work = compilation
+      @config = compilation.config
+    end
+    
+    def movements
+      @compilation.config["movements"]
+    end
+    
+    def ly_filename
+      File.join(@config["ly_dir"], @compilation.relative_path, "#{@part}.ly")
+    end
+    
+    def pdf_filename
+      File.join(@config["pdf_dir"], @compilation.relative_path, "#{@compilation.name}-#{@part}")
+    end
+
+    def movement_config(mvt)
+      c = super(mvt)
+      c["movements"][mvt]["title"] = @work.config["compiled_movement_title"]
+      c["compiled"] = true
+      c["breaks"] = @config["parts/#{@part}/breaks"]
+      c["include_toc"] = true
+      c
+    end
+    
+    def render_movement(mvt)
+      @work = Work.new(mvt["work"], @compilation.clean_config)
+      @config = @work.config.deep_merge("part" => @part)
+      if part_config = mvt["parts"] && mvt["parts"][@part]
+        @config = @config.deep_merge(mvt)
+      end
+      @config["mode"] = :part
+      @work.config["compiled_movement_title"] = mvt["title"]
+      super(mvt["movement"])
+    end
+    
+    def render
+      mvts = movements
+      if @config["unified_movements"]
+        music = render_unified_movements(mvts)
+      else
+        music = mvts.inject("") {|m, mvt| m << render_movement(mvt)}
+      end
+      @config = @compilation_config.deep_merge("part" => @part)
+      @config["include_toc"] = true
+      @config["mode"] = :part
+      Templates.render_part(music, @config)
     end
   end
 end

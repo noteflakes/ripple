@@ -94,8 +94,8 @@ opts = OptionParser.new do |opts|
     $options["open_in_background"] = true
   end
 
-  opts.on("-c", "--compile", "Compilation mode") do |v|
-    $options["compile"] = v
+  opts.on("-c", "--compile", "Compilation mode") do
+    $options["compile"] = true
   end
 end
 
@@ -121,7 +121,13 @@ $works = Ripple.works($config)
 
 def process(opts = {})
   if $work
-    $work.split(',').each {|w| Ripple::Work.new(w, $config.merge(opts)).process}
+    $work.split(',').each do |w| 
+      if $config["compile"]
+        Ripple::Compilation.new(w, $config.merge(opts)).process
+      else
+        Ripple::Work.new(w, $config.merge(opts)).process
+      end
+    end
   elsif $works.empty?
     puts "No music found."
   else

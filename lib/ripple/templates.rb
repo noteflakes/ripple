@@ -111,6 +111,9 @@ module Ripple
     end
     
     def self.should_break(config)
+      if config["compiled"]
+        return config["breaks"] && config["breaks"] > 0
+      end
       breaks = (config["mode"] == :part) ?
         config["parts/#{config["part"]}/breaks"] :
         config["score/breaks"]
@@ -119,6 +122,9 @@ module Ripple
     end
     
     def self.movement_blank_pages(config)
+      if config["compiled"]
+        return config["breaks"].to_i - 1
+      end
       breaks = (config["mode"] == :part) ?
         config["parts/#{config["part"]}/breaks"] :
         config["score/breaks"]
@@ -184,6 +190,10 @@ module Ripple
       mvt = config["movement"]
       title = config["movement_title"] || config["movements/#{mvt}/title"] || mvt
       title.to_movement_title
+    end
+    
+    def self.part_source(config)
+      config["parts/#{config["part"]}/source"]
     end
 
     def self.render_lyrics(content, config)

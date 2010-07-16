@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sharon Rosner"]
-  s.date = %q{2010-07-15}
+  s.date = %q{2010-07-16}
   s.default_executable = %q{ripple}
   s.description = %q{Ripple is a Lilypond generator.}
   s.email = %q{ciconia@gmail.com}
@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
      "examples/simple/dessus.rpl",
      "lib/defaults.yml",
      "lib/ripple.rb",
+     "lib/ripple/compilation.rb",
      "lib/ripple/core_ext.rb",
      "lib/ripple/lilypond.rb",
      "lib/ripple/part.rb",
@@ -45,7 +46,6 @@ Gem::Specification.new do |s|
      "lib/ripple/templates/tacet.ly",
      "lib/ripple/vocal_score.rb",
      "lib/ripple/work.rb",
-     "lib/ripple/compilation.rb",
      "ripple.gemspec",
      "spec/core_ext_spec.rb",
      "spec/rendering_spec.rb",

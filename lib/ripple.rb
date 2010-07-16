@@ -69,12 +69,8 @@ module Ripple
   end
   
   def self.works(config)
-    if config["compile"]
-      [Compilation.new(config)]
-    else
-      paths = Dir[File.join(config['source'], "**/_work.yml")].
-        map {|fn| Work.new(File.dirname(fn), config)}
-    end
+    paths = Dir[File.join(config['source'], "**/_work.yml")].
+      map {|fn| Work.new(File.dirname(fn), config)}
   end
   
   def self.format_movement_title(mvt)
@@ -93,5 +89,13 @@ module Ripple
   end
 end
 
+__END__
+
 C = Ripple::Compilation
-$c = C.new(Ripple.configuration("compile" => 'compilations/herzelia-july-2010.yml', "open_target" => true))
+$c = C.new('compilations/test.yml',
+  Ripple.configuration(
+    "open_target" => true#,
+    #{ }"no_score" => true,
+    #{}"selected_parts" => "ira"
+  )
+)

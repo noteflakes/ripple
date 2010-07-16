@@ -123,12 +123,18 @@ module Ripple
       Templates.render_movement(combined, c)
     end
     
-    def render
+    def movements
       if m = @config["selected_movements"]
         mvts = m.split(',')
       else
         mvts = @work.movements
       end
+      mvts << "" if mvts.empty?
+      mvts
+    end
+
+    def render
+      mvts = movements
       
       if @config["unified_movements"]
         music = render_unified_movements(mvts)

@@ -43,7 +43,16 @@
 	    <% end %>
 	  }
 	  <% end %>
-	  \header { piece = \markup \bold \large "<%= movement_title(config) %>" }
+	  \header { 
+	    piece = \markup {
+	      \column {
+          \fill-line {\bold \large "<%= movement_title(config) %>"}
+          <% if config["compiled"] %>
+            \fill-line {\large "<%= part_source(config) %>"}
+          <% end %>
+	      }
+	    }
+	  }
 	  <% if (config["mode"] == :score) && (config["score/indent"]) %>
 	  \layout {
       indent = <%= config["score/indent"] %>

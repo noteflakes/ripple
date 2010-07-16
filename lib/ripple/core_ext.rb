@@ -116,3 +116,32 @@ class Array
     return idx if self[idx, arr.size] == arr
   end
 end
+
+
+
+
+module Kernel
+  # Simple debugging tool. Returns a backtrace to the current place.
+  def backtrace
+    raise
+  rescue => e
+    b = e.clean_backtrace
+    b.shift
+    b
+  end
+end
+
+class Exception
+  def clean_backtrace
+    stop = nil
+    return [] if backtrace.nil?
+    backtrace.inject([]) do |m, i|
+      unless stop
+        m << i
+        stop = i !~ /bin/
+      end
+      m
+    end
+  end
+end
+
