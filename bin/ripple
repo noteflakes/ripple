@@ -38,12 +38,12 @@ opts = OptionParser.new do |opts|
     $options["no_score"] = true
   end
   
-  opts.on("-M", "--midi", "Generate midi file") do |v|
+  opts.on("-M", "--midi", "Generate midi file") do
     $options["midi"] = true
     $options["score_only"] = true # implied
   end
   
-  opts.on("--no-midi", "Disable midi file generation") do |v|
+  opts.on("--no-midi", "Disable midi file generation") do
     $options["midi"] = false
   end
   
@@ -97,6 +97,14 @@ opts = OptionParser.new do |opts|
   opts.on("-c", "--compile", "Compilation mode") do
     $options["compile"] = true
   end
+  
+  opts.on("-C", "--fast-compile", "Ad-hoc compilation mode") do
+    $options["fast-compile"] = true
+  end
+  
+  opts.on("-t", "--title TITLE", "Title") do |v|
+    $options["title"] = v
+  end
 end
 
 opts.parse!
@@ -112,15 +120,21 @@ when 0
 when 1
   $work = ARGV[0]
 else
-  puts "Invalid options. Run `ripple --help` for assistance."
-  exit(1)
+  if $options["fast-compile"]
+    $options["fast-compile"] = ARGV
+  else
+    puts "Invalid options. Run `ripple --help` for assistance."
+    exit(1)
+  end
 end
 
 $config = Ripple.configuration($options)
 $works = Ripple.works($config)
 
 def process(opts = {})
-  if $work
+  if $options["fast-compile"]
+    Ripple::Compilation.new(nil, $config).process
+  elsif $work
     $work.split(',').each do |w| 
       if $config["compile"]
         Ripple::Compilation.new(w, $config.merge(opts)).process

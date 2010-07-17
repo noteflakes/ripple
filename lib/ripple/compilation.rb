@@ -3,10 +3,47 @@ module Ripple
     attr_reader :config, :path
     
     def initialize(path, config = {})
-      @path = File.expand_path(path)
-      @path += ".yml" if @path !~ /\.yml/
-      @config = config.deep_merge(compilation_config)
+      if path.nil?
+        calculate_fast_compile(config)
+      else
+        @path = File.expand_path(path)
+        @path += ".yml" if @path !~ /\.yml/
+        @config = config.deep_merge(compilation_config)
+      end
       compute_movement_titles
+    end
+    
+    def calculate_fast_compile(config)
+      @path = File.expand_path("compilations/adhoc.yml")
+      @config = config; @config.deep = true
+      mvts = @config["fast-compile"].inject([]) do |m, specifier|
+        if specifier =~ /(.+)#(.+)/
+          work, mvt = $1, $2
+          found = Dir["#{work}/*"].select do |entry|
+            if File.directory?(entry)
+              n = File.basename(entry)
+              (n == work) || ((n =~ /^(\d+)/) && ($1.to_i(10) == mvt.to_i))
+            end
+          end.first
+          if found
+            m << {
+              "work" => work,
+              "movement" => File.basename(found)
+            }
+          end
+        else
+          Dir["#{work}/*"].each do |entry|
+            if File.directory?(entry)
+              m << {
+                "work" => work,
+                "movement" => File.basename(entry)
+              }
+            end
+          end
+        end
+        m
+      end
+      @config["movements"] = mvts
     end
     
     def name
@@ -40,7 +77,7 @@ module Ripple
     def all_parts
       # for now return an empty array. later we'll go over all
       # movements and compute a union
-      compilation_config["parts"].keys
+      compilation_config["parts"] ? compilation_config["parts"].keys : []
     end
     
     def process
