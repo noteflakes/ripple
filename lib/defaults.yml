@@ -101,6 +101,7 @@ parts:
   continuo:
     clef: bass
     midi_instrument: cello
+    embed_figures: true
   organo:
     clef: bass
     midi_instrument: church organ

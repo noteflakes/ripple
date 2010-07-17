@@ -99,8 +99,8 @@ module Ripple
     end
     
     def movement_config(mvt)
-      c = super(mvt)
-      c["movements"][mvt]["title"] = @work.config["compiled_movement_title"]
+      c = super(mvt); c.deep = true
+      c["movements/#{mvt}/title"] = @work.config["compiled_movement_title"]
       c["compiled"] = true
       c["breaks"] = @config["breaks"]
       c["include_toc"] = true
@@ -146,8 +146,8 @@ module Ripple
     end
 
     def movement_config(mvt)
-      c = super(mvt)
-      c["movements"][mvt]["title"] = @work.config["compiled_movement_title"]
+      c = super(mvt); c.deep = true
+      c["movements/#{mvt}/title"] = @work.config["compiled_movement_title"]
       c["compiled"] = true
       c["breaks"] = @config["parts/#{@part}/breaks"]
       c["include_toc"] = true
