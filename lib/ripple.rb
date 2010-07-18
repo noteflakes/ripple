@@ -88,14 +88,3 @@ module Ripple
     "#{yml[:major]}.#{yml[:minor]}.#{yml[:patch]}"
   end
 end
-
-__END__
-
-C = Ripple::Compilation
-$c = C.new('compilations/test.yml',
-  Ripple.configuration(
-    "open_target" => true#,
-    #{ }"no_score" => true,
-    #{}"selected_parts" => "ira"
-  )
-)
