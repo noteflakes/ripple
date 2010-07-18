@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ripple}
-  s.version = "0.7.1"
+  s.version = "0.7.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sharon Rosner"]
-  s.date = %q{2010-07-17}
+  s.date = %q{2010-07-18}
   s.default_executable = %q{ripple}
   s.description = %q{Ripple is a Lilypond generator.}
   s.email = %q{ciconia@gmail.com}
