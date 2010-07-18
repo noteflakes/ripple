@@ -2,12 +2,15 @@
 
 Ripple is a small program that helps you generate scores and parts without repeating yourself, performing complex includes or writing scheme macros.
 
-Ripple does two things:
+Here are some of Ripple's features:
 
-- Put together scores and parts from files organized in a specific directory hierarchy.
-- Allow you to use a better syntax for writing music, with support for macros (very useful for notating recurring rhythms), better accidentals, prefixed beams and slurs, and shorthand notation for stuff like divisi, appogiaturas, etc.
+- Create scores and parts from files organized in a consistent, easy-to-understand directory hierarchy.
+- Improved Lilypond syntax for writing music, with support for macros (very useful for notating recurring rhythms), better accidentals, prefixed beams and slurs, and shorthand notation for stuff like divisi, appogiaturas, etc.
+- Automatically create MIDI versions of your scores.
+- Proof mode for faster editing - get your PDF regenerated every time you save your source.
+- Compilation mode for mixing different musical works together in a single score or part. 
 
-For comprehensive examples of usage checkout out my [music scores project](http://github.com/ciconia/music/tree) (mainly Bach stuff).
+For comprehensive examples of the improved syntax checkout out my [music scores project](http://github.com/ciconia/music/tree) (mainly Bach stuff).
 
 ## A Ripple project:
 
@@ -103,16 +106,91 @@ Ripple also currently includes the following default settings for several voice 
 
 ## Overriding default settings
 
-The settings used by Ripple to process the source files are merged from the different settings files (<code>ripple/lib/defaults.yml</code>, <code>_ripple.yml</code>, <code>_work.yml</code>, <code>_movement.yml</code>) and can further be overriden by supplying an <code>--opt</code> option to the command-line tool.
+The settings used by Ripple to process the source files are merged from the different settings files (<code>ripple/lib/defaults.yml</code>, <code>_ripple.yml</code>, <code>_work.yml</code>, <code>_movement.yml</code>) and can further be overriden by specifying an <code>--opt</code> switch:
 
     ripple BWV17 --opt "editor:Someone else but me"
     
 # Auto-regeneration mode
 
-Ripple can be put into auto-regeneration mode, in which it watches the source directory and process the specified files each time a file is saved in that directory. To use ripple in auto-regenration mode, add <code>auto:true</code> to your <code>_ripple.yml</code> file, or specify the <code>--auto</code> option for the command-line tool.
+Ripple can be put into auto-regeneration mode, in which it watches the source directory and process the specified files each time a file is saved in that directory. To use ripple in auto-regenration mode, add <code>auto:true</code> to your <code>_ripple.yml</code> file, or specify the <code>--auto</code> switch:
 
     ripple BWV17 --auto
 
 # Proof mode
 
-Proof mode is similar to auto-regeneration mode, except that each time a file is changed or added, it is compiled into PDF (as a single movement and part) and opened in the background. This mode is very useful when entering parts. To use ripple in proof mode, add <code>proof:true</code> to your <code>_ripple.yml</code> file, or specify the <code>--proof</code> or <code>-P</code> option for the command-line tool.
+Proof mode is similar to auto-regeneration mode, except that each time a file is changed or added, it is compiled into PDF (as a single movement and part) and opened in the background. This mode is very useful when entering parts. To use ripple in proof mode, add <code>proof:true</code> to your <code>_ripple.yml</code> file, or specify the <code>--proof</code> or <code>-P</code> switch:
+
+    ripple BWV17 -P
+
+# Compilation mode
+
+Compilation mode allows you to compile different pieces/movements into a single score or part. The compilation settings are defined in a YAML file. Here's a simple example:
+
+title: My First Ripple Compilation
+subtitle: Just Testing
+movements:
+  - work: bach/BWV1041
+    movement: 01-allegro
+  - work: bach/BWV1066
+    movement: "09-bourree-II"
+    score_breaks: 2
+    parts:
+      ira:
+        source: fagotto
+        breaks: 1
+parts:
+  ira:
+    source: continuo
+    clef: bass
+    hide_figures: true
+    
+In order to process the compilation, use the <code>-c</code> switch:
+
+    ripple -c compilations/test
+    
+When no parts are specified, Ripple will process all parts specified in the compilation file. As the example above shows, you can also control page breaks for individual parts and for the score. For more examples of usage look at [my own compilations](http://github.com/ciconia/music/tree/master/compilations/).
+
+## Ad-hoc compilations
+
+Ripple also lets you perform ad-hoc compilations without preparing a compilation file by using the <code>-C</code> switch:
+
+    ripple -C bach/BWV156 bach/BWV044 bach/BWV017
+    
+If no parts are specified, only the score will be prepared. You can also compile specific movements by specifying them using the format <code>work#movement</code>. Ripple will also understand movement numbers instead of complete movement references:
+
+    ripple -C bach/BWV156#1 bach/BWV044#2
+    
+You can also specify a title for the compilation by including the <code>-t</code> switch:
+
+    ripple -C -t "My own title" bach/BWV156#1 bach/BWV044#2
+
+# More ripple tips
+
+## Create a MIDI version of your score:
+
+    ripple bach/BWV017 -M
+
+## Open the rendered PDF file once it is ready:
+
+    ripple bach/BWV017 -o
+    
+This also works for MIDI files:
+
+    ripple bach/BWV017 -M -o
+    
+## Process only the score:
+
+    ripple bach/BWV017 -s
+    
+## Process only the parts:
+   
+    ripple bach/BWV017 --no-score
+    
+## Process a specific part:
+
+    ripple bach/BWV017 -p continuo
+    ripple bach/BWV017 -p violino1,violino2
+    
+## Process a specific movement:
+
+    ripple bach/BWV017 -m 01-coro
