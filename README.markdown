@@ -178,6 +178,10 @@ This also works for MIDI files:
 
     ripple bach/BWV017 -M -o
     
+If you find yourself always using the <code>-o</code> switch, you can add the following setting to your <code>_ripple.yml</code> file instead:
+
+    open_target: true
+    
 ## Process only the score:
 
     ripple bach/BWV017 -s
