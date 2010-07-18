@@ -10,7 +10,27 @@ module Ripple
         @path += ".yml" if @path !~ /\.yml/
         @config = config.deep_merge(compilation_config)
       end
+      qualify_all_movements
       compute_movement_titles
+    end
+    
+    def qualify_movement(work, mvt)
+      found = Dir["#{work}/*"].select do |entry|
+        if File.directory?(entry)
+          n = File.basename(entry)
+          (n == mvt) || ((n =~ /^(\d+)/) && ($1.to_i(10) == mvt.to_i))
+        end
+      end.first
+      found && File.basename(found)
+    end
+    
+    def qualify_all_movements
+      @config["movements"].each do |m|
+        if m["movement"] =~ /(.+)#(.+)/
+          m["work"] = $1
+          m["movement"] = qualify_movement($1, $2)
+        end
+      end
     end
     
     def calculate_fast_compile(config)
@@ -18,17 +38,11 @@ module Ripple
       @config = config; @config.deep = true
       mvts = @config["fast-compile"].inject([]) do |m, specifier|
         if specifier =~ /(.+)#(.+)/
-          work, mvt = $1, $2
-          found = Dir["#{work}/*"].select do |entry|
-            if File.directory?(entry)
-              n = File.basename(entry)
-              (n == work) || ((n =~ /^(\d+)/) && ($1.to_i(10) == mvt.to_i))
-            end
-          end.first
-          if found
+          work = $1
+          if mvt = qualify_movement(work, $2)
             m << {
               "work" => work,
-              "movement" => File.basename(found)
+              "movement" => mvt
             }
           end
         else
