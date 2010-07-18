@@ -135,7 +135,7 @@ def process(opts = {})
   if $options["fast-compile"]
     Ripple::Compilation.new(nil, $config).process
   elsif $work
-    $work.split(',').each do |w| 
+    $work.split(',').each do |w|
       if $config["compile"]
         Ripple::Compilation.new(w, $config.merge(opts)).process
       else
@@ -147,6 +147,9 @@ def process(opts = {})
   else
     $works.each {|w| w.process}
   end
+rescue RippleError => e
+  puts e.message
+  exit unless $options["auto"]
 end
 
 # Files to watch

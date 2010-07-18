@@ -48,7 +48,7 @@
 	      \column {
           \fill-line {\bold \large "<%= movement_title(config) %>"}
           <% if config["compiled"] %>
-            \fill-line {\large "<%= part_source(config) %>"}
+            \fill-line {\large "<%= (s = part_source(config)) && s.to_instrument_title %>"}
           <% end %>
 	      }
 	    }

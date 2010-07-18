@@ -145,3 +145,6 @@ class Exception
   end
 end
 
+
+class RippleError < RuntimeError
+end

@@ -30,6 +30,18 @@ module Ripple
           m["work"] = $1
           m["movement"] = qualify_movement($1, $2)
         end
+        if m["work"].nil?
+          raise RippleError, "Missing work specification in config file (#{m["movement"]})"
+        end
+      end
+    end
+    
+    def compute_movement_titles
+      @config["movements"].each_with_index do |m, i|
+        w = Work.new(m["work"], clean_config)
+        mvt = (m["movement"] =~ /^(\d+)\-(.+)/) ? 
+          "#{$1.to_i} - #{$2.titlize(true)}" : m["movement"]
+        m["title"] ||= "%d. %s/%s" % [i + 1, w.name, mvt]
       end
     end
     
@@ -71,15 +83,6 @@ module Ripple
     
     def clean_config
       @config.reject {|k, v| k == "movements" || k == "compile"}
-    end
-    
-    def compute_movement_titles
-      @config["movements"].each_with_index do |m, i|
-        w = Work.new(m["work"], clean_config)
-        mvt = (m["movement"] =~ /^(\d+)\-(.+)/) ? 
-          "#{$1.to_i} - #{$2.titlize(true)}" : m["movement"]
-        m["title"] ||= "%d. %s/%s" % [i + 1, w.name, mvt]
-      end
     end
     
     def relative_path

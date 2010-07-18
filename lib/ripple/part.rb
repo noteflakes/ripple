@@ -8,12 +8,18 @@ module Ripple
     end
     
     def movement_music_files(part, mvt, config)
-      part = config["parts/#{part}/source"] || part
-      Dir[
+      src = config["parts/#{part}/source"]
+      part = src || part
+      files = Dir[
         File.join(@work.path, mvt, "#{part}.rpl"), 
         File.join(@work.path, mvt, "#{part}.?.rpl"),
         File.join(@work.path, mvt, "#{part}.ly")
       ].sort
+      if files.empty? && src
+        movement_music_files(src, mvt, config)
+      else
+        files
+      end
     end
     
     def movement_lyrics_files(part, mvt, config)
@@ -32,8 +38,14 @@ module Ripple
     end
     
     def movement_figures_file(part, mvt, config)
-      part = config["parts/#{part}/source"] || part
-      Dir[File.join(@work.path, mvt, "#{part}.figures")].first
+      src = config["parts/#{part}/source"]
+      part = src || part
+      file = Dir[File.join(@work.path, mvt, "#{part}.figures")].first
+      if file.nil? && src
+        movement_figures_file(src, mvt, config)
+      else
+        file
+      end
     end
     
     def movement_config(mvt)
