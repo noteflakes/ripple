@@ -8,6 +8,7 @@ module Ripple
     end
     
     def movement_music_files(part, mvt, config)
+      orig_part = part
       src = config["parts/#{part}/source"]
       part = src || part
       files = Dir[
@@ -15,7 +16,7 @@ module Ripple
         File.join(@work.path, mvt, "#{part}.?.rpl"),
         File.join(@work.path, mvt, "#{part}.ly")
       ].sort
-      if files.empty? && src
+      if files.empty? && src && (src != orig_part)
         movement_music_files(src, mvt, config)
       else
         files
@@ -38,10 +39,11 @@ module Ripple
     end
     
     def movement_figures_file(part, mvt, config)
+      orig_part = part
       src = config["parts/#{part}/source"]
       part = src || part
       file = Dir[File.join(@work.path, mvt, "#{part}.figures")].first
-      if file.nil? && src
+      if file.nil? && src && (src != orig_part)
         movement_figures_file(src, mvt, config)
       else
         file
@@ -67,7 +69,7 @@ module Ripple
           config["parts/#{p}/title"] || p.to_instrument_title : nil
         c = config.merge(config["parts/#{@part}"] || {}).merge("part" => p, "staff_name" => title)
         music_files = movement_music_files(p, mvt, c)
-        
+
         if !c["hide_figures"] && figures_fn = movement_figures_file(p, mvt, c)
           figures = IO.read(figures_fn)
           # check if should embed figures in staff
@@ -182,7 +184,7 @@ module Ripple
       puts "Failed to generate #{@part} part."
     rescue => e
       puts "#{e.class}: #{e.message}"
-      puts e.backtrace[0]
+      e.clean_backtrace.each {|l| puts l}
     end
   end
 end

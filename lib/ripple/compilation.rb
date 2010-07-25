@@ -7,7 +7,7 @@ module Ripple
         calculate_fast_compile(config)
       else
         @path = File.expand_path(path)
-        @path += ".yml" if @path !~ /\.yml/
+        @path += ".yml" if @path !~ /\.yml$/
         @config = config.deep_merge(compilation_config)
       end
       qualify_all_movements
@@ -203,16 +203,20 @@ module Ripple
       c = super(mvt); c.deep = true
       c["movements/#{mvt}/title"] = @work.config["compiled_movement_title"]
       c["compiled"] = true
-      c["breaks"] = @config["parts/#{@part}/breaks"]
+      if part_config = @config["parts"][@part]
+        c = c.deep_merge(part_config).deep_merge("parts" => {@part => part_config})
+      end
+      c["breaks"] = @config["breaks"]#@config["parts/#{@part}/breaks"]
       c["include_toc"] = true
       c
     end
     
     def render_movement(mvt)
       @work = Work.new(mvt["work"], @compilation.clean_config)
-      @config = @work.config.deep_merge("part" => @part)
+      @config = @work.config.deep_merge(mvt).deep_merge("part" => @part)
+      @config["parts/#{@part}/breaks"] = nil
       if part_config = mvt["parts"] && mvt["parts"][@part]
-        @config = @config.deep_merge(mvt)
+        @config = @config.deep_merge(part_config)
       end
       @config["mode"] = :part
       @work.config["compiled_movement_title"] = mvt["title"]

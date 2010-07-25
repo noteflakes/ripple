@@ -119,6 +119,12 @@ when 0
   end
 when 1
   $work = ARGV[0]
+  file = $work; file += ".yml" if file !~ /\.yml$/
+  if !$options["fast-compile"] && File.file?(file)
+    if file =~ /compilation/ || ((y = YAML.load(file) rescue {}) && (y["compilation"]))
+      $options["compile"] = true
+    end
+  end
 else
   if $options["fast-compile"]
     $options["fast-compile"] = ARGV
