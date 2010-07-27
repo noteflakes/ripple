@@ -166,6 +166,10 @@ You can also specify a title for the compilation by including the <code>-t</code
 
 # More ripple tips
 
+## Process multiple works
+
+    ripple bach/BWV017 bach/BWV166
+
 ## Create a MIDI version of your score:
 
     ripple bach/BWV017 -M

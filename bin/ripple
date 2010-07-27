@@ -118,7 +118,7 @@ when 0
     exit(1)
   end
 when 1
-  $work = ARGV[0]
+  $work = [ARGV[0]]
   file = $work; file += ".yml" if file !~ /\.yml$/
   if !$options["fast-compile"] && File.file?(file)
     if file =~ /compilation/ || ((y = YAML.load(file) rescue {}) && (y["compilation"]))
@@ -129,8 +129,7 @@ else
   if $options["fast-compile"]
     $options["fast-compile"] = ARGV
   else
-    puts "Invalid options. Run `ripple --help` for assistance."
-    exit(1)
+    $work = ARGV
   end
 end
 
@@ -141,7 +140,7 @@ def process(opts = {})
   if $options["fast-compile"]
     Ripple::Compilation.new(nil, $config).process
   elsif $work
-    $work.split(',').each do |w|
+    $work.each do |w|
       if $config["compile"]
         Ripple::Compilation.new(w, $config.merge(opts)).process
       else
