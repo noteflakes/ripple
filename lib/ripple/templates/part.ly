@@ -11,6 +11,9 @@
 		<% if config["subtitle"] %>
 			subtitle = <%= config["subtitle"].ly_inspect %>
 		<% end %>
+		<% if config["subsubtitle"] %>
+			subsubtitle = <%= config["subsubtitle"].ly_inspect %>
+		<% end %>
 	  composer = "<%= config["composer"] %>"
 	  instrument = "<%= config["parts/#{config["part"]}/title"] || 
       config["part"].to_instrument_title %>"
