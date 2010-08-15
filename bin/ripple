@@ -74,6 +74,10 @@ opts = OptionParser.new do |opts|
     $options["open_target"] = true
   end
 
+  opts.on("--no-open", "Open PDF/Midi file after processing") do
+    $options["open_target"] = false
+  end
+
   opts.on("-v", "--version", "Display current version") do
     puts "Ripple " + Ripple.version
     exit 0

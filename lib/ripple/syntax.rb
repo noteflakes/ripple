@@ -40,10 +40,10 @@ module Ripple
     
     INLINE_INCLUDE_RE = /\\inlineInclude\s(\S+)/
     
-    def convert_inline_includes(m, fn, mode)
+    def convert_inline_includes(m, fn, mode, config)
       m.gsub(INLINE_INCLUDE_RE) do |i|
         include_fn = File.join(File.dirname(fn), $1)
-        load_music(include_fn, mode)
+        load_music(include_fn, mode, config)
       end
     end
     
@@ -99,7 +99,7 @@ module Ripple
         end
       end
       
-      convert_inline_includes(m, fn, mode)
+      convert_inline_includes(m, fn, mode, config)
     end
     
     def load_music(fn, mode, config)

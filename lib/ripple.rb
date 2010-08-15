@@ -29,11 +29,11 @@ module Ripple
   DEFAULTS = YAML.load(IO.read(File.join(File.dirname(__FILE__), 'defaults.yml')))
   
   def self.configuration(opts = {})
-    config = DEFAULTS.deep_merge(opts)
+    config = DEFAULTS
     config.deep = true
     config_file_path = File.join(config['source'], CONFIG_FILE)
     if File.exists?(config_file_path)
-      config = config.deep_merge(YAML.load_file(config_file_path))
+      config = config.deep_merge(YAML.load_file(config_file_path)).deep_merge(opts)
     end
     
     find_include_files(config)
