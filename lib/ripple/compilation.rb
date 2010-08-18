@@ -26,9 +26,13 @@ module Ripple
     
     def qualify_all_movements
       @config["movements"].each do |m|
-        if m["movement"] =~ /(.+)#(.+)/
+        mvt = m["movement"]
+        if mvt =~ /(.+)#(.+)/
           m["work"] = $1
           m["movement"] = qualify_movement($1, $2)
+          unless m["movement"]
+            raise RippleError, "Invalid movement specified: #{mvt}. Check work and movement refs."
+          end
         end
         if m["work"].nil?
           raise RippleError, "Missing work specification in config file (#{m["movement"]})"
