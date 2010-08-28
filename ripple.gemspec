@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ripple}
-  s.version = "0.7.9"
+  s.version = "0.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sharon Rosner"]
-  s.date = %q{2010-08-18}
+  s.date = %q{2010-08-29}
   s.default_executable = %q{ripple}
   s.description = %q{Ripple is a Lilypond generator.}
   s.email = %q{ciconia@gmail.com}
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
      "README.markdown",
      "Rakefile",
      "VERSION.yml",
+     "alternative_figures_syntax",
      "bin/ripple",
      "examples/simple/_work.yml",
      "examples/simple/basse.rpl",
@@ -30,6 +31,7 @@ Gem::Specification.new do |s|
      "lib/ripple.rb",
      "lib/ripple/compilation.rb",
      "lib/ripple/core_ext.rb",
+     "lib/ripple/figures_syntax.rb",
      "lib/ripple/lilypond.rb",
      "lib/ripple/part.rb",
      "lib/ripple/score.rb",
@@ -48,6 +50,7 @@ Gem::Specification.new do |s|
      "lib/ripple/work.rb",
      "ripple.gemspec",
      "spec/core_ext_spec.rb",
+     "spec/figures_syntax_spec.rb",
      "spec/rendering_spec.rb",
      "spec/spec_helper.rb",
      "spec/syntax_spec.rb"
@@ -60,6 +63,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Ripple is a Lilypond generator.}
   s.test_files = [
     "spec/core_ext_spec.rb",
+     "spec/figures_syntax_spec.rb",
      "spec/rendering_spec.rb",
      "spec/spec_helper.rb",
      "spec/syntax_spec.rb"
