@@ -13,6 +13,7 @@ require 'yaml'
 # internal requires
 require 'ripple/core_ext'
 require 'ripple/syntax'
+require 'ripple/figures_syntax'
 require 'ripple/templates'
 require 'ripple/work'
 require 'ripple/part'

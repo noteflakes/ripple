@@ -1,6 +1,7 @@
 module Ripple
   class Score
     include Syntax
+    include FigureSyntax
     
     def initialize(work, config = nil)
       @work = work
@@ -31,7 +32,8 @@ module Ripple
 
     def movement_figures_file(part, mvt, config)
       part = config["parts/#{part}/source"] || part
-      Dir[File.join(@work.path, mvt, "#{part}.figures")].first
+      Dir[File.join(@work.path, mvt, "#{part}.figures"),
+        File.join(@work.path, mvt, "#{part}.fig")].first
     end
     
     
@@ -82,7 +84,8 @@ module Ripple
     def render_part_figures(part, mvt, config)
       output = ""
       if !config["score/hide_figures"] && figures_fn = movement_figures_file(part, mvt, config)
-        output += Templates.render_figures(IO.read(figures_fn), config)
+        output += Templates.render_figures(load_figures(figures_fn, :part, config), config)
+          #IO.read(figures_fn), config)
       end
       output
     end

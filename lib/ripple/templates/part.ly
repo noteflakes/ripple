@@ -1,5 +1,12 @@
 <% include.each do |inc| %>\include "<%= inc %>"
 <% end %>
+
+\layout {
+  \context { \Staff
+    ignoreFiguredBassRest = ##f
+  }
+}
+
 \book {
   <% if config["include_toc"] %>
   	\markuplines \table-of-contents

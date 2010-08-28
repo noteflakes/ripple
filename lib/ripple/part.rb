@@ -1,6 +1,7 @@
 module Ripple
   class Part
     include Syntax
+    include FigureSyntax
     
     def initialize(part, work)
       @part = part; @work = work
@@ -42,7 +43,8 @@ module Ripple
       orig_part = part
       src = config["parts/#{part}/source"]
       part = src || part
-      file = Dir[File.join(@work.path, mvt, "#{part}.figures")].first
+      file = Dir[File.join(@work.path, mvt, "#{part}.figures"),
+        File.join(@work.path, mvt, "#{part}.fig")].first
       if file.nil? && src && (src != orig_part)
         movement_figures_file(src, mvt, config)
       else
@@ -71,7 +73,7 @@ module Ripple
         music_files = movement_music_files(p, mvt, c)
 
         if !c["hide_figures"] && figures_fn = movement_figures_file(p, mvt, c)
-          figures = IO.read(figures_fn)
+          figures = load_figures(figures_fn, :part, c) #IO.read(figures_fn)
           # check if should embed figures in staff
           c["figures"] = figures if c["embed_figures"]
         end
@@ -95,7 +97,8 @@ module Ripple
         end
         if figures && !c["embed_figures"]
           # if not embedding figures, they are rendered separately
-          output += Templates.render_figures(IO.read(figures_fn), c)
+          output += Templates.render_figures(load_figures(figures_fn, :part, c), c)
+            #IO.read(figures_fn), c)
         end
       end
       output
