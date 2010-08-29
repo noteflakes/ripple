@@ -5,7 +5,7 @@ def cvt(input, mode = nil, config = {})
 end
 
 context "Figure syntax converter" do
-  specify "should correctly parse first example (BWV135/1)" do
+  specify "use case 1 (BWV135/1)" do
     cvt("% excerpt from BWV 135/1
     #/2.
     ,/2 642/4
@@ -24,5 +24,9 @@ context "Figure syntax converter" do
     642 7`42/2
     853/2.
     ,").should == "<_+>2. s2 <6 4 2>4 <6 5> <6 4 2> <5>8 <6\\\\> <5 4>4 \\bassFigureExtendersOn <5 3> \\bassFigureExtendersOff <6>8 <5> <7 _+>4 <6 4 2/> <7 5 _+> <6 5 _+> \\bassFigureExtendersOn <6 4> \\bassFigureExtendersOff <5 _+> <6 4> <7\\\\ 4 2/>2 <8 5 _+>2. s2.*4 <6\\\\>2. <6> <7>4 <6>2 <7 _+>4 <6 4> <5 _+> <6 5 _+>8 \\bassFigureExtendersOn <6 4> \\bassFigureExtendersOff <5 _+>4 <6 4> <6 4 2> <7\\\\ 4 2>2 <8 5 3>2. s"
+  end
+  
+  specify "use case 2" do
+    cvt("6-4!2/4").should == "<6- 4! 2>4"
   end
 end

@@ -1,6 +1,6 @@
 module Ripple
   module FigureSyntax
-    PARTS_RE = /([,s])?((?:[\d#bh_][`\+\-']*)+)?(?:\/(\d+[\.]*\*?\d*))?/
+    PARTS_RE = /([,s])?((?:[\d#bh_][\\`\+\-'!]*)+)?(?:\/(\d+[\.]*\*?\d*))?/
     CHORD_RE = /[\d#bh_][\\`\+\-'!]*/
     ALTERATION_RE = /[#bh`']/
     ALTERATION = {
