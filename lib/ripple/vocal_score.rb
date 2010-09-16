@@ -70,7 +70,7 @@ module Ripple
     end
     
     def pdf_filename
-      File.join(@config["pdf_dir"], @work.relative_path, "vocal")
+      File.join(@config["pdf_dir"], @work.relative_path, "#{@work.name}-vocal")
     end
     
     def process
