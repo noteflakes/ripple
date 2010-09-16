@@ -26,8 +26,8 @@ module Ripple
           if lyrics = movement_lyrics_file(p, mvt, c)
             lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
           end
-          if figures_fn = Dir[File.join(@work.path, mvt, "#{p}.figures")].first
-            output += Templates.render_figures(IO.read(figures_fn), c)
+          if !config["vocal/hide_figures"] && (figures_fn = movement_figures_file(p, mvt, config))
+            output += Templates.render_figures(load_figures(figures_fn, :score, config), c)
           end
         end
       end

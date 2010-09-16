@@ -84,7 +84,7 @@ module Ripple
     def render_part_figures(part, mvt, config)
       output = ""
       if !config["score/hide_figures"] && figures_fn = movement_figures_file(part, mvt, config)
-        output += Templates.render_figures(load_figures(figures_fn, :part, config), config)
+        output += Templates.render_figures(load_figures(figures_fn, :score, config), config)
           #IO.read(figures_fn), config)
       end
       output
