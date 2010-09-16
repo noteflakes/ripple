@@ -20,7 +20,7 @@ module Ripple
         else
           title = config["parts/#{p}/title"] || p.to_instrument_title
           c = config.merge("part" => p, "staff_name" => title)
-          music_fn = movement_music_file(p, mvt, c)
+          music_fn = movement_music_files(p, mvt, c)[0]
           mode = @config["midi"] ? :midi : :score
           output += Templates.render_staff(music_fn, load_music(music_fn, mode, c), c)
           if lyrics = movement_lyrics_file(p, mvt, c)
@@ -75,6 +75,7 @@ module Ripple
     
     def process
       @config["mode"] = :score
+      @config["score_mode"] = :vocal
 
       # create ly file
       FileUtils.mkdir_p(File.dirname(ly_filename))

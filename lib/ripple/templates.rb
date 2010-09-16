@@ -114,9 +114,12 @@ module Ripple
       if config["compiled"]
         return config["breaks"] && config["breaks"] > 0
       end
-      breaks = (config["mode"] == :part) ?
-        config["parts/#{config["part"]}/breaks"] :
-        config["score/breaks"]
+      breaks = case config["mode"]
+      when :part
+        config["parts/#{config["part"]}/breaks"]
+      else
+        (config["score_mode"] == :vocal) ? config["vocal/breaks"] : config["score/breaks"]
+      end
       breaks = [breaks] unless breaks.is_a?(Array)
       breaks.include?(config["movement"])
     end
