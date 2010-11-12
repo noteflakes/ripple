@@ -117,9 +117,12 @@ opts.parse!
 case ARGV.size
 when 0
   $works = nil
-  if $options["proof"]
+  if $options["proof"] && !File.exists?('_work.yml')
     puts "Work must be specified in proof mode."
     exit(1)
+  end
+  if File.file?('_work.yml')
+    $works = ['.']
   end
 when 1
   file = ARGV[0]

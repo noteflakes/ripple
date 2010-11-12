@@ -21,6 +21,7 @@ require 'ripple/score'
 require 'ripple/vocal_score'
 require 'ripple/compilation'
 require 'ripple/lilypond'
+require 'ripple/generate'
 
 module Ripple
   # Default options. Overriden by values in _config.yml or command-line opts.
@@ -29,20 +30,39 @@ module Ripple
   
   DEFAULTS = YAML.load(IO.read(File.join(File.dirname(__FILE__), 'defaults.yml')))
   
+  def self.find_config_file(source_dir)
+    dir = File.expand_path(source_dir)
+    while (fn = File.join(dir, CONFIG_FILE)) && !File.exists?(fn)
+      parent = File.expand_path(File.join(dir, '..'))
+      return nil if parent == dir
+      dir = parent
+    end
+    fn
+  end
+  
   def self.configuration(opts = {})
     config = DEFAULTS
     config.deep = true
-    config_file_path = File.join(config['source'], CONFIG_FILE)
-    if File.exists?(config_file_path)
-      config = config.deep_merge(YAML.load_file(config_file_path)).deep_merge(opts)
+    if fn = find_config_file(config['source'])
+      orig_dir = FileUtils.pwd
+      FileUtils.cd File.dirname(fn)
+      config = config.deep_merge(YAML.load_file(fn)).deep_merge(opts)
+      # resolve ly, pdf, midi path relative to the config file
+      %w[ly_dir pdf_dir midi_dir].each do |d|
+        config[d] = File.expand_path(config[d])
+      end
+      FileUtils.cd orig_dir
+      config['config_file_dir'] = File.dirname(fn)
     end
-    
     find_include_files(config)
     config
   end
   
   def self.find_include_files(config)
-    include_dir = File.join(config["source"], "_include")
+    
+    include_dir = File.join(config['config_file_dir'] || config['source'], "_include")
+    puts "******************"
+    p include_dir
     return unless File.directory?(include_dir)
     
     config["include"] = []

@@ -32,7 +32,7 @@ chord: 65 65/2
 sharp: 6+ 6+5 6++
 flat: 6- 6-5- 3--
 natural: 6! 5!
-altered: 6\ 4'
+altered: 6` 4'
 tenue: 65 _4
 
 
