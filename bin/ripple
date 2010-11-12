@@ -109,9 +109,18 @@ opts = OptionParser.new do |opts|
   opts.on("-t", "--title TITLE", "Title") do |v|
     $options["title"] = v
   end
+  
+  opts.on("-W", "--work", "New work") do
+    $options["gen"] = :work
+  end
 end
 
 opts.parse!
+
+if $options["gen"]
+  Ripple.generate($options["gen"], ARGV)
+  exit
+end
 
 # Get source and destintation from command line
 case ARGV.size
