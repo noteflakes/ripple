@@ -61,8 +61,6 @@ module Ripple
   def self.find_include_files(config)
     
     include_dir = File.join(config['config_file_dir'] || config['source'], "_include")
-    puts "******************"
-    p include_dir
     return unless File.directory?(include_dir)
     
     config["include"] = []
