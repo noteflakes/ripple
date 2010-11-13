@@ -326,17 +326,17 @@ end
 context "crossbar dot .|" do
   specify "should be expanded into lilypond construct" do
     cvt("c2 d2.| e4 f g").should ==
-      "c2 d2 \\once \\override NoteHead #'transparent = ##t \\once \\override Stem #'transparent = ##t d2.*0 s4 e4 f g"
+      "c2 d2 \\once \\override NoteHead #'transparent = ##t \\once \\override Dots #'extra-offset = #'(-1.3 . 0)\\once \\override Stem #'transparent = ##t d2.*0 s4 e4 f g"
   end
 
   specify "should handle octave disposition" do
     cvt("c d'4.|\\p e8 f g").should ==
-      "c d'4\\p \\once \\override NoteHead #'transparent = ##t \\once \\override Stem #'transparent = ##t d4.*0 s8 e8 f g"
+      "c d'4\\p \\once \\override NoteHead #'transparent = ##t \\once \\override Dots #'extra-offset = #'(-1.3 . 0) \\once \\override Stem #'transparent = ##t d4.*0 s8 e8 f g"
   end
 
   specify "should handle attached objects" do
     cvt("c d4.|\\p e8 f g").should ==
-      "c d4\\p \\once \\override NoteHead #'transparent = ##t \\once \\override Stem #'transparent = ##t d4.*0 s8 e8 f g"
+      "c d4\\p \\once \\override NoteHead #'transparent = ##t \\once \\override Dots #'extra-offset = #'(-1.3 . 0) \\once \\override Stem #'transparent = ##t d4.*0 s8 e8 f g"
   end
 end
 

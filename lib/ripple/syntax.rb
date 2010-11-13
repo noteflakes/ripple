@@ -29,7 +29,7 @@ module Ripple
     
     CROSSBAR_DOT_RE = /((([a-gr](?:[bs]+)?)(?:[',]+)?)(?:[!\?])?((?:[\d]+)?\.?(?:[\d*\/]+)?))\.\|(\S+)?/m
     CROSSBAR_DOT_VALUE = {'1' => '2', '2' => '4', '4' => '8', '8' => '16', '16' => '32'}
-    CROSSBAR_NOTE = "\\once \\override NoteHead #'transparent = ##t \\once \\override Stem #'transparent = ##t"
+    CROSSBAR_NOTE = "\\once \\override NoteHead #'transparent = ##t \\once \\override Dots #'extra-offset = #'(-1.3 . 0) \\once \\override Stem #'transparent = ##t"
     CROSSBAR_TIE = "\\once \\override Tie #'transparent = ##t"
     
     def convert_crossbar_dot(m)
