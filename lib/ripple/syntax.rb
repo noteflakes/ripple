@@ -20,8 +20,7 @@ module Ripple
     VARIABLE_RE = /%(\S+)%/
     DIVISI_RE = /\/1\s([^\/]+)\/2\s([^\/]+)\/u\s/
     
-    # BEAM_SLUR_RE = /([\[\(]+)([a-g](?:[bs]+)?(?:[',]+)?(?:[!\?])?([\d*\/]+)?\.?)/m
-    BEAM_SLUR_RE = /([\[\(]+)([a-gr](?:[bs]+)?(?:[',]+)?(?:[!\?])?(?:[\d]+)?\.?`?(?:[\d*\/]+)?)/m
+    BEAM_SLUR_RE = /([\[\(]+)([a-gr](?:[bs]+)?(?:[',]+)?(?:[!\?])?(?:[\d]+)?\.?\|?`?(?:[\d*\/]+)?)/m
     
     def convert_prefixed_beams_and_slurs(m)
       m.gsub(BEAM_SLUR_RE) {"#{$2}#{$1}"}
@@ -88,7 +87,7 @@ module Ripple
       if rpl_mode
         m = m.gsub(SKIP_QUOTES_RE) do
           a,q = convert_macros($1, config), $2
-          a = convert_prefixed_beams_and_slurs(convert_crossbar_dot(a)).
+          a = convert_crossbar_dot(convert_prefixed_beams_and_slurs(a)).
             gsub(VARIABLE_RE) {config[$1]}.
             gsub(DIVISI_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}.
             gsub(VALUE_RE) {"#{$1}#{VALUE[$2]}"}.
