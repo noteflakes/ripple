@@ -5,15 +5,14 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ripple}
-  s.version = "0.8.4"
+  s.version = "0.9.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sharon Rosner"]
-  s.date = %q{2010-11-20}
-  s.default_executable = %q{ripple}
+  s.date = %q{2010-11-24}
   s.description = %q{Ripple is a Lilypond generator.}
   s.email = %q{ciconia@gmail.com}
-  s.executables = ["ripple", "pdf_booklet"]
+  s.executables = ["pdf_booklet", "ripple"]
   s.extra_rdoc_files = [
     "README.markdown"
   ]
@@ -23,10 +22,12 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION.yml",
      "alternative_figures_syntax",
+     "bin/pdf_booklet",
      "bin/ripple",
      "examples/simple/_work.yml",
      "examples/simple/basse.rpl",
      "examples/simple/dessus.rpl",
+     "lib/blank.pdf",
      "lib/defaults.yml",
      "lib/ripple.rb",
      "lib/ripple/compilation.rb",
@@ -34,7 +35,6 @@ Gem::Specification.new do |s|
      "lib/ripple/figures_syntax.rb",
      "lib/ripple/generate.rb",
      "lib/ripple/lilypond.rb",
-     "lib/ripple/pdftk.rb",
      "lib/ripple/part.rb",
      "lib/ripple/score.rb",
      "lib/ripple/syntax.rb",
