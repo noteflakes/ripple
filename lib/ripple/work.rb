@@ -11,8 +11,9 @@ module Ripple
     end
     
     def relative_path
-      root = File.expand_path(config["source"])
-      path =~ /^#{root}\/(.+)$/ ? $1 : "."
+      source_dir = File.expand_path(config["source"])
+      config_dir = @config['config_file_dir']
+      path =~ /^(?:#{source_dir}|#{config_dir})\/(.+)$/ ? $1 : "."
     end
     
     def work_config
