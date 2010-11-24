@@ -110,7 +110,11 @@ opts = OptionParser.new do |opts|
     $options["title"] = v
   end
   
-  opts.on("-W", "--work", "New work") do
+  opts.on("-b", "--booklet", "Create booklet PDF's") do
+    $options["make_booklet"] = true
+  end
+  
+  opts.on("-W", "--work", "Create new work") do
     $options["gen"] = :work
   end
 end

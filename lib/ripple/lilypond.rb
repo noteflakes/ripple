@@ -40,6 +40,7 @@ module Ripple
     def self.make_pdf(ly_file, pdf_file, config)
       run("--pdf -o \"#{pdf_file}\" \"#{ly_file}\"", config)
       delete_ps_file(pdf_file)
+      PDFTK.make_booklet("#{pdf_file}.pdf") if config["make_booklet"]
       open("#{pdf_file}.pdf", config) if config["open_target"]
     end
     

@@ -21,6 +21,7 @@ require 'ripple/score'
 require 'ripple/vocal_score'
 require 'ripple/compilation'
 require 'ripple/lilypond'
+require 'ripple/pdftk'
 require 'ripple/generate'
 
 module Ripple

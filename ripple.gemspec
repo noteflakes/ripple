@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
      "lib/ripple/figures_syntax.rb",
      "lib/ripple/generate.rb",
      "lib/ripple/lilypond.rb",
+     "lib/ripple/pdftk.rb",
      "lib/ripple/part.rb",
      "lib/ripple/score.rb",
      "lib/ripple/syntax.rb",
