@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.default_executable = %q{ripple}
   s.description = %q{Ripple is a Lilypond generator.}
   s.email = %q{ciconia@gmail.com}
-  s.executables = ["ripple"]
+  s.executables = ["ripple", "pdf_booklet"]
   s.extra_rdoc_files = [
     "README.markdown"
   ]
