@@ -174,6 +174,30 @@ context "[[]] sections" do
   end
 end
 
+context "![[]] sections (cue)" do
+  specify "should be included only in part mode" do
+    cvt("a ![[b c]]").should == 
+      "a "
+
+    cvt("a ![[b c]]", :part).should == 
+      "a \\new CueVoice { b c }"
+
+    cvt("a ![[b c]] d ![[e f]]").should == 
+      "a  d "
+    
+    cvt("a ![[b c]] d ![[(e f)]]", :part).should == 
+      "a \\new CueVoice { b c } d \\new CueVoice { e( f) }"
+  end
+  
+  specify "should support line breaks" do
+    cvt("a ![[\nb c\n]]").should == 
+      "a "
+
+    cvt("a ![[\nb c\n]]", :part).should == 
+      "a \\new CueVoice { \nb c\n }"
+  end
+end
+
 context "{{}} sections" do
   specify "should be included only in score or midi mode" do
     cvt("a {{b c}}").should == 

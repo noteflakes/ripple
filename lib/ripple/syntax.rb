@@ -16,6 +16,7 @@ module Ripple
     PART_ONLY_RE = /\[\[((?:(?:\](?!\]))|[^\]])+)\]\]/m
     SCORE_ONLY_RE = /\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
     MIDI_ONLY_RE = /m\{\{((?:(?:\}(?!\}))|[^\}])+)\}\}/m
+    PART_ONLY_CUE_RE = /\!\[\[((?:(?:\](?!\]))|[^\]])+)\]\]/m
     
     VARIABLE_RE = /%(\S+)%/
     DIVISI_RE = /\/1\s([^\/]+)\/2\s([^\/]+)\/u\s/
@@ -79,10 +80,15 @@ module Ripple
       }
     end
     
+    def convert_modal_sections(m, mode)
+      m.gsub(PART_ONLY_CUE_RE) {(mode == :part) ? "\\new CueVoice { #{$1} }" : ''}.
+      gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}.
+      gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
+      gsub(SCORE_ONLY_RE) {(mode == :score || mode == :midi) ? $1 : ''}
+    end
+    
     def convert_syntax(m, fn, rpl_mode, mode, config)
-      m = m.gsub(MIDI_ONLY_RE) {(mode == :midi) ? $1 : ''}.
-        gsub(PART_ONLY_RE) {(mode == :part) ? $1 : ''}.
-        gsub(SCORE_ONLY_RE) {(mode == :score || mode == :midi) ? $1 : ''}
+      m = convert_modal_sections(m, mode)
 
       if rpl_mode
         m = m.gsub(SKIP_QUOTES_RE) do
