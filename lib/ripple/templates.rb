@@ -13,7 +13,8 @@ module Ripple
     def self.part_clef(config)
       part = config["part"]
       case c = config["parts/#{part}/clef"]
-      when 'none': nil
+      when 'none'
+        nil
       else
         c
       end
@@ -57,8 +58,10 @@ module Ripple
     
     def self.end_bar(config)
       case config["end_bar"]
-      when nil: "\\bar \"#{DEFAULT_ENDING_BAR}\""
-      when 'none': ''
+      when nil
+        "\\bar \"#{DEFAULT_ENDING_BAR}\""
+      when 'none'
+        ''
       else
         "\\bar \"#{config["end_bar"]}\""
       end

@@ -19,11 +19,12 @@ module Ripple
     def self.run(args, config)
       IO.popen("#{cmd(config)} #{args}", 'w+') {}
       case $?.exitstatus
-      when nil:
+      when nil
         puts
         puts "Interrupted by user"
         exit
-      when 0: # success, do nothing
+      when 0
+        # success, do nothing
       else
         raise LilypondError, "#{cmd(config)} #{args}"
       end

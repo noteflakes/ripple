@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# encoding: UTF-8
 
 trap("INT") {exit}
 trap("TERM") {exit}
@@ -182,7 +183,7 @@ end
 def globs(source)
   Dir.chdir(source) do
     if $works
-      dirs = $works.map {|w| Dir[w]}
+      dirs = $works
     else
       dirs = Dir['*'].select { |x| File.directory?(x) }
       # exclude _ly, _pdf, _midi dirs
@@ -194,7 +195,8 @@ def globs(source)
     end
     
     dirs = dirs.map { |x| "#{x}/**/*" }
-    dirs += ['*']
+    dirs << '*'
+    dirs
   end
 end
 
@@ -236,9 +238,12 @@ def proof_interrupt
   puts "Proof mode interrupted. (S)core, (M)IDI or e(x)it?"
   if i = STDIN.gets
     case i.chomp.downcase
-    when 's': make_proof_score(false)
-    when 'm': make_proof_score(true)
-    when 'x': exit
+    when 's'
+      make_proof_score(false)
+    when 'm'
+      make_proof_score(true)
+    when 'x'
+      exit
     end
   end
   trap("INT") {proof_interrupt}
@@ -252,7 +257,7 @@ if $options["auto"]
     puts "Auto-regeneration: #{$config['source']} -> #{$config['pdf_dir']}"
   end
 
-  dw = DirectoryWatcher.new($config['source'])
+  dw = DirectoryWatcher.new(File.expand_path($config['source']))
   dw.interval = 1
   dw.glob = globs($config['source'])
   

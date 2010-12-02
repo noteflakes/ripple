@@ -6,7 +6,7 @@ module Ripple
     #ACCIDENTAL_RE = /\b([a-g])([sb]{1,2})([^a-z])?/
     ACCIDENTAL_RE = /\b([a-g])([sb]{1,2})((?:\\[a-z]+)*)([^a-z])?/
     
-    VALUE_RE = /([a-gr](?:[bs]+)?(?:[',]+)?(?:[!\?])?)([36]4?)/
+    VALUE_RE = /([a-gr](?:[bs]*)(?:[',])*(?:[!\?])?)([36]4?)/
     VALUE = {'3' => '32', '6' => '16', '64' => '64'}
     
     TWOTHIRDS_RE = /(\d+)`/
@@ -21,13 +21,13 @@ module Ripple
     VARIABLE_RE = /%(\S+)%/
     DIVISI_RE = /\/1\s([^\/]+)\/2\s([^\/]+)\/u\s/
     
-    BEAM_SLUR_RE = /([\[\(]+)([a-gr](?:[bs]+)?(?:[',]+)?(?:[!\?])?(?:[\d]+)?\.?\|?`?(?:[\d*\/]+)?)/m
+    BEAM_SLUR_RE = /([\[\(]+)([a-gr](?:[bs]*)(?:[',]*)(?:[!\?])?(?:[\d]*)\.?\|?`?(?:[\d*\/]*))/m
     
     def convert_prefixed_beams_and_slurs(m)
       m.gsub(BEAM_SLUR_RE) {"#{$2}#{$1}"}
     end
     
-    CROSSBAR_DOT_RE = /((([a-gr](?:[bs]+)?)(?:[',]+)?)(?:[!\?])?((?:[\d]+)?\.?(?:[\d*\/]+)?))\.\|(\S+)?/m
+    CROSSBAR_DOT_RE = /((([a-gr](?:[bs]*))(?:[',]*))(?:[!\?])?((?:[\d]*)\.?(?:[\d*\/]*)))\.\|(\S*)/m
     CROSSBAR_DOT_VALUE = {'1' => '2', '2' => '4', '4' => '8', '8' => '16', '16' => '32'}
     CROSSBAR_NOTE = "\\once \\override NoteHead #'transparent = ##t \\once \\override Dots #'extra-offset = #'(-1.3 . 0) \\once \\override Stem #'transparent = ##t"
     CROSSBAR_TIE = "\\once \\override Tie #'transparent = ##t"
@@ -47,7 +47,7 @@ module Ripple
       end
     end
     
-    MACRO_GOBBLE_RE = /([a-gr](?:[bs]?)(?:[,'!?]+)?)([\\\^_]\S+)?/
+    MACRO_GOBBLE_RE = /([a-gr](?:[bs]?)(?:[,'!?]*))([\\\^_]\S+)?/
     MACRO_REPLACE_RE = /([#\@])([^\s]+)?/
 
     def convert_macro_region(pattern, m)
