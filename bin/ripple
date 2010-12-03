@@ -210,7 +210,7 @@ def proof_options(path)
   if dir =~ /^\.\/(.+)$/
     dir = $1
   end
-  if dir =~ /^#{$works.first}\/([^\/]+)/
+  if dir =~ /#{$works.first}\/([^\/]+)/
     mvt = $1
   else
     mvt = nil
