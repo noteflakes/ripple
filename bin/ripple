@@ -203,19 +203,34 @@ def globs(source)
 end
 
 def proof_options(path)
+  path = path.gsub('/./', '/')
   part = File.basename(path, '.*')
   # check if the file belongs to a keyboard part (e.g. organo.r.rpl)
   if part =~ /^(.*)\.\d$/
     part = $1
   end
+  base = $works.first
+  if base == '.'
+    base = File.expand_path(base)
+  end
   dir = File.dirname(path)
   if dir =~ /^\.\/(.+)$/
     dir = $1
   end
-  if dir =~ /#{$works.first}\/([^\/]+)/
+  puts "***************"
+  p path
+  p base
+  p dir
+  if dir =~ /^\.\/(.+)$/
+    dir = $1
+    p "1: #{$1}"
+  end
+  if dir =~ /#{base}\/([^\/]+)/
     mvt = $1
+    p "mvt = #{$1}"
   else
     mvt = nil
+    p "mvt = nil"
   end
   if $options['score_only']
     {"selected_movements" => mvt}
