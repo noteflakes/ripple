@@ -217,20 +217,13 @@ def proof_options(path)
   if dir =~ /^\.\/(.+)$/
     dir = $1
   end
-  puts "***************"
-  p path
-  p base
-  p dir
   if dir =~ /^\.\/(.+)$/
     dir = $1
-    p "1: #{$1}"
   end
   if dir =~ /#{base}\/([^\/]+)/
     mvt = $1
-    p "mvt = #{$1}"
   else
     mvt = nil
-    p "mvt = nil"
   end
   if $options['score_only']
     {"selected_movements" => mvt}
