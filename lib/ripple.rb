@@ -29,7 +29,7 @@ module Ripple
   # Strings are used instead of symbols for YAML compatibility.
   CONFIG_FILE = '_ripple.yml'
   
-  DEFAULTS = YAML.load(IO.read(File.join(File.dirname(__FILE__), 'defaults.yml')))
+  DEFAULTS = load_yaml(File.join(File.dirname(__FILE__), 'defaults.yml'))
   
   def self.find_config_file(source_dir)
     dir = File.expand_path(source_dir)
@@ -47,7 +47,7 @@ module Ripple
     if fn = find_config_file(config['source'])
       orig_dir = FileUtils.pwd
       FileUtils.cd File.dirname(fn)
-      config = config.deep_merge(YAML.load_file(fn)).deep_merge(opts)
+      config = config.deep_merge(load_yaml(fn)).deep_merge(opts)
       # resolve ly, pdf, midi path relative to the config file
       %w[ly_dir pdf_dir midi_dir].each do |d|
         config[d] = File.expand_path(config[d])
@@ -104,7 +104,7 @@ module Ripple
   end
 
   def self.version
-    yml = YAML.load(File.read(File.join(File.dirname(__FILE__), *%w[.. VERSION.yml])))
+    yml = load_yaml(File.join(File.dirname(__FILE__), *%w[.. VERSION.yml]))
     "#{yml[:major]}.#{yml[:minor]}.#{yml[:patch]}"
   end
 end

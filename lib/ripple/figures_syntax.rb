@@ -1,6 +1,6 @@
 module Ripple
   module FigureSyntax
-    PARTS_RE = /([,s])?((?:[\d#bh_][\\`\+\-'!]*)+)?(?:\/(\d+[\.]*\*?\d*))?/
+    PARTS_RE = /([,s])?(\?)?((?:[\d#bh_][\\`\+\-'!]*)+)?(?:\/(\d+[\.]*\*?\d*))?/
     CHORD_RE = /[\d#bh_][\\`\+\-'!]*/
     ALTERATION_RE = /[#bh`']/
     ALTERATION = {
@@ -12,6 +12,8 @@ module Ripple
     }
     EXTENDERS_ON = "\\bassFigureExtendersOn"
     EXTENDERS_OFF = "\\bassFigureExtendersOff"
+    
+    HIDDEN_FORMAT = "\\once \\override BassFigure #'implicit = ##t"
 
     def convert_figures(figures, fn, mode, config)
       #remove comments
@@ -31,11 +33,11 @@ module Ripple
     end
     
     def convert_chord(f)
-      if f[1]
-        a = []; f[1].scan(CHORD_RE) {|i| a << i}
-        [f[0], a, f[2]]
+      if f[2]
+        a = []; f[2].scan(CHORD_RE) {|i| a << i}
+        [f[0], a, f[3], f[1]]
       else
-        f
+        [f[0], nil, f[3], f[1]]
       end
     end
     
@@ -49,12 +51,11 @@ module Ripple
         chord.each_with_index do |n, i|
           # check for tenue
           if n == '_'
-            figure[3] = true
+            figure[4] = true
             # back track to find tenue value
             number, a = nil, figures[0, fidx]
             while !number && (f = a.pop) && (c = f[1])
               number = c[i] if c[i] != '_'
-              #f[3] = true unless c.include?('_')
             end
             chord[i] = number if number
           end
@@ -67,11 +68,15 @@ module Ripple
       ext_mode = false
       transformed = figures.inject([]) do |m, f|
         # check if extenders mode changed
-        new_ext_mode = !!f[3]
+        new_ext_mode = !!f[4]
         if ext_mode != new_ext_mode
           ext_mode = new_ext_mode
           m << (ext_mode ? EXTENDERS_ON : EXTENDERS_OFF)
         end
+        if f[3] # hidden flag
+          m << HIDDEN_FORMAT
+        end
+        
         # add chord
         if f[0]
           m << "s#{f[2]}"

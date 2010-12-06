@@ -3,7 +3,7 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 require 'yaml'
 
-yml = YAML.load(IO.read(File.join(File.dirname(__FILE__), "VERSION.yml")))
+yml = YAML.load_file(File.join(File.dirname(__FILE__), "VERSION.yml"))
 VERSION = "#{yml[:major]}.#{yml[:minor]}.#{yml[:patch]}"
 
 begin

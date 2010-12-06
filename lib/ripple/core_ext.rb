@@ -64,6 +64,20 @@ class Hash
     target
   end
 
+  def deep_merge!(hash)
+    hash.keys.each do |key|
+      if hash[key].is_a? Hash and self[key].is_a? Hash
+        self[key] = self[key].deep_merge!(hash[key])
+        next
+      end
+
+      self[key] = hash[key]
+    end
+
+    self.deep = true
+    self
+  end
+
   def lookup(path)
     path.split("/").inject(self) {|m,i| m[i].nil? ? (return nil) : m[i]}
   end
@@ -103,6 +117,15 @@ class Hash
       old_merge(hash)
     end
   end
+  
+  alias_method :old_merge!, :merge!
+  def merge!(hash)
+    if deep || hash.deep
+      deep_merge!(hash)
+    else
+      old_merge!(hash)
+    end
+  end
 end
 
 class Array
@@ -128,6 +151,14 @@ module Kernel
     b = e.clean_backtrace
     b.shift
     b
+  end
+  
+  def load_yaml(fn)
+    YAML.load_file(fn) rescue {}
+  end
+  
+  def convert_yaml(s)
+    YAML.load(s) rescue {}
   end
 end
 

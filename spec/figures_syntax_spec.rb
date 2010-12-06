@@ -29,4 +29,8 @@ context "Figure syntax converter" do
   specify "use case 2" do
     cvt("6-4!2/4").should == "<6- 4! 2>4"
   end
+  
+  specify "should convert figures preceded by ? to transparent figures" do
+    cvt("?6/4").should == "\\once \\override BassFigure #'transparent = ##t <6>4"
+  end
 end

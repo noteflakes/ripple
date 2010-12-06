@@ -82,7 +82,7 @@ module Ripple
     end
     
     def compilation_config
-      YAML.load(IO.read(@path)) rescue {}
+      load_yaml(@path)
     end
     
     def clean_config

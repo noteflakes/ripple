@@ -62,4 +62,16 @@
       indent = <%= config["score/indent"] || '2.5\cm' %>
     }
 	  <% end %>
+	  \layout {
+	    \context {
+        \Score
+        %% defaults
+        %% (shortest-duration-space . 2.0)
+        %% (spacing-increment . 1.2)
+        %% (base-shortest-duration . ,(ly:make-moment 1 8))
+        \override SpacingSpanner #'shortest-duration-space = #<%= config["layout/shortest_duration_space"] || "2.0" %>
+        \override SpacingSpanner #'spacing-increment = #<%= config["layout/spacing_increment"] || "1.2" %>
+        \override SpacingSpanner #'base-shortest-duration = #(ly:make-moment 1 <%= config["layout/base_shortest_duration"] || "8" %>)
+      }
+	  }
 	}

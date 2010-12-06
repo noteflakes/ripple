@@ -17,7 +17,7 @@ module Ripple
     end
     
     def work_config
-      YAML.load(IO.read(File.join(@path, "_work.yml"))) rescue {}
+      load_yaml(File.join(@path, "_work.yml"))
     end
     
     def movements

@@ -107,9 +107,14 @@ module Ripple
       convert_inline_includes(m, fn, mode, config)
     end
     
-    def load_music(fn, mode, config)
+    def load_music(fn, mode, config, config_out = nil)
       rpl_mode = fn =~ /\.rpl$/
-      convert_syntax(IO.read(fn), fn, rpl_mode, mode, config)
+      content = IO.read(fn)
+      if content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
+        content = content[($1.size + $2.size)..-1]
+        config_out.merge!(convert_yaml($1)) if config_out
+      end
+      convert_syntax(content, fn, rpl_mode, mode, config)
     end
     
     class Proxy

@@ -53,7 +53,7 @@ module Ripple
     end
     
     def movement_config(mvt)
-      c = YAML.load(IO.read(File.join(@work.path, mvt, "_movement.yml"))) rescue {}
+      c = load_yaml(File.join(@work.path, mvt, "_movement.yml"))
       if mc = @config["movements/#{mvt}"]
         mvt_config = @config.deep_merge(mc).deep_merge(c)
       else
@@ -84,12 +84,12 @@ module Ripple
             
             staff_number = (fn =~ /\.(\d)\.rpl$/) ? $1.to_i : 0
             cc["parts/#{p}/clef"] = [nil, 'treble', 'bass'][staff_number]
-            m += Templates.render_staff(fn, load_music(fn, :part, cc), cc)
+            m += Templates.render_staff(fn, load_music(fn, :part, cc, config), cc)
           end
           output += Templates.render_keyboard_part(staves, c)
         else
           music_files.each do |fn|
-            output += Templates.render_staff(fn, load_music(fn, :part, c), c)
+            output += Templates.render_staff(fn, load_music(fn, :part, c, config), c)
           end
         end
         if lyrics = movement_lyrics_files(p, mvt, c)
@@ -119,6 +119,9 @@ module Ripple
         content += render_part(@part, mvt, c)
         if after_parts
           content += render_part(after_parts, mvt, c.merge("aux_staff" => true))
+        end
+        if c["parts/#{@part}/layout"]
+          c.merge!('layout' => c["parts/#{@part}/layout"])
         end
         Templates.render_movement(content, c.merge("aux_staves" => (before_parts || after_parts)))
       else
@@ -187,7 +190,7 @@ module Ripple
       puts "Failed to generate #{@part} part."
     rescue => e
       puts "#{e.class}: #{e.message}"
-      e.clean_backtrace.each {|l| puts l}
+      e.backtrace.each {|l| puts l}
     end
   end
 end

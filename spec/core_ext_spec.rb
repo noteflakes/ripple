@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require File.expand_path(File.join(File.dirname(__FILE__), '../lib/ripple'))
 
 context "Hash#lookup" do
@@ -72,6 +74,52 @@ context "Hash#set" do
   end
 end
 
+context "Hash#merge" do
+  before(:each) do
+    @h = {
+      "a" => 1, 
+      "b" => {
+        "c" => 2, 
+        "d" => 3
+      }
+    }
+  end
+  
+  specify "should act normally when hash#deep is false" do
+    @h.merge("a" => 7).should == {"a" => 7, "b" => {"c" => 2, "d" => 3}}
+
+    @h.merge("b" => {"e" => 4}).should == {"a" => 1, "b" => {"e" => 4}} 
+  end
+  
+  specify "should do deep merge if hash#deep is true" do
+    @h.deep = true
+    @h.merge("b" => {"e" => 4}).should == {"a" => 1, "b" => {"c" => 2, "d" => 3, "e" => 4}} 
+  end
+end
+
+context "Hash#merge!" do
+  before(:each) do
+    @h = {
+      "a" => 1, 
+      "b" => {
+        "c" => 2, 
+        "d" => 3
+      }
+    }
+  end
+  
+  specify "should act normally when hash#deep is false" do
+    @h.merge!("a" => 7).should == {"a" => 7, "b" => {"c" => 2, "d" => 3}}
+
+    @h.merge!("b" => {"e" => 4}).should == {"a" => 7, "b" => {"e" => 4}} 
+  end
+  
+  specify "should do deep merge if hash#deep is true" do
+    @h.deep = true
+    @h.merge!("b" => {"e" => 4}).should == {"a" => 1, "b" => {"c" => 2, "d" => 3, "e" => 4}} 
+  end
+end
+
 context "Array#array_index" do
   before(:each) do
     @a = [1,2,3,4,5]
@@ -127,3 +175,4 @@ context "String#to_movement_title" do
     "-09-Versus-VIII".to_movement_title.should == 'Versus VIII'
   end
 end
+

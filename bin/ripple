@@ -145,7 +145,7 @@ when 1
   end
   $works = [file]
   if !$options["fast-compile"] && File.file?(file)
-    if file =~ /compilation/ || ((y = YAML.load(file) rescue {}) && (y["compilation"]))
+    if file =~ /compilation/ || ((y = convert_yaml(file)) && (y["compilation"]))
       $options["compile"] = true
     end
   end
@@ -175,7 +175,9 @@ def process(opts = {})
     end
   end
 rescue RippleError => e
+  puts "!!!!!!!!!!!!!!"
   puts e.message
+  
   exit unless $options["auto"]
 end
 
