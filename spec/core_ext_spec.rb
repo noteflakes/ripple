@@ -95,6 +95,17 @@ context "Hash#merge" do
     @h.deep = true
     @h.merge("b" => {"e" => 4}).should == {"a" => 1, "b" => {"c" => 2, "d" => 3, "e" => 4}} 
   end
+  
+  specify "should create deep copies when hash#deep is true" do
+    @h.deep = true
+    m = @h.merge({"b" => {"e" => 4}})
+    m.should == {"a" => 1, "b" => {"c" => 2, "d" => 3, "e" => 4}}
+    @h["b"]["c"] = 22
+    m["b/c"].should == 2
+    
+    @h.merge!("b" => {"f" => 5})
+    m["b/f"].should == nil
+  end
 end
 
 context "Hash#merge!" do

@@ -49,19 +49,8 @@ class Hash
   #
   # Thanks to whoever made it.
   def deep_merge(hash)
-    target = dup
-
-    hash.keys.each do |key|
-      if hash[key].is_a? Hash and self[key].is_a? Hash
-        target[key] = target[key].deep_merge(hash[key])
-        next
-      end
-
-      target[key] = hash[key]
-    end
-
-    target.deep = true
-    target
+    target = Marshal.load(Marshal.dump(self))
+    target.deep_merge!(hash)
   end
 
   def deep_merge!(hash)
@@ -140,9 +129,6 @@ class Array
   end
 end
 
-
-
-
 module Kernel
   # Simple debugging tool. Returns a backtrace to the current place.
   def backtrace
@@ -154,11 +140,12 @@ module Kernel
   end
   
   def load_yaml(fn)
-    YAML.load_file(fn) rescue {}
+    convert_yaml(IO.read(fn)) rescue {}
   end
   
   def convert_yaml(s)
-    YAML.load(s) rescue {}
+    o = YAML.load(s) rescue {}
+    (o == false) ? {} : o
   end
 end
 

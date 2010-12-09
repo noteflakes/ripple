@@ -2,6 +2,7 @@
   }
   \bookpart {
     \pageBreak
+
     <% movement_blank_pages(config).times do %>
       \markup \column {
       \null \null \null \null \null \null
@@ -16,6 +17,7 @@
 	<% if config["include_toc"] %>
 		\tocItem \markup { <%= movement_title(config) %> }
 	<% end %>
+
 	\score {
 	  \new StaffGroup <<
 		<% if (p = config["score/rendered_parts"]) && config["score/groups"] %>
@@ -62,8 +64,9 @@
       indent = <%= config["score/indent"] || '2.5\cm' %>
     }
 	  <% end %>
-	  \layout {
-	    \context {
+	  <% if config["layout"] %>
+    \layout {
+      \context {
         \Score
         %% defaults
         %% (shortest-duration-space . 2.0)
@@ -73,5 +76,6 @@
         \override SpacingSpanner #'spacing-increment = #<%= config["layout/spacing_increment"] || "1.2" %>
         \override SpacingSpanner #'base-shortest-duration = #(ly:make-moment 1 <%= config["layout/base_shortest_duration"] || "8" %>)
       }
-	  }
+    }
+    <% end %>
 	}

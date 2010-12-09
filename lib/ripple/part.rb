@@ -84,12 +84,12 @@ module Ripple
             
             staff_number = (fn =~ /\.(\d)\.rpl$/) ? $1.to_i : 0
             cc["parts/#{p}/clef"] = [nil, 'treble', 'bass'][staff_number]
-            m += Templates.render_staff(fn, load_music(fn, :part, cc, config), cc)
+            m += Templates.render_staff(fn, load_music(fn, :part, cc, c), cc)
           end
           output += Templates.render_keyboard_part(staves, c)
         else
           music_files.each do |fn|
-            output += Templates.render_staff(fn, load_music(fn, :part, c, config), c)
+            output += Templates.render_staff(fn, load_music(fn, :part, c, c), c)
           end
         end
         if lyrics = movement_lyrics_files(p, mvt, c)
@@ -106,10 +106,13 @@ module Ripple
     
     def render_movement(mvt)
       c = movement_config(mvt)
-      
       if c["parts/#{@part}/score_in_part"]
         Score.new(@work, c.merge('mode' => :score)).render_movement(mvt)
-      elsif movement_music_files(@part, mvt, c)[0]
+      elsif fn = movement_music_files(@part, mvt, c)[0]
+        # load music so that if a YAML header is present, it is merged into 
+        # the config.
+        load_music(fn, :part, c, c)
+        
         before_parts = c["parts/#{@part}/before_include"]
         after_parts = c["parts/#{@part}/after_include"]
         content = ''
@@ -180,7 +183,7 @@ module Ripple
       # create ly file
       FileUtils.mkdir_p(File.dirname(ly_filename))
       File.open(ly_filename, 'w') {|f| f << render}
-      
+
       unless @config["no_pdf"]
         FileUtils.mkdir_p(File.dirname(pdf_filename))
         Lilypond.make_pdf(ly_filename, pdf_filename, @config)

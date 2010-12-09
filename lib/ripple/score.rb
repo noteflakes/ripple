@@ -61,7 +61,7 @@ module Ripple
             cc["parts/#{part}/clef"] = [nil, 'treble', 'bass'][staff_number]
             m << Templates.render_staff(fn, load_music(fn, :part, cc), cc)
           else
-            m << load_music(fn, mode, config)
+            m << load_music(fn, mode, config, config)
           end
         end
         m
