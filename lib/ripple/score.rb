@@ -2,6 +2,7 @@ module Ripple
   class Score
     include Syntax
     include FigureSyntax
+    include LyricsSyntax
     
     def initialize(work, config = nil)
       @work = work
@@ -20,7 +21,7 @@ module Ripple
     def movement_lyrics_file(part, mvt, config)
       case lyrics = config["parts/#{part}/lyrics"]
       when nil
-        Dir[File.join(@work.path, mvt, "#{part}.lyrics*")].sort
+        Dir[File.join(@work.path, mvt, "#{part}.lyr*")].sort
       when 'none'
         []
       when Array
@@ -76,7 +77,7 @@ module Ripple
     def render_part_lyrics(part, mvt, config)
       output = ""
       if lyrics = movement_lyrics_file(part, mvt, config)
-        lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), config)}
+        lyrics.each {|fn| output += Templates.render_lyrics(load_lyrics(fn, :score, config), config)}
       end
       output
     end

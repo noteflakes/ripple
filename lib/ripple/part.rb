@@ -2,6 +2,7 @@ module Ripple
   class Part
     include Syntax
     include FigureSyntax
+    include LyricsSyntax
     
     def initialize(part, work)
       @part = part; @work = work
@@ -27,7 +28,7 @@ module Ripple
     def movement_lyrics_files(part, mvt, config)
       case lyrics = config["parts/#{part}/lyrics"]
       when nil
-        Dir[File.join(@work.path, mvt, "#{part}.lyrics*")].sort
+        Dir[File.join(@work.path, mvt, "#{part}.lyr*")].sort
       when 'none'
         []
       when Array
@@ -73,7 +74,7 @@ module Ripple
         music_files = movement_music_files(p, mvt, c)
 
         if !c["hide_figures"] && figures_fn = movement_figures_file(p, mvt, c)
-          figures = load_figures(figures_fn, :part, c) #IO.read(figures_fn)
+          figures = load_figures(figures_fn, :part, c)
           # check if should embed figures in staff
           c["figures"] = figures if c["embed_figures"]
         end
@@ -93,7 +94,7 @@ module Ripple
           end
         end
         if lyrics = movement_lyrics_files(p, mvt, c)
-          lyrics.each {|fn| output += Templates.render_lyrics(IO.read(fn), c)}
+          lyrics.each {|fn| output += Templates.render_lyrics(load_lyrics(fn, :part, c), c)}
         end
         if figures && !c["embed_figures"]
           # if not embedding figures, they are rendered separately

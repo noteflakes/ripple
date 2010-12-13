@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
      "lib/ripple/compilation.rb",
      "lib/ripple/core_ext.rb",
      "lib/ripple/figures_syntax.rb",
+     "lib/ripple/lyrics_syntax.rb",
      "lib/ripple/generate.rb",
      "lib/ripple/lilypond.rb",
      "lib/ripple/part.rb",
@@ -67,6 +68,7 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/core_ext_spec.rb",
      "spec/figures_syntax_spec.rb",
+     "spec/lyrics_syntax_spec.rb",
      "spec/rendering_spec.rb",
      "spec/spec_helper.rb",
      "spec/syntax_spec.rb"
