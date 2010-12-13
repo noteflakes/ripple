@@ -197,7 +197,6 @@ def globs(source)
     end
     
     dirs = dirs.map { |x| "#{x}/**/*" }
-    dirs << '*'
     dirs
   end
 end
@@ -278,7 +277,11 @@ if $options["auto"]
       t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       args.each do |e|
         if e.type = :modified
-          puts "[#{t}] Changed: #{e.path}"
+          path = File.expand_path(e.path)
+          if path =~ /^#{File.expand_path($config['source'])}\/(.+)/
+            path = $1
+          end
+          puts "[#{t}] Changed: #{path}"
           $last_proof_path = e.path unless File.extname(e.path) == '.yml'
           process(proof_options($last_proof_path)) if $last_proof_path
         end
