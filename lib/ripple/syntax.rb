@@ -76,7 +76,11 @@ module Ripple
         config.set("macros/#{$2}", $1) if $2
         convert_macro_region($1, $3)
       }.gsub(NAMED_MACRO_RE) { |i|
-        convert_macro_region(config.lookup("macros/#{$1}"), $2)
+        pattern = config.lookup("macros/#{$1}")
+        if pattern.nil?
+          raise RippleError, "Missing macro definition (#{$1})"
+        end
+        convert_macro_region(pattern, $2)
       }
     end
     
