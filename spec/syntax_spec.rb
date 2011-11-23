@@ -297,6 +297,11 @@ context "divisi shorthand" do
     cvt("/1 a4 /2 b4 /u c2").should == 
       "<< { \\voiceOne a4 } \\new Voice { \\voiceTwo b4 } >> \\oneVoice c2"
   end
+  
+  specify "use case 1 (BWV 52/1)" do
+    cvt("/1 g6^\"Violoncelli\" d g a g f e d cs8 /2 g'8 r r4 r8 /u a, b cs").should == 
+      "<< { \\voiceOne g6^\"Violoncelli\" d g a g f e d cs8 } \\new Voice { \\voiceTwo g'8 r r4 r8 } >> \\oneVoice a, b cs"
+  end
 end
 
 context "macro use case" do

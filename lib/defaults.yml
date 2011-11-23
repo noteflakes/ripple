@@ -22,7 +22,23 @@ parts:
     clef: treble
     auto_beam: false
     midi_instrument: voice oohs
+  alto1:
+    clef: treble
+    auto_beam: false
+    midi_instrument: voice oohs
+  alto2:
+    clef: treble
+    auto_beam: false
+    midi_instrument: voice oohs
   tenor:             
+    clef: treble_8   
+    auto_beam: false 
+    midi_instrument: voice oohs
+  tenor1:             
+    clef: treble_8   
+    auto_beam: false 
+    midi_instrument: voice oohs
+  tenor2:             
     clef: treble_8   
     auto_beam: false 
     midi_instrument: voice oohs
@@ -30,11 +46,35 @@ parts:
     clef: treble_8   
     auto_beam: false 
     midi_instrument: voice oohs
+  tenore1:            
+    clef: treble_8   
+    auto_beam: false 
+    midi_instrument: voice oohs
+  tenore2:            
+    clef: treble_8   
+    auto_beam: false 
+    midi_instrument: voice oohs
   bass:              
     clef: bass       
     auto_beam: false 
     midi_instrument: voice oohs
+  bass1:              
+    clef: bass       
+    auto_beam: false 
+    midi_instrument: voice oohs
+  bass2:              
+    clef: bass       
+    auto_beam: false 
+    midi_instrument: voice oohs
   basso:             
+    clef: bass       
+    auto_beam: false 
+    midi_instrument: voice oohs
+  basso1:             
+    clef: bass       
+    auto_beam: false 
+    midi_instrument: voice oohs
+  basso2:             
     clef: bass       
     auto_beam: false 
     midi_instrument: voice oohs

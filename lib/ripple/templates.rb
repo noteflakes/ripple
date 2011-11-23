@@ -164,7 +164,7 @@ module Ripple
       if config['midi'] && (t = config["parts/#{config["part"]}/midi_transpose"])
         t
       else
-        config["parts/#{config["part"]}/transpose"]
+        config["parts/#{config["part"]}/transpose"] || config["score/transpose"] || config["transpose"]
       end
     end
     

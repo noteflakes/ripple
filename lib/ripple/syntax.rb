@@ -91,19 +91,45 @@ module Ripple
       gsub(SCORE_ONLY_RE) {(mode == :score || mode == :midi) ? $1 : ''}
     end
     
+    
+
+    def _convert(kind, m, config)
+      case kind
+      when :crossbar_dot
+        convert_crossbar_dot(m)
+      when :prefixed_beams_and_slurs
+        convert_prefixed_beams_and_slurs(m)
+      when :variable
+        m.gsub(VARIABLE_RE) {config[$1]}
+      when :divisi
+        m.gsub(DIVISI_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}
+      when :value
+        m.gsub(VALUE_RE) {"#{$1}#{VALUE[$2]}"}
+      when :twothirds
+        m.gsub(TWOTHIRDS_RE) {"#{$1}*2/3"}
+      when :accidental
+        m.gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}#{$4}"}
+      when :appogiature
+        m.gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
+      else
+        raise "Unknown conversion - #{kind}"
+      end
+    end
+    
     def convert_syntax(m, fn, rpl_mode, mode, config)
       m = convert_modal_sections(m, mode)
 
       if rpl_mode
         m = m.gsub(SKIP_QUOTES_RE) do
           a,q = convert_macros($1, config), $2
-          a = convert_crossbar_dot(convert_prefixed_beams_and_slurs(a)).
-            gsub(VARIABLE_RE) {config[$1]}.
-            gsub(DIVISI_RE) {"<< { \\voiceOne #{$1}} \\new Voice { \\voiceTwo #{$2}} >> \\oneVoice "}.
-            gsub(VALUE_RE) {"#{$1}#{VALUE[$2]}"}.
-            gsub(TWOTHIRDS_RE) {"#{$1}*2/3"}.
-            gsub(ACCIDENTAL_RE) {"#{$1}#{ACCIDENTAL[$2]}#{$3}#{$4}"}.
-            gsub(APPOGGIATURE_RE) {"#{$1}\\appoggiatura #{$2}"}
+          a = _convert(:prefixed_beams_and_slurs, a, config)
+          a = _convert(:crossbar_dot, a, config)
+          a = _convert(:variable, a, config)
+          a = _convert(:divisi, a, config)
+          a = _convert(:value, a, config)
+          a = _convert(:twothirds, a, config)
+          a = _convert(:accidental, a, config)
+          a = _convert(:appogiature, a, config)
           "#{a}#{q}"
         end
       end
