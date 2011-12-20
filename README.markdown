@@ -23,7 +23,7 @@ Ripple expects your files to be organized a certain way for it to function corre
           gamba.rpl
           cembalo.rpl
 
-The music is contained in <code>.ly</code> or <code>.rpl</code> files (the latter are assumed to be in [Ripple syntax](https://github.com/ciconia/ripple/blob/master/SYNTAX.markdown) and are converted to normal Lilypond syntax). The <code>\_work.yml</code> file is a YAML file that contains the attributes of the work (more about that later):
+The music is contained in <code>.ly</code> or <code>.rpl</code> files (the latter are assumed to be in [Ripple syntax](https://github.com/ciconia/ripple/blob/master/SYNTAX.markdown) and are converted to normal Lilypond syntax). The <code>\_work.yml</code> file is a YAML file that contains the attributes of the work:
 
     title: Sonata for Viola da Gamba and Harpsichord G-dur BWV1027
     composer: Johann Sebastian Bach
@@ -38,7 +38,7 @@ To process the files into parts and scores, simply cd into the directory and run
     cd my_music
     ripple
     
-Lyrics are entered in a separate file with the same part name and using the <code>.lyrics</code> or <code>.lyr</code> extension (the latter using enhanced syntax). Basso continuo figures are also entered in a separate file with the same part name and a <code>.figures</code> or <code>.fig</code> extension.
+Lyrics are entered in a separate file with the same part name and using the <code>.lyrics</code> or <code>.lyr</code> extension (the latter using enhanced syntax). Basso continuo figures are also entered in a separate file with the same part name and a <code>.figures</code> or <code>.fig</code> extension (the latter also using the improved Ripple syntax).
     
 Ripple will generate Lilypond files and put them into <code>my\_music/\_ly</code>, and then run Lilypond to produce PDF files that will be put in <code>my\_music/\_pdf</code>.
 
