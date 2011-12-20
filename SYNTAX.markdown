@@ -1,6 +1,6 @@
 # Lilypond Syntax Extensions
 
-In order to use the following syntax extensions, you need to use the .rpl filename extension.
+In order to use the following syntax extensions, you need to use the .rpl filename extension. 
 
 ## Include files
 
@@ -104,7 +104,7 @@ Notes can be repeated by using <code>@</code> as a placeholder:
 
 ## Alternative Syntax for Basso Continuo Figures
 
-The stock Lilypond syntax for *basso continuo* figures is far from ideal. Ripple offers a better solution that is easier to read and much faster to write. To use this syntax the figures file should have the <code>fig</code> extension.
+The stock Lilypond syntax for *basso continuo* figures is far from ideal. Ripple offers a better solution that is easier to read and much faster to write. To use this syntax the figures file should have the <code>.fig</code> extension.
 
 Each chord consists of one or more figures, optionally followed by a slash and a duration value. The format pretty much explains itself. Here is an excerpt from BWV 135/1:
 
@@ -145,7 +145,7 @@ Rest/silence is notated by <code>s</code> or alternatively <code>,<code>. Here's
 
 ## Alternative Syntax for Lyrics
 
-Ripple also offers a better syntax for lyrics:
+Ripple also offers a better syntax for lyrics. Files using this syntax should use the <code>.lyr</code> extension:
 
     Je-su mei-ne Freu--de, => Je -- su mei -- ne Freu -- _ de, 
     
