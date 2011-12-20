@@ -5,12 +5,12 @@ Ripple is a small program that helps you generate scores and parts without repea
 Here are some of Ripple's features:
 
 - Create scores and parts from files organized in a consistent, easy-to-understand directory hierarchy.
-- Improved Lilypond syntax for writing music, with support for macros (very useful for notating recurring rhythms), better accidentals, prefixed beams and slurs, and shorthand notation for stuff like divisi, appogiaturas, etc.
+- [Improved Lilypond syntax](https://github.com/ciconia/ripple/wiki) for writing music, with support for macros (very useful for notating recurring rhythms), better accidentals, prefixed beams and slurs, and shorthand notation for stuff like divisi, appogiaturas, etc.
 - Automatically create MIDI versions of your scores.
 - Proof mode for faster editing - get your PDF regenerated every time you save your source.
-- Compilation mode for mixing different musical works together in a single score or part. 
+- Compilation mode for mixing different musical works together in a single score or part.
 
-For comprehensive examples of the improved syntax checkout out my [music scores project](http://github.com/ciconia/music/tree) (mainly Bach stuff).
+More information about the syntax extensions can be found on the [project wiki](https://github.com/ciconia/ripple/wiki). For comprehensive examples of the improved syntax checkout out my [music scores project](http://github.com/ciconia/music/tree) (mainly works by Bach).
 
 ## A Ripple project:
 
