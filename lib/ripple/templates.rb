@@ -71,7 +71,7 @@ module Ripple
       return nil unless groups = config["score/groups"]
       grouped = parts.map do |p|
         if config["parts/#{p}/keyboard"]
-          ['organo.1', 'organo.2']
+          ["#{p}.1", "#{p}.2"]
           # {'brace' => ['organo.1', 'organo.2']}
         else
           p
