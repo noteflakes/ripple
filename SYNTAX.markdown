@@ -24,7 +24,7 @@ You can make code be included in scores only by placing it inside double curly b
 
 Code to appear only for parts should be placed inside double square brackets:
 
-    [[[\break]]]
+    [[\break]]
 
 Code for producing MIDI should be placed inside double curly brackets prefixed with <code>m</code>:
 
