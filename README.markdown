@@ -128,23 +128,23 @@ Proof mode is similar to auto-regeneration mode, except that each time a file is
 
 Compilation mode allows you to compile different pieces/movements into a single score or part. The compilation settings are defined in a YAML file. Here's a simple example:
 
-title: My First Ripple Compilation
-subtitle: Just Testing
-movements:
-  - work: bach/BWV1041
-    movement: 01-allegro
-  - work: bach/BWV1066
-    movement: "09-bourree-II"
-    score_breaks: 2
+    title: My First Ripple Compilation
+    subtitle: Just Testing
+    movements:
+      - work: bach/BWV1041
+        movement: 01-allegro
+      - work: bach/BWV1066
+        movement: "09-bourree-II"
+        score_breaks: 2
+        parts:
+          ira:
+            source: fagotto
+            breaks: 1
     parts:
       ira:
-        source: fagotto
-        breaks: 1
-parts:
-  ira:
-    source: continuo
-    clef: bass
-    hide_figures: true
+        source: continuo
+        clef: bass
+        hide_figures: true
     
 In order to process the compilation, use the <code>-c</code> switch:
 
