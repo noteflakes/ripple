@@ -14,6 +14,7 @@ For comprehensive examples of the improved syntax checkout out my [music scores 
 
 ## A Ripple project:
 
+
 Ripple expects your files to be organized a certain way for it to function correctly. Here is a simple example:
 
     my_music
