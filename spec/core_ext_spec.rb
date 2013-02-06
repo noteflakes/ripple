@@ -1,8 +1,8 @@
 # encoding: UTF-8
 
-require File.expand_path(File.join(File.dirname(__FILE__), '../lib/ripple'))
+require File.expand_path(File.join(File.dirname(__FILE__), './spec_helper'))
 
-context "Hash#lookup" do
+describe "Hash#lookup" do
   before(:each) do
     @h = {
       "a" => 1, 
@@ -21,14 +21,14 @@ context "Hash#lookup" do
     }
   end
   
-  specify "should act like Hash#[] for flat paths" do
+  it "should act like Hash#[] for flat paths" do
     @h.lookup("a").should == 1
     @h.lookup("b").should == {"c" => 2, "d" => 3}
     @h.lookup("c").should be_nil
     @h.lookup("e").should == {"f" => {"g" => 4, "h" => {"i" => 5}}}
   end
   
-  specify "should provide deep access" do
+  it "should provide deep access" do
     @h.lookup("b/c").should == 2
     @h.lookup("b/d").should == 3
     @h.lookup("e/f").should == {"g" => 4, "h" => {"i" => 5}}
@@ -38,7 +38,7 @@ context "Hash#lookup" do
   end
 end
 
-context "Hash#set" do
+describe "Hash#set" do
   before(:each) do
     @h = {
       "a" => 1, 
@@ -57,13 +57,13 @@ context "Hash#set" do
     }
   end
   
-  specify "should act like Hash#[]= for flat paths" do
+  it "should act like Hash#[]= for flat paths" do
     @h.set("a", 7)
     @h.should == {"a" => 7, "b" => {"c" => 2, "d" => 3}, 
       "e" => {"f" => {"g" => 4, "h" => {"i" => 5}}}}
   end
   
-  specify "should support deep access" do
+  it "should support deep access" do
     @h.set("a/z/x", 8)
     @h.should == {"a" => {"z" => {"x" => 8}}, "b" => {"c" => 2, "d" => 3}, 
       "e" => {"f" => {"g" => 4, "h" => {"i" => 5}}}}
@@ -74,7 +74,7 @@ context "Hash#set" do
   end
 end
 
-context "Hash#merge" do
+describe "Hash#merge" do
   before(:each) do
     @h = {
       "a" => 1, 
@@ -85,18 +85,18 @@ context "Hash#merge" do
     }
   end
   
-  specify "should act normally when hash#deep is false" do
+  it "should act normally when hash#deep is false" do
     @h.merge("a" => 7).should == {"a" => 7, "b" => {"c" => 2, "d" => 3}}
 
     @h.merge("b" => {"e" => 4}).should == {"a" => 1, "b" => {"e" => 4}} 
   end
   
-  specify "should do deep merge if hash#deep is true" do
+  it "should do deep merge if hash#deep is true" do
     @h.deep = true
     @h.merge("b" => {"e" => 4}).should == {"a" => 1, "b" => {"c" => 2, "d" => 3, "e" => 4}} 
   end
   
-  specify "should create deep copies when hash#deep is true" do
+  it "should create deep copies when hash#deep is true" do
     @h.deep = true
     m = @h.merge({"b" => {"e" => 4}})
     m.should == {"a" => 1, "b" => {"c" => 2, "d" => 3, "e" => 4}}
@@ -108,7 +108,7 @@ context "Hash#merge" do
   end
 end
 
-context "Hash#merge!" do
+describe "Hash#merge!" do
   before(:each) do
     @h = {
       "a" => 1, 
@@ -119,24 +119,24 @@ context "Hash#merge!" do
     }
   end
   
-  specify "should act normally when hash#deep is false" do
+  it "should act normally when hash#deep is false" do
     @h.merge!("a" => 7).should == {"a" => 7, "b" => {"c" => 2, "d" => 3}}
 
     @h.merge!("b" => {"e" => 4}).should == {"a" => 7, "b" => {"e" => 4}} 
   end
   
-  specify "should do deep merge if hash#deep is true" do
+  it "should do deep merge if hash#deep is true" do
     @h.deep = true
     @h.merge!("b" => {"e" => 4}).should == {"a" => 1, "b" => {"c" => 2, "d" => 3, "e" => 4}} 
   end
 end
 
-context "Array#array_index" do
+describe "Array#array_index" do
   before(:each) do
     @a = [1,2,3,4,5]
   end
   
-  specify "should return the index of the passed argument in the array" do
+  it "should return the index of the passed argument in the array" do
     @a.array_index([1,2,3]).should == 0
     @a.array_index([1,2,3,4]).should == 0
     @a.array_index([1,2,3,4,5]).should == 0
@@ -148,40 +148,40 @@ context "Array#array_index" do
   end
 end
 
-context "String#ly_inspect" do
-  specify "should properly escape quotes" do
+describe "String#ly_inspect" do
+  it "should properly escape quotes" do
     s = "r \"i\" p"
     s.ly_inspect.should == "\"r \\\"i\\\" p\""
   end
   
-  specify "should not escape unicode characters" do
+  it "should not escape unicode characters" do
     s = "\"Allein Gott in der Höh' sei Ehr'\""
     s.ly_inspect.should == "\"\\\"Allein Gott in der H\303\266h' sei Ehr'\\\"\""
   end
 end
 
-context "String#to_instrument_title" do
-  specify "should recognize indexed instruments" do
+describe "String#to_instrument_title" do
+  it "should recognize indexed instruments" do
     "violino1".to_instrument_title.should == 'Violino I'
     "violino3".to_instrument_title.should == 'Violino III'
   end
   
-  specify "should handle multiple words in title" do
+  it "should handle multiple words in title" do
     "viola-da-gamba1".to_instrument_title.should == 'Viola da gamba I'
   end
 end
 
-context "String#to_movement_title" do
-  specify "should work with numbered titles" do
+describe "String#to_movement_title" do
+  it "should work with numbered titles" do
     "01-blah-blah".to_movement_title.should == '1. Blah Blah'
   end
 
-  specify "should work with numbers only" do
+  it "should work with numbers only" do
     "01".to_movement_title.should == 'I'
     "09".to_movement_title.should == 'IX'
   end
   
-  specify "should omit number when prefixed with a dash" do
+  it "should omit number when prefixed with a dash" do
     "-01-Blah".to_movement_title.should == 'Blah'
     "-09-Versus-VIII".to_movement_title.should == 'Versus VIII'
   end

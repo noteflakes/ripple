@@ -1,6 +1,6 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '../lib/ripple'))
+require File.expand_path(File.join(File.dirname(__FILE__), './spec_helper'))
 
-context "Staff group hierarchy algorithm" do
+describe "Staff group hierarchy algorithm" do
   before(:each) do
     yaml = <<EOF
 score:
@@ -23,7 +23,7 @@ EOF
     @config = YAML.load(yaml)
   end
   
-  specify "should create the correct hierarchy when all staves are present" do
+  it "should create the correct hierarchy when all staves are present" do
     parts = @config['score/order']
     parts.should == %w[oboe1 oboe2 violino1 violino2 viola soprano alto tenore basso continuo]
     
@@ -36,7 +36,7 @@ EOF
     ]
   end
 
-  specify "should create the correct hierarchy when only some of the staves are present" do
+  it "should create the correct hierarchy when only some of the staves are present" do
     parts = %w[violino1 violino2 soprano continuo]
     
     Ripple::Templates.staff_groups(parts, @config).should == [
@@ -54,14 +54,14 @@ EOF
     ]
   end
   
-  specify "should render the correct systemStartDelimiterHierarchy expression for full score" do
+  it "should render the correct systemStartDelimiterHierarchy expression for full score" do
     parts = @config['score/order']
     parts.should == %w[oboe1 oboe2 violino1 violino2 viola soprano alto tenore basso continuo]
     
     Ripple::Templates.staff_hierarchy(parts, @config).should == "#'(SystemStartBracket (SystemStartBrace oboe1 oboe2) (SystemStartBrace violino1 violino2) viola (SystemStartBracket soprano alto tenore basso) continuo)"
   end
 
-  specify "should render the correct systemStartDelimiterHierarchy expression for partial score" do
+  it "should render the correct systemStartDelimiterHierarchy expression for partial score" do
     parts = %w[violino1 violino2 soprano continuo]
     Ripple::Templates.staff_hierarchy(parts, @config).should == "#'(SystemStartBracket (SystemStartBrace violino1 violino2) soprano continuo)"
 
@@ -70,8 +70,8 @@ EOF
   end
 end
 
-context "staff id" do
-  specify "should strip non-alphabet characters" do
+describe "staff id" do
+  it "should strip non-alphabet characters" do
     Ripple::Templates.staff_id("staff_name" => "Vno I &oboe d'amore I").should ==
       "VnoIoboedamoreIStaff"
   end
