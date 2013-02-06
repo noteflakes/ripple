@@ -1,29 +1,46 @@
 require 'rake'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
+require 'rspec/core/rake_task'
 require 'yaml'
 
 yml = YAML.load_file(File.join(File.dirname(__FILE__), "VERSION.yml"))
 VERSION = "#{yml[:major]}.#{yml[:minor]}.#{yml[:patch]}"
 
-begin
-  gem 'jeweler', '>= 0.11.0'
-  require 'jeweler'
-  Jeweler::Tasks.new do |s|
-    s.name = "ripple"
-    s.summary = %Q{Ripple is a Lilypond generator.}
-    s.version = VERSION
-    s.email = "ciconia@gmail.com"
-    s.homepage = "http://github.com/ciconia/ripple"
-    s.description = "Ripple is a Lilypond generator."
-    s.authors = ["Sharon Rosner"]
-    s.rubyforge_project = "ripple"
-    s.add_dependency('directory_watcher', '>= 1.1.1')
-  end
-rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install jeweler --version '>= 0.11.0'"
-  exit(1)
+
+require 'jeweler2'
+Jeweler::Tasks.new do |gem|
+  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+  gem.name = "ripple"
+  gem.summary = "Ripple is a Lilypond generator."
+  gem.description = "Ripple is a Lilypond generator."
+  gem.email = "ciconia@gmail.com"
+  gem.homepage = "http://github.com/ciconia/ripple"
+  gem.authors = ["Sharon Rosner"]
+  gem.version = VERSION
+  gem.add_dependency('directory_watcher', '>= 1.1.1')
 end
+Jeweler::RubygemsDotOrgTasks.new
+
+
+# begin
+#   gem 'jeweler', '>= 0.11.0'
+#   require 'jeweler'
+#   Jeweler::Tasks.new do |s|
+#     s.name = "ripple"
+#     s.summary = %Q{Ripple is a Lilypond generator.}
+#     s.version = VERSION
+#     s.email = "ciconia@gmail.com"
+#     s.homepage = "http://github.com/ciconia/ripple"
+#     s.description = "Ripple is a Lilypond generator."
+#     s.authors = ["Sharon Rosner"]
+#     s.rubyforge_project = "ripple"
+#     s.add_dependency('directory_watcher', '>= 1.1.1')
+#   end
+# rescue LoadError
+#   puts "Jeweler not available. Install it with: sudo gem install jeweler --version '>= 0.11.0'"
+#   exit(1)
+# end
 
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
@@ -39,3 +56,10 @@ desc "Open an irb session preloaded with this library"
 task :console do
   sh "irb -I lib -r ripple.rb"
 end
+
+desc "Run specs"
+RSpec::Core::RakeTask.new('spec') do |t|
+  t.pattern = ['spec/spec_helper.rb', 'spec/**/*_spec.rb']
+end
+
+
