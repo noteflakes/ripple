@@ -8,9 +8,6 @@
 }
 
 \book {
-  <% if config["include_toc"] %>
-  	\markuplines \table-of-contents
-  <% end %>
 	\header {
 		<% if config["title"] %>
 	  	title = <%= config["title"].ly_inspect %>
@@ -26,6 +23,9 @@
       config["part"].to_instrument_title %>"
 	}
 
+  <% if config["include_toc"] %>
+%     \markuplist \table-of-contents
+  <% end %>
 	\bookpart {
 		\pageBreak
 		<%= content %>
