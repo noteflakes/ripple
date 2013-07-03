@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ripple}
-  s.version = "0.9.2"
+  s.version = "1.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sharon Rosner"]
-  s.date = %q{2010-11-25}
+  s.date = %q{2013-07-03}
   s.description = %q{Ripple is a Lilypond generator.}
   s.email = %q{ciconia@gmail.com}
   s.executables = ["pdf_booklet", "ripple"]
@@ -63,7 +63,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{ripple}
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{2.0.3}
   s.summary = %q{Ripple is a Lilypond generator.}
   s.test_files = [
     "spec/core_ext_spec.rb",
