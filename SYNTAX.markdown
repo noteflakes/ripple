@@ -56,7 +56,7 @@ Flats:
 
 Handy for writing unobtrusive triplets.
 
-    f8 ~ ([f6` e]) f => f8 ~ f6*2/3([ e]) f
+    f8 ~ ([f6` e]) f => f8 ~ f16*2/3([ e]) f
     
 ## Cross-bar dotting
 
